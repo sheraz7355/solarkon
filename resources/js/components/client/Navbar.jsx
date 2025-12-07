@@ -6,7 +6,7 @@ import { HiPhone } from "react-icons/hi2";
 
 // 2. CHECK IMAGE PATH: Ensure this path is correct relative to this file.
 // For files under `components/client`, assets live at `resources/js/assets` so go up two levels:
-import webLogo from "../../assets/web-logo.svg";
+import webLogo from "../../assets/web-logo.webp";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
