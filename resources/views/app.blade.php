@@ -6,8 +6,9 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+        <!-- Use brand logo as the site icon (favicon) so the tab shows your navbar mark -->
+        <link rel="icon" href="/logo.svg" type="image/svg+xml">
+        <link rel="shortcut icon" href="/favicon.ico" sizes="any">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
         <link rel="preconnect" href="https://fonts.bunny.net">

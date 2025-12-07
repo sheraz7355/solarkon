@@ -22,7 +22,7 @@ export default defineConfig({
     server: {
         host: '0.0.0.0', // Listen on all network addresses
         hmr: {
-            host: '192.168.0.102' // MUST match your computer's IP
+            host: '192.168.1.101' // MUST match your computer's IP
         },
         cors: true, // Allow cross-origin requests
     },
