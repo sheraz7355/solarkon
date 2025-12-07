@@ -104,7 +104,7 @@ function ContactPanels() {
                   <label className="form-label small fw-semibold text-muted">Preferred contact</label>
                   <select className="form-select rounded-3">
                     <option>Email</option>
-                    <option>Phone</option>
+                    <option>Phone</option>  
                     <option>Either</option>
                   </select>
                 </div>

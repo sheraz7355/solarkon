@@ -3,16 +3,16 @@ import { Head } from '@inertiajs/react'; // Good for SEO titles
 
 // Import all your sections
 // Note: We use '@' which points to 'resources/js'
-import HeroSection from '@/Components/client/HeroSection';
-import StatisticsSection from '@/Components/client/StatisticsSection';
-import ClientLogosSection from '@/Components/client/ClientLogosSection';
-import BenefitsSection from '@/Components/client/BenefitsSection';
-import ServicesSection from '@/Components/client/ServicesSection';
-import TestimonialsSection from '@/Components/client/TestimonialsSection';
-import StepsSection from '@/Components/client/StepsSection';
-import FAQSection from '@/Components/client/FAQSection';
-import BlogSection from '@/Components/client/BlogSection';
-import CTASection from '@/Components/client/CTASection';
+import HeroSection from '@/components/client/HeroSection';
+import StatisticsSection from '@/components/client/StatisticsSection';
+import ClientLogosSection from '@/components/client/ClientLogosSection';
+import BenefitsSection from '@/components/client/BenefitsSection';
+import ServicesSection from '@/components/client/ServicesSection';
+import TestimonialsSection from '@/components/client/TestimonialsSection';
+import StepsSection from '@/components/client/StepsSection';
+import FAQSection from '@/components/client/FAQSection';
+import BlogSection from '@/components/client/BlogSection';
+import CTASection from '@/components/client/CTASection';
 
 export default function Home() {
   return (

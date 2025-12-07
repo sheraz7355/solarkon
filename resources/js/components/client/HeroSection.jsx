@@ -1,10 +1,8 @@
 import { HiPlay, HiArrowRight } from 'react-icons/hi2';
 import { motion } from 'framer-motion';
-import heroImage from '../../assets/images/solarimg-1.jpg';
+import heroImage from '../../assets/images/solarimg-1.webp';
 
 function HeroSection() {
-  const heroVideoThumb =
-    'https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=800&q=80';
 
   const stats = [
     { label: 'Solar Installations', value: '10k+' },
@@ -91,7 +89,6 @@ function HeroSection() {
                     className='rounded-3 position-relative mb-3 gradient-mask'
                     style={{
                       height: 140,
-                      backgroundImage: `url(${heroVideoThumb})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                     }}
