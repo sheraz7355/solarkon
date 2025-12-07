@@ -83,30 +83,6 @@ function HeroSection() {
               className='position-relative hero-visual tilt-float'
               style={{ backgroundImage: `url(${heroImage})` }}
             >
-              <div className='position-absolute bottom-0 start-0 end-0 p-3 p-md-4'>
-                <div className='bg-white rounded-4 shadow p-3 p-md-4'>
-                  <div
-                    className='rounded-3 position-relative mb-3 gradient-mask'
-                    style={{
-                      height: 140,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  >
-                    <div className='position-absolute top-50 start-50 translate-middle'>
-                      <div
-                        className='d-flex align-items-center justify-content-center rounded-circle shadow icon-badge-hover bg-white'
-                        style={{ width: 64, height: 64 }}
-                      >
-                        <HiPlay size={32} color='#22C55E' style={{ marginLeft: 4 }} />
-                      </div>
-                    </div>
-                  </div>
-                  <p className='mb-0 text-muted small'>
-                    Unlock the power of solar energy and enjoy long-term advantages.
-                  </p>
-                </div>
-              </div>
             </motion.div>
           </div>
         </div>
