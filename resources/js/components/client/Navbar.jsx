@@ -1,40 +1,43 @@
 import { useState } from "react";
-// 1. CHANGE: Import Link and usePage from Inertia instead of react-router-dom
 import { Link, usePage, router } from "@inertiajs/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiPhone } from "react-icons/hi2";
-
-// 2. CHECK IMAGE PATH: Ensure this path is correct relative to this file.
-// For files under `components/client`, assets live at `resources/js/assets` so go up two levels:
 import webLogo from "../../assets/web-logo.webp";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  
-  // 3. CHANGE: Get current URL to check for "Active" state
   const { url } = usePage(); 
 
   const handleToggle = () => setIsOpen((prev) => !prev);
   const closeMenu = () => setIsOpen(false);
 
-  // 4. CHANGE: 'to' becomes purely the URL string
   const navLinks = [
     { label: "Home", to: "/" },
-    { label: "About Us", to: "/about" }, // Make sure Route::get('/about') exists in web.php
-    { label: "Project", to: "/profile" },
+    { label: "About Us", to: "/about" },
+    { label: "Project", to: "/profile" }, // Note: You might want this to point to /projects or /project-details
     { label: "Solutions", to: "/solutions" },
     { label: "Projects", to: "/projects" },
-    { label: "Financing", to: "/financing" }, // Assuming you mapped this in web.php
+    { label: "Financing", to: "/financing" },
   ];
 
-  // Helper function to check if link is active (Replaces NavLink logic)
   const isLinkActive = (path) => {
     if (path === '/') return url === '/';
     return url.startsWith(path);
   };
 
   return (
-    <header className="py-2 position-sticky top-0 z-2">
+    // CHANGE IS HERE: 
+    // 1. Removed 'z-2' class.
+    // 2. Added inline style for zIndex: 1050 to force it above everything.
+    // 3. Added background/backdropFilter to ensure content doesn't bleed through on scroll.
+    <header 
+      className="py-2 position-sticky top-0" 
+      style={{ 
+        zIndex: 1050, 
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: ensures text is readable over hero
+        backdropFilter: 'blur(8px)' // Optional: Adds that modern glass effect
+      }}
+    >
       <nav className="container">
         <div className="glass-nav d-flex align-items-center justify-content-between gap-3">
           <div className="d-flex align-items-center gap-2">
@@ -51,11 +54,10 @@ function Navbar() {
 
           <div className="d-none d-md-flex align-items-center gap-4">
             {navLinks.map((item) => (
-              <Link // 5. CHANGE: NavLink -> Link
+              <Link 
                 key={item.to}
-                href={item.to} // 6. CHANGE: to -> href
+                href={item.to} 
                 className={`fw-semibold text-decoration-none nav-link-main link-underline-hover ${
-                   // 7. CHANGE: Manual active check
                    isLinkActive(item.to) ? "text-success" : "text-dark"
                 }`}
               >
@@ -68,7 +70,6 @@ function Navbar() {
             <button
               className="btn btn-outline-success btn-pill btn-soft-hover btn-contact"
               type="button"
-              // 8. CHANGE: navigate() -> router.visit()
               onClick={() => router.visit("/contact")}
             >
               <HiPhone className="me-2" size={18} />
@@ -76,7 +77,6 @@ function Navbar() {
             </button>
           </div>
 
-          {/* Mobile Toggle Button (Kept same) */}
           <button
             className="btn btn-outline-success d-inline-flex d-md-none align-items-center justify-content-center btn-soft-hover nav-toggle"
             onClick={handleToggle}
@@ -89,7 +89,6 @@ function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -101,9 +100,9 @@ function Navbar() {
             >
               <div className="d-flex flex-column gap-3">
                 {navLinks.map((item) => (
-                  <Link // CHANGE: NavLink -> Link
+                  <Link 
                     key={item.to}
-                    href={item.to} // CHANGE: to -> href
+                    href={item.to} 
                     className={`fw-semibold text-decoration-none ${
                         isLinkActive(item.to) ? "text-success" : "text-dark"
                     }`}
@@ -117,7 +116,7 @@ function Navbar() {
                   className="btn btn-success rounded-pill btn-contact-solid"
                   onClick={() => {
                     closeMenu();
-                    router.visit("/contact"); // CHANGE: navigate -> router.visit
+                    router.visit("/contact");
                   }}
                 >
                   <HiPhone className="me-2" size={18} />
