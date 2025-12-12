@@ -20,28 +20,40 @@ function ContactPanels() {
 
                 <div className="mb-4">
                   <p className="text-uppercase small fw-semibold mb-1" style={{ color: '#BBF7D0' }}>
-                    Message Us
+                    Email
                   </p>
                   <p className="mb-0" style={{ fontSize: 14 }}>
-                    support@solvixenergy.com
+                    info@solarkon.org
                   </p>
                 </div>
 
                 <div className="mb-4">
                   <p className="text-uppercase small fw-semibold mb-1" style={{ color: '#BBF7D0' }}>
-                    Call Us
+                    Phone
                   </p>
                   <p className="mb-0" style={{ fontSize: 14 }}>
-                    +1 (555) 987-6543
+                    +92 306 2935768
+                  </p>
+                  <p className="mb-0" style={{ fontSize: 14 }}>
+                    Landline: 042-36449602
                   </p>
                 </div>
 
                 <div className="mb-4">
                   <p className="text-uppercase small fw-semibold mb-1" style={{ color: '#BBF7D0' }}>
-                    Office
+                    Address
                   </p>
                   <p className="mb-0" style={{ fontSize: 14 }}>
-                    4567 Elm Street, Suite 120, Greenfield, TX 78201
+                    94-C J1 Johar Town, Phase 2 Lahore
+                  </p>
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-uppercase small fw-semibold mb-1" style={{ color: '#BBF7D0' }}>
+                    Website
+                  </p>
+                  <p className="mb-0" style={{ fontSize: 14 }}>
+                    www.solarkon.org
                   </p>
                 </div>
 
@@ -86,52 +98,38 @@ function ContactPanels() {
                 Fill out the form below, and our team will get back to you within 24 hours.
               </h2>
 
-              <form className="row g-3">
-                <div className="col-12 col-md-6">
-                  <label className="form-label small fw-semibold text-muted">Full name</label>
-                  <input type="text" className="form-control rounded-3" placeholder="John Carter" />
-                </div>
-                <div className="col-12 col-md-6">
-                  <label className="form-label small fw-semibold text-muted">Email address</label>
-                  <input type="email" className="form-control rounded-3" placeholder="you@example.com" />
-                </div>
-
-                <div className="col-12 col-md-6">
-                  <label className="form-label small fw-semibold text-muted">Phone number</label>
-                  <input type="tel" className="form-control rounded-3" placeholder="+1 (555) 000-0000" />
-                </div>
-                <div className="col-12 col-md-6">
-                  <label className="form-label small fw-semibold text-muted">Preferred contact</label>
-                  <select className="form-select rounded-3">
-                    <option>Email</option>
-                    <option>Phone</option>  
-                    <option>Either</option>
-                  </select>
+              <form className="row g-3" onSubmit={(e) => {
+                e.preventDefault();
+                // Handle form submission - send to Laravel API
+                const formData = new FormData(e.target);
+                const data = {
+                  name: formData.get('name'),
+                  phone: formData.get('phone'),
+                  city: formData.get('city'),
+                  billAmount: formData.get('billAmount'),
+                };
+                console.log('Form data:', data);
+                // TODO: Send to Laravel API
+                alert('Thank you! We will contact you soon.');
+              }}>
+                <div className="col-12">
+                  <label className="form-label small fw-semibold text-muted">Name *</label>
+                  <input type="text" name="name" className="form-control rounded-3" placeholder="Your Name" required />
                 </div>
 
                 <div className="col-12">
-                  <label className="form-label small fw-semibold text-muted">Project type</label>
-                  <div className="d-flex flex-wrap gap-2">
-                    {['Residential', 'Commercial', 'Off-grid', 'Other'].map((label) => (
-                      <button
-                        key={label}
-                        type="button"
-                        className="btn btn-sm btn-pill"
-                        style={{ backgroundColor: '#E5F2E0', color: '#14532D', border: 'none' }}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
+                  <label className="form-label small fw-semibold text-muted">Phone *</label>
+                  <input type="tel" name="phone" className="form-control rounded-3" placeholder="+92 300 1234567" required />
                 </div>
 
                 <div className="col-12">
-                  <label className="form-label small fw-semibold text-muted">Tell us about your project</label>
-                  <textarea
-                    className="form-control rounded-3"
-                    rows="3"
-                    placeholder="Share details about your property, goals, and timeline..."
-                  />
+                  <label className="form-label small fw-semibold text-muted">City *</label>
+                  <input type="text" name="city" className="form-control rounded-3" placeholder="Your City" required />
+                </div>
+
+                <div className="col-12">
+                  <label className="form-label small fw-semibold text-muted">Monthly Bill Amount (PKR) *</label>
+                  <input type="number" name="billAmount" className="form-control rounded-3" placeholder="e.g., 50000" required />
                 </div>
 
                 <div className="col-12 d-flex justify-content-end mt-2">

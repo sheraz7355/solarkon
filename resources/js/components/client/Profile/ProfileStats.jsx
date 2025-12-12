@@ -1,7 +1,6 @@
 import { router } from '@inertiajs/react';
 
 function ProfileStats() {
-
   const projects = [
     {
       category: 'On-Grid Solutions',
@@ -85,11 +84,12 @@ function ProfileStats() {
                       </div>
                       <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                         <p className="small text-muted mb-0">
-                          {project.location} · {project.date}
+                          {project.location} • {project.date}
                         </p>
                         <button
                           className="btn btn-sm btn-pill px-3 btn-soft-hover"
                           style={{ backgroundColor: '#2D5016', color: '#ffffff' }}
+                          // Updated to use Inertia router
                           onClick={() => router.visit('/project-details')}
                         >
                           View This Case Study
@@ -101,9 +101,13 @@ function ProfileStats() {
               </div>
             </div>
           ))}
-
         </div>
 
+        {/* 
+            Note: In Laravel, pagination is usually handled automatically.
+            When you integrate the backend, you will replace this static pagination 
+            with the <Link> components provided by Laravel's paginate() method.
+        */}
         <nav aria-label="Project pagination" className="d-flex justify-content-center">
           <ul className="pagination pagination-sm mb-0">
             <li className="page-item disabled">

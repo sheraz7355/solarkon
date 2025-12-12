@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import StatsCard from '../../admin/components/StatsCard';
+import StatsCard from '../../components/admin/StatsCard';
 import {
   faFolderOpen,
   faCheckCircle,

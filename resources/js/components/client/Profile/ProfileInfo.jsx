@@ -1,9 +1,6 @@
-// ProfileInfo - featured project hero card
 import { router } from '@inertiajs/react';
 
 function ProfileInfo() {
-  // Removed react-router navigation
-  // const navigate = useNavigate();
   const featuredImage =
     'https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=1400&q=80';
 
@@ -28,13 +25,14 @@ function ProfileInfo() {
                   costs through clean, reliable solar power.
                 </p>
                 <p className="small mb-1 text-white-50">Commercial Solar System</p>
-                <p className="small mb-4 text-white-50">Los Angeles, CA · March 2024</p>
+                <p className="small mb-4 text-white-50">Los Angeles, CA • March 2024</p>
               </div>
               <div className="d-flex align-items-center gap-3 mt-3">
                 <button
                   className="btn btn-pill btn-soft-hover"
                   style={{ backgroundColor: '#22C55E', color: '#1F2937' }}
-                  onClick={() => router.visit('/project-details')}
+                  // Change: use router.visit instead of navigate
+                  onClick={() => router.visit('/project-details')} 
                 >
                   View Full Project
                 </button>

@@ -21,7 +21,10 @@ function Navbar() {
   const navLinks = [
     { label: "Home", to: "/" },
     { label: "About Us", to: "/about" }, // Make sure Route::get('/about') exists in web.php
-    { label: "Project", to: "/profile" }, // Assuming you mapped this in web.php
+    { label: "Project", to: "/profile" },
+    { label: "Solutions", to: "/solutions" },
+    { label: "Projects", to: "/projects" },
+    { label: "Financing", to: "/financing" }, // Assuming you mapped this in web.php
   ];
 
   // Helper function to check if link is active (Replaces NavLink logic)

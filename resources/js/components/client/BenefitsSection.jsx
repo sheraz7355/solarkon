@@ -1,22 +1,22 @@
-import { HiCurrencyDollar, HiArrowTrendingUp, HiGlobeAlt } from 'react-icons/hi2';
+import { HiShieldCheck, HiWrenchScrewdriver, HiAcademicCap } from 'react-icons/hi2';
 import { motion } from 'framer-motion';
 
 function BenefitsSection() {
   const benefits = [
     {
-      icon: <HiCurrencyDollar size={24} />,
-      title: 'Significant Cost Savings',
-      description: 'Reduce your electricity bills by up to 70% with solar power.',
+      icon: <HiShieldCheck size={24} />,
+      title: 'Long-Term Warranties',
+      description: 'All systems come with long-term warranties. Quick diagnosis and repair under warranty terms.',
     },
     {
-      icon: <HiArrowTrendingUp size={24} />,
-      title: 'Energy Independence',
-      description: 'Generate your own power and reduce reliance on the grid.',
+      icon: <HiWrenchScrewdriver size={24} />,
+      title: 'Dedicated After-Sales Service',
+      description: 'We don\'t just install — we stay with you! Dedicated after-sales service to ensure smooth operation for years.',
     },
     {
-      icon: <HiGlobeAlt size={24} />,
-      title: 'Sustainable Future',
-      description: 'Reduce your carbon footprint and contribute to a greener planet.',
+      icon: <HiAcademicCap size={24} />,
+      title: 'Certified Engineering Team',
+      description: 'Certified, experienced engineering team with best-in-class technology and global product partnerships.',
     },
     {
       icon: (
@@ -25,12 +25,12 @@ function BenefitsSection() {
             strokeLinecap='round'
             strokeLinejoin='round'
             strokeWidth='2'
-            d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'
+            d='M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'
           />
         </svg>
       ),
-      title: 'Increase Home Value',
-      description: "Boost your property's market value with a solar energy system.",
+      title: 'Environmental Compliance',
+      description: 'Environmental compliance and net metering assistance for seamless integration.',
     },
   ];
 
@@ -52,13 +52,13 @@ function BenefitsSection() {
               className='pe-lg-4'
             >
               <div className='eyebrow mb-3' style={{ background: 'rgba(34,197,94,0.2)' }}>
-                // Benefits
+                Why Choose Us
               </div>
               <h2 className='fw-bold text-white mb-3' style={{ fontSize: '2.4rem' }}>
-              The Benefits Of Going Solar With SOLARKON
+              Why Choose Solarkon
               </h2>
               <p className='text-white-50 mb-4'>
-                Unlock the power of solar energy and enjoy long-term advantages.
+                With a customer-centric approach and a passion for sustainability, we strive to lead Pakistan's transition toward a clean energy future.
               </p>
               <div className='row g-4'>
                 {benefits.map((benefit, index) => (

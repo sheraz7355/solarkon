@@ -3,10 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Admin routes
-Route::get("/admin", function () {
-    Inertia::render("admin/Dashboard");
-})->name("admin.dashboard");
+Route::get('/admin/{any?}', function () {
+    return Inertia::render('admin/AdminApp');
+})->where('any', '.*'); 
+
 
 
 // 1. Home Page
@@ -24,7 +24,6 @@ Route::get('/contact', function () {
     return Inertia::render('Contact');
 })->name('contact');
 
-// 4. Projects / Profile Page
 // (Your Navbar linked to '/profile', so we map that here)
 Route::get('/profile', function () {
     return Inertia::render('Profile');
@@ -34,3 +33,8 @@ Route::get('/profile', function () {
 Route::get('/project-details', function () {
     return Inertia::render('ProjectDetails');
 })->name('project.details');
+
+
+Route::get('/solutions', function () { return Inertia::render('Solutions'); });
+Route::get('/projects', function () { return Inertia::render('Projects'); }); 
+Route::get('/financing', function () { return Inertia::render('Financing'); });

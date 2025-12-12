@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Block the Admin Panel from Google (You don't want login pages in search results)
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/*
+
+# Point Google to your Sitemap (We will create this next)
+Sitemap: https://solarkon.org/sitemap.xml

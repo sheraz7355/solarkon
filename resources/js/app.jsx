@@ -1,7 +1,7 @@
 import './bootstrap'; // Laravel's default axios setup
-import 'bootstrap/dist/css/bootstrap.min.css'; // Bootstrap styles (load first so app.css can override)
-import '../css/app.css'; // Your friend's index.css (paste content here)
-import '../css/animations.css'; // Your friend's animations
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import '../css/app.css'; 
+import '../css/animations.css'; 
 
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';

@@ -29,7 +29,8 @@ function ProfileSettings() {
                   className="btn btn-pill px-4 btn-soft-hover"
                   style={{ backgroundColor: '#22C55E', color: '#1F2937' }}
                   type="button"
-                  onClick={() => router.visit('/contact')}
+                  // Changed from '/project' to '/contact' to match the "Consultation" context
+                  onClick={() => router.visit('/contact')} 
                 >
                   Book A Free Consultation
                 </button>

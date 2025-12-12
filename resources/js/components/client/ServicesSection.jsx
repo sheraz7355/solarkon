@@ -6,27 +6,39 @@ function ServicesSection() {
   const services = [
     {
       icon: <HiHomeModern size={24} />,
-      title: 'Residential Solar',
+      title: 'Residential Solutions',
       description:
-        "Power your home with clean, renewable energy. Our residential solar solutions are tailored to meet your household's specific needs, ensuring maximum efficiency and savings.",
+        'Supported by a skilled team of engineers and technical specialists across Pakistan, committed to lowering electricity costs and delivering top-tier, cutting-edge solutions for Pakistani communities.',
       image:
         'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=900&q=80',
     },
     {
       icon: <HiBuildingOffice2 size={24} />,
-      title: 'Commercial Solar',
+      title: 'Commercial Solutions',
       description:
-        'Reduce operational costs and demonstrate your commitment to sustainability with our commercial solar solutions designed for businesses of all sizes.',
+        'Empower your workplace with efficient solar power systems, effectively replacing high-cost conventional energy.',
       image:
         'https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=900&q=80',
     },
     {
       icon: <HiBolt size={24} />,
-      title: 'Industrial Solar',
+      title: 'Industrial Solutions',
       description:
-        'Scale up your energy production with industrial-grade solar systems that deliver maximum output and reliability for large-scale operations.',
+        'From factories to warehouses, high-capacity solar systems designed for heavy-load usage. Delivering stable energy and operational savings without compromising performance.',
       image:
         'https://images.unsplash.com/photo-1509395283749-8d6f0c7e1d0b?auto=format&fit=crop&w=900&q=80',
+    },
+    {
+      icon: (
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      ),
+      title: 'Agricultural Solutions',
+      description:
+        'Transition your farm to dependable, off-grid solar energy ensuring steady power for irrigation, pumping, and operations while slashing expenses. Boost yield and income with clean, cost-effective solutions.',
+      image:
+        'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=900&q=80',
     },
   ];
 
@@ -44,7 +56,7 @@ function ServicesSection() {
           {services.map((service, index) => (
             <motion.div
               key={service.title}
-              className='col-md-6 col-lg-4'
+              className='col-md-6 col-lg-3'
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

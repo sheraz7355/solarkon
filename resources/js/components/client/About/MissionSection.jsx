@@ -27,16 +27,13 @@ function MissionSection() {
 
           <div className="col-lg-6">
             <div className="text-uppercase small fw-semibold mb-2" style={{ color: '#22C55E' }}>
-              // About
+              Our Story
             </div>
             <h2 className="fw-bold mb-3 section-title" style={{ fontSize: '2rem' }}>
-              Innovating Solar Solutions For A Sustainable Tomorrow
+              Leading Solar Energy Provider in Pakistan
             </h2>
             <p className="text-muted mb-4 section-subtitle">
-              Solarkon is a leading provider of solar energy solutions, helping homeowners, businesses,
-              and communities transition to clean, renewable power. Our in-house design, engineering,
-              and installation teams work together to deliver systems that are efficient, reliable, and
-              tailored to every project.
+              Solarkon Private Limited is the leading solar energy provider in Pakistan, offering top-of-the-line products and services that can be tailored to meet your individual needs. Our experienced team of professionals is dedicated to delivering the highest quality.
             </p>
 
             <div className="row g-3">

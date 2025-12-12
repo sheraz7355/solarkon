@@ -23,10 +23,10 @@ function AboutHero() {
       <div className="container">
         <div className="text-center mb-4 mb-md-5 section-heading">
           <h1 className="fw-bold mb-2 section-title" style={{ fontSize: '2.3rem' }}>
-            Powering A Brighter Future
+            Our Story
           </h1>
-          <p className="text-muted mb-0 mx-auto section-subtitle" style={{ maxWidth: 540 }}>
-            Join us in building a sustainable, cost-effective future powered by the sun.
+          <p className="text-muted mb-0 mx-auto section-subtitle" style={{ maxWidth: 800 }}>
+            Solarkon Private Limited is the leading solar energy provider in Pakistan, offering top-of-the-line products and services that can be tailored to meet your individual needs. Our experienced team of professionals is dedicated to delivering the highest quality.
           </p>
         </div>
 
