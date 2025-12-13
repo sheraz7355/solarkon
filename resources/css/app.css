@@ -260,6 +260,20 @@ section {
   outline: none;
 }
 
+/* resources/css/app.css */
+
+/* Force the Inertia Loading Bar to be on top of the Navbar */
+#nprogress .bar {
+    z-index: 99999 !important;
+    height: 4px !important; /* Make it slightly thicker so it's visible */
+    background: #22C55E !important; /* Enforce your Green color */
+}
+
+/* Optional: Make the spinner on the right visible too */
+#nprogress .spinner {
+    z-index: 99999 !important;
+}
+
 .btn-contact-solid {
   background-color: var(--brand-primary);
   border-color: var(--brand-primary);
