@@ -14,7 +14,6 @@ function Navbar() {
   const navLinks = [
     { label: "Home", to: "/" },
     { label: "About Us", to: "/about" },
-    { label: "Project", to: "/profile" }, // Note: You might want this to point to /projects or /project-details
     { label: "Solutions", to: "/solutions" },
     { label: "Projects", to: "/projects" },
     { label: "Financing", to: "/financing" },
@@ -27,18 +26,18 @@ function Navbar() {
 
   return (
     // CHANGE IS HERE: 
-    // 1. Removed 'z-2' class.
-    // 2. Added inline style for zIndex: 1050 to force it above everything.
-    // 3. Added background/backdropFilter to ensure content doesn't bleed through on scroll.
+    // 1. Removed backgroundColor and backdropFilter from here.
+    // 2. The <header> is now invisible; only the inner .glass-nav will show.
+    // 3. Changed py-2 to py-3 to give it a slightly more "floating" feel from the top.
     <header 
-      className="py-2 position-sticky top-0" 
+      className="py-3 position-sticky top-0 w-100" 
       style={{ 
-        zIndex: 1050, 
-        backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: ensures text is readable over hero
-        backdropFilter: 'blur(8px)' // Optional: Adds that modern glass effect
+        zIndex: 1050,
+        pointerEvents: 'none' // Allows clicking through the empty space around the navbar
       }}
     >
-      <nav className="container">
+      <nav className="container" style={{ pointerEvents: 'auto' }}>
+        {/* The .glass-nav class in your CSS handles the white pill look */}
         <div className="glass-nav d-flex align-items-center justify-content-between gap-3">
           <div className="d-flex align-items-center gap-2">
             <img
@@ -92,11 +91,11 @@ function Navbar() {
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.25 }}
-              className="mt-3 d-md-none border rounded-4 p-3 bg-white shadow-sm"
+              className="mt-2 d-md-none border rounded-4 p-3 bg-white shadow-lg"
             >
               <div className="d-flex flex-column gap-3">
                 {navLinks.map((item) => (
