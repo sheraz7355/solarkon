@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faUserCircle, faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
+// 1. Added faHome to imports
+import { faBell, faUserCircle, faCog, faSearch, faHome } from '@fortawesome/free-solid-svg-icons';
 
 function TopNavbar() {
   return (
@@ -16,6 +17,8 @@ function TopNavbar() {
     >
       <div className="container-fluid px-2 px-sm-3 px-md-4 px-lg-5" style={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
         <div className="d-flex align-items-center justify-content-between py-2 py-sm-3" style={{ width: '100%', minWidth: 0, flexWrap: 'nowrap' }}>
+          
+          {/* ... Logo/Title Section (Unchanged) ... */}
           <div className="admin-navbar-content fade-up d-flex align-items-center gap-1 gap-sm-2 gap-md-3" style={{ minWidth: 0, flexShrink: 1, overflow: 'hidden' }}>
             <div 
               className="d-none d-md-block"
@@ -53,6 +56,44 @@ function TopNavbar() {
           </div>
           
           <div className="d-flex align-items-center gap-1 gap-sm-2 gap-md-3" style={{ flexShrink: 0, minWidth: 0 }}>
+            
+            {/* --- HOME BUTTON START --- */}
+            {/* CHANGED: Used <a> tag directly instead of <button> for valid HTML */}
+            <a
+              href="/"
+              className="btn position-relative p-1 p-sm-2 text-decoration-none rounded-3 admin-search-btn"
+              aria-label="Go to Home"
+              style={{ 
+                background: 'linear-gradient(135deg, rgba(45, 80, 22, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%)',
+                border: '1px solid rgba(45, 80, 22, 0.1)',
+                color: '#2D5016',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                width: '34px', // Standardized width to match other icons
+                height: '34px',
+                minWidth: '34px',
+                maxWidth: '34px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                padding: 0,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(45, 80, 22, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(45, 80, 22, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(45, 80, 22, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%)';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              {/* Added Icon instead of text to fit the UI better */}
+              <FontAwesomeIcon icon={faHome} style={{ fontSize: 'clamp(0.8rem, 2vw, 0.95rem)' }} />
+            </a>
+            {/* --- HOME BUTTON END --- */}
+
             {/* Search Button */}
             <button
               className="btn position-relative p-1 p-sm-2 text-decoration-none rounded-3 admin-search-btn"

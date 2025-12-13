@@ -1,12 +1,25 @@
-// ContactMap - embedded map strip
+import React from 'react';
+
 function ContactMap() {
   return (
     <section className="section-shell pt-0" data-aos="fade-up">
-      <div className="container-fluid px-0">
-        <div style={{ height: 260, width: '100%' }}>
+      {/* 
+         1. Changed 'container-fluid' to 'container'. 
+         This limits the width to standard breakpoints (aligning with your form).
+      */}
+      <div className="container">
+        <div 
+          style={{ 
+            height: 350, // Adjusted height for better visibility
+            width: '100%', 
+            borderRadius: 16, 
+            overflow: 'hidden', // Ensures the iframe respects the rounded corners
+            position: 'relative'
+          }}
+        >
           <iframe
-            title="SOLARKON location map"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24172.89974390258!2d-73.952407!3d40.719526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQzJzEwLjMiTiA3M8KwNTcnMzIuMiJX!5e0!3m2!1sen!2sus!4v1700000000000"
+            title="SOLARKON Location - Johar Town"
+            src="https://maps.google.com/maps?q=94+J1+Block+J1+Phase+2+Johar+Town%2C+Lahore%2C+Pakistan&t=&z=15&ie=UTF8&iwloc=&output=embed"
             width="100%"
             height="100%"
             style={{ border: 0 }}

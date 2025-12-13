@@ -156,39 +156,7 @@ function HeroSection() {
           </div>
         </div>
 
-        {/* --- SECTION 2: FINANCING OPTIONS --- */}
-        <div className="card border-0 shadow-lg rounded-4 mb-4">
-          <div className="card-header bg-white p-4 border-bottom">
-            <h5 className="mb-0 fw-bold text-success">
-              <FontAwesomeIcon icon={faCoins} className="me-2" /> Financing Options
-            </h5>
-          </div>
-          <div className="card-body p-4">
-            <div className="row g-3">
-              {formData.financing.map((item, index) => (
-                <div key={index} className="col-md-6">
-                  <div className="p-3 border rounded-3 bg-light h-100">
-                    <span className="badge bg-success mb-2">Option {index + 1}</span>
-                    <input 
-                      type="text" 
-                      className="form-control form-control-sm mb-2 fw-bold"
-                      value={item.title} 
-                      onChange={(e) => handleFinanceChange(index, 'title', e.target.value)}
-                      placeholder="Title" 
-                    />
-                    <textarea 
-                      className="form-control form-control-sm"
-                      value={item.desc}
-                      onChange={(e) => handleFinanceChange(index, 'desc', e.target.value)}
-                      placeholder="Description"
-                      rows="2"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        
 
         {/* --- SECTION 3: STATISTICS --- */}
         <div className="card border-0 shadow-lg rounded-4 mb-4">

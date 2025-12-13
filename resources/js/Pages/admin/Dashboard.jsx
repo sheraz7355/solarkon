@@ -14,8 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  LineChart,
-  Line,
+ 
   AreaChart,
   Area,
   XAxis,
