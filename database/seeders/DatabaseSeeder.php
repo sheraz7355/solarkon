@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-                HeroSections::factory(10)->create();
+                HeroSections::factory(1)->create();
 
     }
 }

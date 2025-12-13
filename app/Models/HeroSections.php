@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class HeroSections extends Model
 {
-    /** @use HasFactory<\Database\Factories\HeroSectionsFactory> */
     use HasFactory;
 
+    // Allow mass assignment
     protected $guarded = [];
 
-     protected $casts = [
+    // Automatically convert JSON from DB to PHP Array
+    protected $casts = [
         'slider_url' => 'array',
-        'stats' => 'array',
+        'stats'      => 'array',
     ];
 }

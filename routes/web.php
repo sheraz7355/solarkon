@@ -9,6 +9,7 @@ Route::get('/admin/{any?}', function () {
     return Inertia::render('admin/AdminApp');
 })->where('any', '.*'); 
 
+Route::post('/hero-section', HeroSectionsController::class)->name('admin.hero.update');
 
 
 // 1. Home Page

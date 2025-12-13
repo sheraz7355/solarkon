@@ -17,22 +17,18 @@ class HeroSectionsFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(),
-            'description' => $this->faker->paragraph(),
-            'page_name' => $this->faker->randomElement(['home', 'about', 'contact', 'projects', 'solutions', 'financing']),
+             'title'      => 'Powering a Brighter, Greener Pakistan',
+            'description' => 'Solarkon Private Limited is a premier solar energy solutions provider in Pakistan, known for delivering high-performance systems tailored to residential, commercial, industrial, and agricultural needs.',
+            'page_name'   => 'home',
+            'slider_url'  => json_encode([
+                $this->faker->imageUrl(1200, 400, 'business'),
+                $this->faker->imageUrl(1200, 400, 'technology'),
+            ]),
+            'image_url'   => $this->faker->imageUrl(800, 600, 'solar'),
+            'stats'       => $this->faker->numberBetween(10, 500),
         ];
     }
 
-    public function withMedia(): static
-{
-    return $this->state(fn () => [
-        'slider_url' => [
-            fake()->imageUrl(1200, 400),
-            fake()->imageUrl(1200, 400),
-        ],
-        'image_url' => fake()->imageUrl(800, 600),
-        'stats'     => fake()->numberBetween(10, 500),
-    ]);
-}
+
 
 }

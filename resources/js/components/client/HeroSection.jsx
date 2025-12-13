@@ -3,11 +3,10 @@ import { HiArrowRight, HiArrowTopRightOnSquare } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from '@inertiajs/react';
 
-// 1. RE-INTRODUCE THE LOCAL IMAGE IMPORT (Fallback)
-// Ensure this path is correct relative to this file
+// Ensure this path matches where your image actually is. 
+// Based on previous logs, it might be '../../assets/solarimg-1.webp'
 import heroBackground from '../../assets/images/solarimg-1.webp'; 
 
-// Default images for the SLIDER (Fallback if admin list is empty)
 const defaultSliderImages = [
   'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=1200&q=80',
@@ -19,13 +18,15 @@ function HeroSection({ data }) {
   const title = data?.title || "Powering a Brighter, Greener Pakistan";
   const description = data?.description || "Solarkon Private Limited is a premier solar energy solutions provider in Pakistan, known for delivering high-performance systems tailored to residential, commercial, industrial, and agricultural needs.";
   
-  // Logic: Use DB Image -> If null, use Local Import
   const backgroundImage = data?.image_url || heroBackground;
 
-  // Logic: Use DB Slider -> If empty, use Default Array
-  const sliderImagesToUse = (data?.slider_url && data.slider_url.length > 0) 
+  // --- CRITICAL FIX START ---
+  // We strictly check Array.isArray(). 
+  // If data.slider_url is a String, this returns false, preventing the crash.
+  const sliderImagesToUse = (Array.isArray(data?.slider_url) && data.slider_url.length > 0) 
     ? data.slider_url 
     : defaultSliderImages;
+  // --- CRITICAL FIX END ---
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -34,7 +35,7 @@ function HeroSection({ data }) {
     // Only scroll if we have more than 1 image
     if (sliderImagesToUse.length > 1) {
         const interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % sliderImagesToUse.length);
+          setCurrentSlide((prev) => (prev + 1) % sliderImagesToUse.length);
         }, 4000); 
         return () => clearInterval(interval);
     }
@@ -46,7 +47,6 @@ function HeroSection({ data }) {
       className='position-relative overflow-hidden' 
       data-aos='fade-up'
       style={{
-        // Use the calculated backgroundImage variable
         backgroundImage: `url(${backgroundImage})`, 
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -131,6 +131,7 @@ function HeroSection({ data }) {
                 >
                   <AnimatePresence mode="wait">
                     <motion.img
+                      // KEY Change: Added key prop to force re-render on slide change
                       key={currentSlide}
                       src={sliderImagesToUse[currentSlide]}
                       initial={{ opacity: 0, scale: 1.1 }}
