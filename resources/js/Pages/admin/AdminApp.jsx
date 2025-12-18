@@ -6,7 +6,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 // const Dashboard = lazy(() => import('./Dashboard'));
 // This splits the code into small chunks.
 const Dashboard = lazy(() => import('./Dashboard'));
-const HeroSection = lazy(() => import('./HeroSection'));
+const Home = lazy(() => import('./Home'));
 const AdminProjects = lazy(() => import('./Projects'));
 const AdminProfile = lazy(() => import('./Profile'));
 const NavbarFooterContent = lazy(() => import('./NavbarFooterContent'));
@@ -36,7 +36,7 @@ export default function AdminApp() {
             <Route index element={<Navigate to="dashboard" replace />} />
             
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="hero-section" element={<HeroSection />} />
+            <Route path="home" element={<Home />} />
             <Route path="about-us" element={<AboutUs/>} />
             <Route path="solutions" element={<AdminSolutions/>} />
             <Route path="projects" element={<AdminProjects/>} />

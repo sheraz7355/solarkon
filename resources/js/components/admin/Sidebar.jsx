@@ -33,7 +33,7 @@ function Sidebar() {
   // you can use relative paths OR full paths. React Router v6 is smart enough to handle "/admin/..."
   const menuItems = [
     { icon: faHome, label: 'Dashboard', path: '/admin/dashboard' }, // Changed label to Dashboard
-    { icon: faLightbulb, label: 'Hero Section', path: '/admin/hero-section' },
+    { icon: faLightbulb, label: 'Home', path: '/admin/home' },
     { icon: faInfoCircle, label: 'About Us', path: '/admin/about-us' },
     { icon: faLightbulb, label: 'Solutions', path: '/admin/solutions' },
     { icon: faFolderOpen, label: 'Projects', path: '/admin/projects' },

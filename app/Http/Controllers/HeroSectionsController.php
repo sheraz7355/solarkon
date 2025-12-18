@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Storage;
 
 class HeroSectionsController extends Controller
 {
-    public function __invoke(Request $request)
+
+
+    
+    public function update(Request $request)
     {
         // 1. Validation
         $request->validate([
