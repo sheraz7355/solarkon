@@ -1,248 +1,149 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  HiClipboardDocumentCheck,
-  HiMagnifyingGlass,
-  HiWrenchScrewdriver,
-  HiCheckCircle,
-  HiWrench,
-} from "react-icons/hi2";
+import { motion } from "framer-motion";
 
-function StepsSection() {
-  const sectionRef = useRef(null);
-  const stepsRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
+const defaultData = {
+  main_heading: "Our Process Simplified",
+  main_description: "A transparent, step-by-step journey to energy independence.",
+  steps: []
+};
 
-  const steps = [
-    {
-      number: "1",
-      icon: <HiClipboardDocumentCheck size={32} />,
-      title: "Inquiry of System",
-      description: `Contact us to discuss your energy needs and requirements in detail. 
-      We will provide initial consultation, evaluate your current energy usage, 
-      and suggest suitable solar solutions tailored for your home or business.`,
-    },
-    {
-      number: "2",
-      icon: <HiMagnifyingGlass size={32} />,
-      title: "Engineering Team Site Survey",
-      description: `Our certified engineers visit your location to conduct a thorough assessment. 
-      They measure available space, evaluate sunlight exposure, and check existing electrical infrastructure.`,
-    },
-    {
-      number: "3",
-      icon: <HiWrenchScrewdriver size={32} />,
-      title: "Installation",
-      description: `Professional installation is carried out by our experienced technicians. 
-      We ensure proper panel placement, inverter setup, and electrical connections.`,
-    },
-    {
-      number: "4",
-      icon: <HiCheckCircle size={32} />,
-      title: "Completion of Task & Sign-off",
-      description: `System testing, commissioning, and final handover are completed to ensure full operational status. 
-      You can start generating clean energy immediately after the sign-off.`,
-    },
-    {
-      number: "5",
-      icon: <HiWrench size={32} />,
-      title: "After-Sales Services",
-      description: `We provide ongoing support, maintenance, and monitoring services for peace of mind. 
-      Regular inspections and troubleshooting are included.`,
-    },
-  ];
+function StepsSection({ steps }) {
+  const data = steps || defaultData;
+  const heading = data.main_heading || defaultData.main_heading;
+  const description = data.main_description || defaultData.main_description;
+  const timelineList = (data.steps && data.steps.length > 0) ? data.steps : [];
 
-  // Detect mobile
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  // --- HELPER: Styles the Heading Automatically ---
+  const renderStyledHeading = (text) => {
+    if (!text) return null;
+    const words = text.split(" ");
+    
+    // If it's just one word, return it in Dark Green
+    if (words.length === 1) {
+        return <span style={{ color: "#14532d" }}>{text}</span>;
+    }
 
-  // Scroll effect only for desktop
-  useEffect(() => {
-    if (isMobile) return;
-  
-    let rafId = null;
-    let currentScrollTop = 0;
-  
-    const animateScroll = (targetScroll) => {
-      currentScrollTop += (targetScroll - currentScrollTop) * 0.10; // easing
-      stepsRef.current.scrollTop = currentScrollTop;
-  
-      // Continue animating until close enough
-      if (Math.abs(targetScroll - currentScrollTop) > 0.5) {
-        rafId = requestAnimationFrame(() => animateScroll(targetScroll));
-      } else {
-        currentScrollTop = targetScroll; // snap exactly
-      }
-    };
-  
-    const handleScroll = () => {
-      const section = sectionRef.current;
-      const stepsBox = stepsRef.current;
-  
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.offsetHeight;
-      const windowHeight = window.innerHeight;
-      const scrollY = window.scrollY;
-  
-      const stepsScrollHeight = stepsBox.scrollHeight - stepsBox.clientHeight;
-      let targetScroll = 0;
-  
-      if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight - 50) {
-        const progress = (scrollY - sectionTop) / (sectionHeight - windowHeight);
-        targetScroll = progress * stepsScrollHeight;
-      } else if (scrollY >= sectionTop + sectionHeight - windowHeight) {
-        targetScroll = stepsScrollHeight;
-      } else if (scrollY < sectionTop) {
-        targetScroll = 0;
-      }
-  
-      // Cancel previous frame to avoid conflicts
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => animateScroll(targetScroll));
-    };
-  
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [isMobile]);
-  
+    // Pop the last word to make it the "Highlight"
+    const lastWord = words.pop(); 
+    const firstPart = words.join(" ");
+
+    return (
+      <>
+        {/* Top Part: Dark Green */}
+        <span style={{ color: "#14532d" }}>{firstPart}</span> 
+        <br />
+        {/* Bottom Part: Lighter/Bright Green */}
+        <span style={{ color: "#16a34a" }}>{lastWord}.</span> 
+      </>
+    );
+  };
 
   return (
-    <section ref={sectionRef} style={{ padding: "4rem 0", background: "#fff" }}>
+    <section style={{ backgroundColor: "#ffffff", padding: "100px 0" }}>
       <div className="container">
-        <div className="text-center mb-5">
-          <span
-            style={{
-              color: "#166534",
-              backgroundColor: "#D1FAE5",
-              padding: "0.5rem 1rem",
-              borderRadius: "20px",
-              fontWeight: 600,
-              fontSize: "1rem",
-            }}
-          >
-            Working Methodology
-          </span>
-          <h2
-            style={{
-              fontSize: isMobile ? "1.8rem" : "2.3rem",
-              color: "#14532d",
-              marginTop: "1rem",
-            }}
-          >
-            Installation Process
-          </h2>
-        </div>
-
-        <div
-          className="rounded-4 overflow-hidden d-flex flex-column flex-lg-row"
-          style={{
-            border: "2px solid #e2e8f0",
-            boxShadow: "0 8px 30px rgba(0,0,0,0.09)",
-          }}
-        >
-          {/* LEFT STATIC */}
-          <div
-            style={{
-              flex: isMobile ? "none" : "1",
-              borderRight: isMobile ? "none" : "2px solid #e2e8f0",
-              background: "linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%)",
-              padding: "2rem",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <span
-              style={{
-                color: "#fff",
-                backgroundColor: "rgba(255,255,255,0.2)",
-                padding: "0.5rem 1rem",
-                borderRadius: "20px",
-                fontSize: "1rem",
-                fontWeight: 600,
-                marginBottom: "1rem",
-              }}
-            >
-              Working Methodology
-            </span>
-            <h3 style={{ color: "#fff", fontSize: "1.6rem", marginBottom: "1rem" }}>
-              Our Process Flow
-            </h3>
-            <p style={{ color: "rgba(255,255,255,0.9)", lineHeight: 1.8, fontSize: "1.1rem" }}>
-              At Solarkon, we follow a systematic approach to ensure your solar installation is seamless and reliable. Each step is designed to provide maximum efficiency and transparency.
-            </p>
-          </div>
-
-          {/* RIGHT SCROLLABLE STEPS */}
-          <div
-            style={{
-              flex: isMobile ? "none" : "1",
-              height: isMobile ? "auto" : "520px",
-              overflowY: isMobile ? "visible" : "hidden",
-              padding: "2rem",
-            }}
-          >
-            <div
-              ref={stepsRef}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1.5rem",
-                height: isMobile ? "auto" : "100%",
-                overflowY: isMobile ? "auto" : "hidden",
-              }}
-            >
-              {steps.map((step) => (
-                <div
-                  key={step.number}
-                  style={{
-                    padding: "1.5rem",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: "12px",
-                    background: "#fff",
+        <div className="row">
+          
+          {/* --- LEFT SIDE --- */}
+          <div className="col-lg-5 mb-5 mb-lg-0">
+            <div style={{ position: "sticky", top: "150px" }}>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <span 
+                  style={{ 
+                    background: "#dcfce7", 
+                    color: "#166534", 
+                    padding: "8px 16px", 
+                    borderRadius: "50px", 
+                    fontSize: "0.85rem", 
+                    fontWeight: "700",
+                    textTransform: "uppercase",
+                    display: "inline-block",
+                    marginBottom: "1.5rem"
                   }}
                 >
-                  <div
-                    className="d-flex"
-                    style={{
-                      flexDirection: isMobile ? "column" : "row",
-                      alignItems: isMobile ? "center" : "flex-start",
-                      gap: "1rem",
-                      textAlign: isMobile ? "center" : "left",
-                    }}
-                  >
-                    <div
-                      className="d-flex align-items-center justify-content-center rounded-circle"
-                      style={{
-                        width: 64,
-                        height: 64,
-                        backgroundColor: "rgba(20, 83, 45, 0.1)",
-                        color: "#166534",
-                        flexShrink: 0,
-                        marginBottom: isMobile ? "1rem" : "0",
-                      }}
-                    >
-                      {step.icon}
-                    </div>
-                    <div>
-                      <h4 style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}>
-                        {step.number}. {step.title}
-                      </h4>
-                      <p style={{ fontSize: "1rem", lineHeight: 1.6 }}>{step.description}</p>
-                    </div>
-                  </div>
-                </div>
+                  Methodology
+                </span>
+
+                <h2 
+                  style={{ 
+                    fontSize: "3.5rem", 
+                    fontWeight: "800", 
+                    lineHeight: 1.1, 
+                    marginBottom: "1.5rem" 
+                  }}
+                >
+                  {renderStyledHeading(heading)}
+                </h2>
+
+                <p style={{ fontSize: "1.15rem", color: "#64748b", lineHeight: 1.7, maxWidth: "90%" }}>
+                   {description}
+                </p>
+              </motion.div>
+            </div>
+          </div>
+
+          {/* --- RIGHT SIDE --- */}
+          <div className="col-lg-6 offset-lg-1">
+            <div className="d-flex flex-column gap-4">
+              {timelineList.map((step, index) => (
+                <TimelineItem 
+                    key={index} 
+                    step={step} 
+                    number={index + 1} 
+                    isLast={index === timelineList.length - 1} 
+                />
               ))}
             </div>
           </div>
+
         </div>
       </div>
     </section>
+  );
+}
+
+// Sub-component remains the same
+function TimelineItem({ step, number, isLast }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5 }}
+      style={{ display: "flex", gap: "1.5rem" }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: "60px" }}>
+        <div 
+          style={{
+            width: "50px", height: "50px", background: "#f8fafc",
+            border: "1px solid #cbd5e1", borderRadius: "12px",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: "1.25rem", fontWeight: "700", color: "#334155", zIndex: 2
+          }}
+        >
+          {number < 10 ? `0${number}` : number}
+        </div>
+        {!isLast && (
+          <div style={{ width: "2px", flexGrow: 1, background: "#e2e8f0", margin: "10px 0", minHeight: "120px" }} />
+        )}
+      </div>
+
+      <div style={{ paddingBottom: isLast ? "0" : "3rem", paddingTop: "5px" }}>
+        <h3 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#1e293b", marginBottom: "1rem" }}>
+          {step.title}
+        </h3>
+        <p style={{ color: "#475569", fontSize: "1.05rem", lineHeight: "1.6", marginBottom: "1.5rem" }}>
+           {step.description}
+        </p>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "#f1f5f9", padding: "6px 16px", borderRadius: "50px", fontSize: "0.85rem", color: "#475569", fontWeight: "600", border: "1px solid #e2e8f0" }}>
+          <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#166534" }}></span>
+          Duration: {step.duration}
+        </div>
+      </div>
+    </motion.div>
   );
 }
 

@@ -10,37 +10,28 @@ function useCounter(targetValue, duration = 1500) {
 
   useEffect(() => {
     if (!targetValue || isNaN(targetValue)) return;
-
     if (inView && !hasAnimated.current) {
       hasAnimated.current = true;
       let startTime = null;
       const startValue = 0;
       const endValue = targetValue;
-
       const animate = (currentTime) => {
         if (startTime === null) startTime = currentTime;
         const progress = Math.min((currentTime - startTime) / duration, 1);
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
         const current = Math.floor(startValue + (endValue - startValue) * easeOutQuart);
         setCount(current);
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          setCount(endValue);
-        }
+        if (progress < 1) requestAnimationFrame(animate);
+        else setCount(endValue);
       };
       requestAnimationFrame(animate);
     }
   }, [inView, targetValue, duration]);
-
   return [count, ref];
 }
 
-// --- 2. StatCard (Refactored) ---
-// removed 'col' classes from here to keep it pure
+// --- 2. StatCard (Clean Version - No Watermark) ---
 const StatCard = ({ item, index }) => {
-  
   const parseValue = (str) => {
     const match = String(str).match(/(\d+)(.*)/);
     return match 
@@ -57,30 +48,52 @@ const StatCard = ({ item, index }) => {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: 0.08 + (index * 0.1) }}
-      className='h-100' // Ensure it fills the parent column
+      transition={{ duration: 0.8, delay: index * 0.15 }}
+      className='h-100'
     >
       <div 
-        className='h-100 rounded-4 p-4'
+        className='h-100 p-4 d-flex flex-column align-items-center justify-content-center position-relative'
         style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          border: '2px solid rgba(255, 255, 255, 0.3)',
-          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.1)',
-          transition: 'all 0.3s ease',
+          // SOFT NATURAL CARD
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          boxShadow: '0 20px 40px -15px rgba(20, 83, 45, 0.1)', // Soft diffuse shadow
+          borderBottom: '4px solid #dcfce7', // Subtle green foundation
+          transition: 'transform 0.4s ease, box-shadow 0.4s ease',
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-5px)';
-          e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.15)';
+          e.currentTarget.style.transform = 'translateY(-8px)';
+          e.currentTarget.style.boxShadow = '0 30px 60px -15px rgba(20, 83, 45, 0.2)';
+          e.currentTarget.style.borderBottomColor = '#22c55e'; // Highlight on hover
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.1)';
+          e.currentTarget.style.boxShadow = '0 20px 40px -15px rgba(20, 83, 45, 0.1)';
+          e.currentTarget.style.borderBottomColor = '#dcfce7';
         }}
       >
-        <div className='fw-bold' style={{ color: index === 0 ? '#166534' : '#22C55E', fontSize: '2.2rem' }}>
-          {isText ? suffix : <>{count}{suffix}</>}
+        {/* NUMBER: Deep Green */}
+        <div className='fw-bold mb-1 position-relative' style={{ lineHeight: 1, zIndex: 2 }}>
+            <span style={{ 
+                fontSize: '3.5rem', 
+                color: '#15803d', // Green-700
+                fontFamily: 'sans-serif',
+                fontWeight: 700,
+                letterSpacing: '-1.5px'
+            }}>
+                {isText ? suffix : <>{count}</>}
+            </span>
+            {!isText && <span style={{ fontSize: '1.5rem', color: '#86efac', marginLeft: '2px', fontWeight: 500 }}>{suffix}</span>}
         </div>
-        <div className='small text-uppercase' style={{ color: '#14532d', fontWeight: 600 }}>
+
+        {/* LABEL: Warm Grey */}
+        <div className='text-uppercase fw-bold mt-2 position-relative' 
+             style={{ 
+                 color: '#64748b', // Slate-500
+                 letterSpacing: '1.5px', 
+                 fontSize: '0.85rem',
+                 zIndex: 2
+             }}>
           {item.label}
         </div>
       </div>
@@ -88,9 +101,8 @@ const StatCard = ({ item, index }) => {
   );
 };
 
-// --- 3. Main Component ---
+// --- 3. Main Section ---
 function StatisticsSection({ stats }) {
-  // Fallback data
   const safeStats = stats && stats.length > 0 ? stats : [
     { label: 'Solar Installations', value: '700+' },
     { label: 'Total Capacity', value: '150MW+' },
@@ -100,18 +112,16 @@ function StatisticsSection({ stats }) {
   return (
     <section 
       className='section-shell position-relative' 
-      data-aos='fade-up'
       style={{
-        background: 'linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%)',
-        paddingTop: '4rem',
-        paddingBottom: '4rem',
+        // NATURAL GRADIENT: Soft Mint to White
+        background: 'linear-gradient(to bottom, #f0fdf4 0%, #ffffff 100%)', 
+        paddingTop: '5rem',
+        paddingBottom: '5rem',
       }}
     >
       <div className='container position-relative'>
-        {/* The ROW handles the grid layout */}
-        <div className='row g-3 g-lg-4 text-center'>
+        <div className='row g-4 justify-content-center text-center'>
           {safeStats.map((stat, index) => (
-            // WRAPPER DIV: This fixes the "Exploding" layout
             <div key={index} className="col-12 col-md-4">
                <StatCard item={stat} index={index} />
             </div>

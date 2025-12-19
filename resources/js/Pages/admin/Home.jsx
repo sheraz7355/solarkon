@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AdminStepsForm from "../../components/admin/AdminStepsForm"; 
 import { 
   faHeading, faImages, faSave, faTrash, faChartLine, 
   faUpload, faImage, faExclamationTriangle, faCheckCircle, 
@@ -9,27 +10,26 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 // ==========================================
-// 1. CHILD COMPONENT: The Actual Form
+// 1. CHILD: HERO FORM COMPONENT
 // ==========================================
 function HeroForm({ initialData, onRefresh }) {
-  
-  // Initialize Form
   const { data, setData, post, processing, isDirty, reset } = useForm({
     page_name: 'home', 
-    title: initialData.title || '',
-    description: initialData.description || '',
+    title: initialData?.title || '',
+    description: initialData?.description || '',
     image: null, 
-    current_image: initialData.image_url || null, 
-    slider: initialData.slider_url || [], 
-    // Ensure stats is an array. If empty from DB, use defaults.
-    stats: (initialData.stats && initialData.stats.length > 0) ? initialData.stats : [
+    current_image: initialData?.image_url || null, 
+    
+    // 👇 FIX: Force it to be an array. If it's not an array, use [].
+    slider: Array.isArray(initialData?.slider_url) ? initialData.slider_url : [], 
+    
+    stats: (initialData?.stats && initialData.stats.length > 0) ? initialData.stats : [
       { label: 'Solar Installations', value: '700+' },
       { label: 'Total Capacity', value: '150MW+' },
       { label: 'Pipeline Projects', value: '100MW+' }
     ]
-  });
+});
 
-  // Safety Lock
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (isDirty) { e.preventDefault(); e.returnValue = ''; }
@@ -37,8 +37,6 @@ function HeroForm({ initialData, onRefresh }) {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [isDirty]);
-
-  // --- HELPERS ---
 
   const getPreview = (fileOrUrl) => {
     if (!fileOrUrl) return null;
@@ -53,15 +51,9 @@ function HeroForm({ initialData, onRefresh }) {
     setData('slider', data.slider.filter((_, i) => i !== index));
   };
 
-  // ✅ FIXED: IMMUTABLE STATE UPDATE
-  // This ensures Inertia detects the change correctly
   const handleStatChange = (index, field, value) => {
     const newStats = data.stats.map((stat, i) => {
-        if (i === index) {
-            // Create a completely new object for the updated row
-            return { ...stat, [field]: value };
-        }
-        // Return the original object for other rows
+        if (i === index) return { ...stat, [field]: value };
         return stat;
     });
     setData('stats', newStats);
@@ -72,94 +64,81 @@ function HeroForm({ initialData, onRefresh }) {
     post('/hero-section', {
         forceFormData: true, 
         onSuccess: () => {
-            onRefresh(); // Refresh parent to reset 'isDirty'
+            onRefresh(); 
         },
     });
   };
 
   return (
-    <>
-      {/* UNSAVED CHANGES BAR */}
+    <form onSubmit={handleSubmit} className="mb-5 position-relative">
       {isDirty && (
         <div className="position-fixed top-0 start-0 w-100 bg-warning text-dark p-3 text-center fw-bold shadow-lg d-flex align-items-center justify-content-center gap-2" 
              style={{ zIndex: 1060, animation: 'slideDown 0.3s ease' }}>
           <FontAwesomeIcon icon={faExclamationTriangle} />
-          <span>You have unsaved changes. Don't forget to save!</span>
+          <span>You have unsaved changes in the Hero Section.</span>
         </div>
       )}
 
-      {/* Header */}
-      <div className="mb-5 mt-4">
-        <h2 className="fw-bold mb-1" style={{ color: '#14532d' }}>Home Hero Manager</h2>
-        <p className="text-muted mb-0">Edit the content visible on the homepage.</p>
+      <div className="d-flex align-items-center mb-4">
+        <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}>
+          <span className="fw-bold">1</span>
+        </div>
+        <div>
+           <h4 className="fw-bold mb-0 text-dark">Hero Section</h4>
+           <p className="text-muted small mb-0">Main banner and statistics</p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <input type="hidden" name="page_name" value={data.page_name} />
-
-        {/* SECTION 1: TITLE & BG */}
-        <div className="card border-0 shadow-sm rounded-4 mb-4">
-          <div className="card-header bg-white p-4 border-bottom">
-            <h5 className="mb-0 fw-bold text-success"><FontAwesomeIcon icon={faHeading} className="me-2"/> Title & Background</h5>
-          </div>
-          <div className="card-body p-4">
-            <div className="row g-4">
-              <div className="col-md-8">
-                <div className="mb-3">
-                    <label className="form-label fw-bold small text-muted">Heading</label>
-                    <input type="text" value={data.title} onChange={e => setData('title', e.target.value)} className="form-control form-control-lg fw-bold" />
-                </div>
-                <div>
-                    <label className="form-label fw-bold small text-muted">Description</label>
-                    <textarea value={data.description} onChange={e => setData('description', e.target.value)} className="form-control" rows="4" />
-                </div>
+      <div className="card border-0 shadow-sm rounded-4 mb-4">
+        <div className="card-header bg-white p-4 border-bottom">
+          <h5 className="mb-0 fw-bold text-success"><FontAwesomeIcon icon={faHeading} className="me-2"/> Title & Background</h5>
+        </div>
+        <div className="card-body p-4">
+          <div className="row g-4">
+            <div className="col-md-8">
+              <div className="mb-3">
+                  <label className="form-label fw-bold small text-muted">Heading</label>
+                  <input type="text" value={data.title} onChange={e => setData('title', e.target.value)} className="form-control form-control-lg fw-bold" />
               </div>
-              <div className="col-md-4">
-                <label className="form-label fw-bold small text-muted">Background Image</label>
-                <div className="border rounded-3 p-3 text-center bg-light position-relative" style={{ height: '200px' }}>
-                    {(data.image || data.current_image) ? (
-                        <img src={data.image ? getPreview(data.image) : getPreview(data.current_image)} alt="BG" className="w-100 h-100 object-fit-cover rounded-2" />
-                    ) : (
-                        <div className="d-flex flex-column justify-content-center h-100 text-muted">
-                            <FontAwesomeIcon icon={faImage} size="2x" className="mb-2"/> <small>No Image</small>
-                        </div>
-                    )}
-                    {data.image && <div className="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow-sm">New</div>}
-                    <input type="file" accept="image/*" className="position-absolute top-0 start-0 w-100 h-100 opacity-0" style={{ cursor: 'pointer' }} onChange={e => setData('image', e.target.files[0])} />
-                </div>
+              <div>
+                  <label className="form-label fw-bold small text-muted">Description</label>
+                  <textarea value={data.description} onChange={e => setData('description', e.target.value)} className="form-control" rows="4" />
+              </div>
+            </div>
+            <div className="col-md-4">
+              <label className="form-label fw-bold small text-muted">Background Image</label>
+              <div className="border rounded-3 p-3 text-center bg-light position-relative" style={{ height: '200px' }}>
+                  {(data.image || data.current_image) ? (
+                      <img src={data.image ? getPreview(data.image) : getPreview(data.current_image)} alt="BG" className="w-100 h-100 object-fit-cover rounded-2" />
+                  ) : (
+                      <div className="d-flex flex-column justify-content-center h-100 text-muted">
+                          <FontAwesomeIcon icon={faImage} size="2x" className="mb-2"/> <small>No Image</small>
+                      </div>
+                  )}
+                  {data.image && <div className="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow-sm">New</div>}
+                  <input type="file" accept="image/*" className="position-absolute top-0 start-0 w-100 h-100 opacity-0" style={{ cursor: 'pointer' }} onChange={e => setData('image', e.target.files[0])} />
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* SECTION 2: STATS (DYNAMIC EDITING) */}
-        <div className="card border-0 shadow-sm rounded-4 mb-4">
+      <div className="card border-0 shadow-sm rounded-4 mb-4">
            <div className="card-header bg-white p-4 border-bottom">
              <h5 className="mb-0 fw-bold text-success"><FontAwesomeIcon icon={faChartLine} className="me-2"/> Statistics</h5>
            </div>
            <div className="card-body p-4">
               <div className="row g-3">
-                 {/* Map over the stats array so both labels and values are editable */}
                  {data.stats.map((stat, index) => (
                     <div key={index} className="col-md-4">
                        <div className="p-3 border rounded bg-white h-100">
                           <div className="mb-3">
                               <label className="small fw-bold text-muted mb-1">Label</label>
-                              <input 
-                                type="text" 
-                                className="form-control form-control-sm" 
-                                value={stat.label} 
-                                onChange={(e) => handleStatChange(index, 'label', e.target.value)} 
-                              />
+                              <input type="text" className="form-control form-control-sm" value={stat.label} onChange={(e) => handleStatChange(index, 'label', e.target.value)} />
                           </div>
                           <div>
                               <label className="small fw-bold text-muted mb-1">Value</label>
-                              <input 
-                                type="text" 
-                                className="form-control fw-bold text-success" 
-                                value={stat.value} 
-                                onChange={(e) => handleStatChange(index, 'value', e.target.value)} 
-                              />
+                              <input type="text" className="form-control fw-bold text-success" value={stat.value} onChange={(e) => handleStatChange(index, 'value', e.target.value)} />
                           </div>
                        </div>
                     </div>
@@ -168,8 +147,7 @@ function HeroForm({ initialData, onRefresh }) {
            </div>
         </div>
 
-        {/* SECTION 3: SLIDER */}
-        <div className="card border-0 shadow-sm rounded-4 mb-4">
+      <div className="card border-0 shadow-sm rounded-4 mb-4">
           <div className="card-header bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
             <h5 className="mb-0 fw-bold text-success"><FontAwesomeIcon icon={faImages} className="me-2"/> Financing Slider</h5>
             <label className="btn btn-sm btn-success text-white shadow-sm">
@@ -190,77 +168,106 @@ function HeroForm({ initialData, onRefresh }) {
               {data.slider.length === 0 && <div className="col-12 py-5 text-center text-muted border rounded bg-light border-dashed">No slider images found.</div>}
             </div>
           </div>
-        </div>
+      </div>
 
-        {/* ACTION BAR */}
-        <div className="sticky-bottom bg-white border-top py-3 px-4 shadow-lg d-flex justify-content-between align-items-center rounded-top-3" style={{ zIndex: 999 }}> 
-           <div className="d-flex align-items-center gap-3">
-              {isDirty ? <span className="text-warning fw-bold small"><FontAwesomeIcon icon={faExclamationTriangle}/> Unsaved Changes</span> : <span className="text-success fw-bold small"><FontAwesomeIcon icon={faCheckCircle}/> All Saved</span>}
-              {isDirty && <button type="button" onClick={() => reset()} className="btn btn-sm btn-outline-danger rounded-pill px-3"><FontAwesomeIcon icon={faRotateLeft} className="me-2" /> Discard</button>}
-           </div>
-           <button type="submit" disabled={processing || !isDirty} className={`btn btn-lg px-5 rounded-pill ${isDirty ? 'btn-success' : 'btn-secondary'}`}><FontAwesomeIcon icon={faSave} className="me-2" /> {processing ? 'Saving...' : 'Save Changes'}</button>
-        </div>
-      </form>
-    </>
+      <div className="d-flex justify-content-end">
+           {isDirty && <button type="button" onClick={() => reset()} className="btn btn-outline-danger rounded-pill px-4 me-2"><FontAwesomeIcon icon={faRotateLeft} className="me-2" /> Discard</button>}
+           <button type="submit" disabled={processing || !isDirty} className={`btn px-5 rounded-pill ${isDirty ? 'btn-success' : 'btn-secondary'}`}><FontAwesomeIcon icon={faSave} className="me-2" /> {processing ? 'Saving Hero...' : 'Save Hero Changes'}</button>
+      </div>
+    </form>
   );
 }
 
 // ==========================================
-// 2. PARENT CONTAINER: Fetches Data First
+// 2. PARENT: ADMIN HOME PAGE
 // ==========================================
-export default function Home() {
-  const [dbData, setDbData] = useState(null);
+
+
+export default function AdminHome() {
+  const [heroData, setHeroData] = useState(null);
+  const [stepsData, setStepsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0); 
 
+  // Fetch All Data
   useEffect(() => {
     setLoading(true);
-    axios.get('/hero-sections')
-      .then(response => {
-        setDbData(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("API Error:", error);
-        setFetchError(error.response?.data?.message || error.message);
-        setLoading(false);
-      });
+    const fetchData = async () => {
+        try {
+            const [heroRes, stepsRes] = await Promise.all([
+                axios.get('/hero-sections'),
+                axios.get('/work-data').catch(() => ({ data: null })) 
+            ]);
+            setHeroData(heroRes.data);
+            setStepsData(stepsRes.data);
+            setLoading(false);
+        } catch (error) {
+            console.error("API Error:", error);
+            setFetchError(error.response?.data?.message || "Failed to load data.");
+            setLoading(false);
+        }
+    };
+    fetchData();
   }, [refreshKey]); 
 
-  // Loading View
-  if (loading) {
-      return (
-          <div className="d-flex justify-content-center align-items-center vh-100" style={{ background: '#f8faf9' }}>
-              <div className="text-center text-success">
-                  <FontAwesomeIcon icon={faSpinner} spin size="3x" />
-                  <p className="mt-3 fw-bold">Loading Hero Data...</p>
-              </div>
+  if (loading) return (
+      <div className="d-flex justify-content-center align-items-center vh-100" style={{ background: '#f8faf9' }}>
+          <div className="text-center text-success">
+              <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+              <p className="mt-3 fw-bold">Loading Content...</p>
           </div>
-      );
-  }
+      </div>
+  );
 
-  // Error View
-  if (fetchError) {
-      return (
-          <div className="d-flex justify-content-center align-items-center vh-100" style={{ background: '#f8faf9' }}>
-              <div className="text-center text-danger p-4 border rounded bg-white shadow-sm">
-                  <FontAwesomeIcon icon={faBug} size="3x" className="mb-3" />
-                  <h4 className="fw-bold">Failed to Load</h4>
-                  <p className="text-muted">{fetchError}</p>
-                  <button onClick={() => window.location.reload()} className="btn btn-outline-danger mt-2">Retry</button>
-              </div>
+  if (fetchError) return (
+      <div className="d-flex justify-content-center align-items-center vh-100" style={{ background: '#f8faf9' }}>
+          <div className="text-center text-danger p-4 border rounded bg-white shadow-sm">
+              <FontAwesomeIcon icon={faBug} size="3x" className="mb-3" />
+              <h4 className="fw-bold">Failed to Load</h4>
+              <p className="text-muted">{fetchError}</p>
+              <button onClick={() => window.location.reload()} className="btn btn-outline-danger mt-2">Retry</button>
           </div>
-      );
-  }
+      </div>
+  );
 
   return (
     <div className="container-fluid px-4 py-5" style={{ background: '#f8faf9', minHeight: '100vh' }}>
+        
+        <div className="mb-5">
+            <h2 className="fw-bold mb-1" style={{ color: '#14532d' }}>Website Content Manager</h2>
+            <p className="text-muted mb-0">Manage the content for the Home Page.</p>
+        </div>
+
+        {/* 1. HERO FORM */}
+        {/* Assumes HeroForm is imported and accepts these props */}
         <HeroForm 
-            key={refreshKey} 
-            initialData={dbData} 
+            key={`hero-${refreshKey}`} 
+            initialData={heroData || {}} 
             onRefresh={() => setRefreshKey(k => k + 1)} 
         />
+
+        <hr className="my-5 border-secondary opacity-25" />
+
+        {/* 2. STEPS FORM */}
+        <div className="d-flex align-items-center mb-4">
+            <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}>
+                <span className="fw-bold">2</span>
+            </div>
+            <div>
+                <h4 className="fw-bold mb-0 text-dark">Methodology Steps</h4>
+                <p className="text-muted small mb-0">The scrolling workflow section</p>
+            </div>
+        </div>
+
+        {/* ✅ Updated: Now acts just like HeroForm */}
+        <AdminStepsForm 
+            key={`steps-${refreshKey}`} // Force re-render on save to reset isDirty
+            initialData={stepsData} 
+            onRefresh={() => setRefreshKey(k => k + 1)} 
+        />
+        
+        <div style={{ height: '100px' }}></div>
     </div>
   );
 }

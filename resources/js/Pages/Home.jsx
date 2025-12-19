@@ -9,14 +9,14 @@ import TestimonialsSection from '@/components/client/TestimonialsSection';
 import CTASection from '@/components/client/CTASection';
 import Footer from '@/components/client/Footer';
 
-function Home({heroContent,heroStats}) {
+function Home({heroContent,heroStats,methodologyData}) {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
       <main className="flex-grow-1">
         <HeroSection data = {heroContent} />
         <StatisticsSection stats = {heroStats} />
-        <StepsSection />
+        <StepsSection steps = {methodologyData} />
         <ProjectHighlights />
         <ClientLogosSection />
         <TestimonialsSection />

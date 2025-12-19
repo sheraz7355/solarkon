@@ -4,13 +4,13 @@ use App\Http\Controllers\HeroSectionsController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-// ✅ 1. API ROUTES MUST COME FIRST
+Route::get('/work-data',[HomeController::class,'getMethadologyData'])->name('admin.work-data');
 Route::get('/hero-sections', [HomeController::class, 'getHeroData'])->name('admin.getHeroData');
 Route::post('/hero-section', [HeroSectionsController::class, 'update'])->name('admin.hero.update');
+Route::post('/work-data',[HomeController::class,'updateData'])->name('admin.work-data.update');
 
 
-// ✅ 2. Then Specific Pages
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', function () { return Inertia::render('About'); })->name('about');
 Route::get('/contact', function () {return Inertia::render('Contact');})->name('contact');
