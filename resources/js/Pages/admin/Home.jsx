@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AdminStepsForm from "../../components/admin/AdminStepsForm"; 
+import AdminPartnersForm from "../../components/admin/AdminPartnersForm";
+import AdminStepsForm from "../../components/admin/AdminStepsForm"; // Import new form
 import { 
   faHeading, faImages, faSave, faTrash, faChartLine, 
   faUpload, faImage, faExclamationTriangle, faCheckCircle, 
@@ -182,92 +183,73 @@ function HeroForm({ initialData, onRefresh }) {
 // 2. PARENT: ADMIN HOME PAGE
 // ==========================================
 
-
 export default function AdminHome() {
   const [heroData, setHeroData] = useState(null);
   const [stepsData, setStepsData] = useState(null);
+  const [logosData, setLogosData] = useState([]); // New state for logos
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0); 
 
-  // Fetch All Data
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
         try {
-            const [heroRes, stepsRes] = await Promise.all([
+            const [heroRes, stepsRes, logosRes] = await Promise.all([
                 axios.get('/hero-sections'),
-                axios.get('/work-data').catch(() => ({ data: null })) 
+                axios.get('/work-data'),
+                axios.get('/logos')
             ]);
             setHeroData(heroRes.data);
             setStepsData(stepsRes.data);
+            setLogosData(logosRes.data);
             setLoading(false);
         } catch (error) {
             console.error("API Error:", error);
-            setFetchError(error.response?.data?.message || "Failed to load data.");
+            setFetchError("Failed to load content data.");
             setLoading(false);
         }
     };
     fetchData();
   }, [refreshKey]); 
 
-  if (loading) return (
-      <div className="d-flex justify-content-center align-items-center vh-100" style={{ background: '#f8faf9' }}>
-          <div className="text-center text-success">
-              <FontAwesomeIcon icon={faSpinner} spin size="3x" />
-              <p className="mt-3 fw-bold">Loading Content...</p>
-          </div>
-      </div>
-  );
-
-  if (fetchError) return (
-      <div className="d-flex justify-content-center align-items-center vh-100" style={{ background: '#f8faf9' }}>
-          <div className="text-center text-danger p-4 border rounded bg-white shadow-sm">
-              <FontAwesomeIcon icon={faBug} size="3x" className="mb-3" />
-              <h4 className="fw-bold">Failed to Load</h4>
-              <p className="text-muted">{fetchError}</p>
-              <button onClick={() => window.location.reload()} className="btn btn-outline-danger mt-2">Retry</button>
-          </div>
-      </div>
-  );
+  if (loading) return <div className="vh-100 d-flex justify-content-center align-items-center"><FontAwesomeIcon icon={faSpinner} spin size="3x" className="text-success"/></div>;
 
   return (
     <div className="container-fluid px-4 py-5" style={{ background: '#f8faf9', minHeight: '100vh' }}>
-        
-        <div className="mb-5">
+        <div className="mb-4">
             <h2 className="fw-bold mb-1" style={{ color: '#14532d' }}>Website Content Manager</h2>
             <p className="text-muted mb-0">Manage the content for the Home Page.</p>
         </div>
 
-        {/* 1. HERO FORM */}
-        {/* Assumes HeroForm is imported and accepts these props */}
-        <HeroForm 
-            key={`hero-${refreshKey}`} 
-            initialData={heroData || {}} 
-            onRefresh={() => setRefreshKey(k => k + 1)} 
-        />
+        {/* 1. HERO SECTION */}
+        <HeroForm key={`hero-${refreshKey}`} initialData={heroData || {}} onRefresh={() => setRefreshKey(k => k + 1)} />
 
-        <hr className="my-5 border-secondary opacity-25" />
+        <hr className="my-5 opacity-25" />
 
-        {/* 2. STEPS FORM */}
+        {/* 2. METHODOLOGY SECTION */}
         <div className="d-flex align-items-center mb-4">
-            <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}>
-                <span className="fw-bold">2</span>
-            </div>
+            <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}><span className="fw-bold">2</span></div>
             <div>
                 <h4 className="fw-bold mb-0 text-dark">Methodology Steps</h4>
                 <p className="text-muted small mb-0">The scrolling workflow section</p>
             </div>
         </div>
+        <AdminStepsForm key={`steps-${refreshKey}`} initialData={stepsData} onRefresh={() => setRefreshKey(k => k + 1)} />
 
-        {/* ✅ Updated: Now acts just like HeroForm */}
-        <AdminStepsForm 
-            key={`steps-${refreshKey}`} // Force re-render on save to reset isDirty
-            initialData={stepsData} 
-            onRefresh={() => setRefreshKey(k => k + 1)} 
-        />
+        <hr className="my-5 opacity-25" />
+
+        {/* 3. PARTNER LOGOS SECTION */}
+        <div className="d-flex align-items-center mb-4">
+            <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}><span className="fw-bold">3</span></div>
+            <div>
+                <h4 className="fw-bold mb-0 text-dark">Partner Logos</h4>
+                <p className="text-muted small mb-0">Brands shown in the partners slider</p>
+            </div>
+        </div>
+        <AdminPartnersForm key={`logos-${refreshKey}`} initialData={logosData} onRefresh={() => setRefreshKey(k => k + 1)} />
         
-        <div style={{ height: '100px' }}></div>
+        <div style={{ height: '80px' }}></div>
     </div>
   );
 }

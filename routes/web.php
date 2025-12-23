@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 Route::get('/work-data',[HomeController::class,'getMethadologyData'])->name('admin.work-data');
 Route::get('/hero-sections', [HomeController::class, 'getHeroData'])->name('admin.getHeroData');
+Route::get('/logos',[HomeController::class,'getLogos'])->name('admin.getLogos');
 Route::post('/hero-section', [HeroSectionsController::class, 'update'])->name('admin.hero.update');
 Route::post('/work-data',[HomeController::class,'updateData'])->name('admin.work-data.update');
+Route::post('/logos',[HomeController::class,'updateLogos'])->name('admin.updateLogos');
 
 
 

@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\HeroSections; // Ensure this matches your actual model filename
 use App\Models\MethodologySection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use App\Models\PartnerLogo;
+
 
 class HomeController extends Controller
 {
@@ -16,11 +19,14 @@ class HomeController extends Controller
         
         // Fetch methodology data for the frontend props
         $methodologyData = MethodologySection::first();
+         $logosRecord = PartnerLogo::first();
+    $partnerLogos = $logosRecord ? $logosRecord->logos : [];
 
         return Inertia::render('Home', [
             'heroContent' => $heroData,
             'heroStats'   => $heroStats,
-            'methodologyData' => $methodologyData // Pass this so the home page displays it
+            'methodologyData' => $methodologyData,
+            'partnerLogos' => $partnerLogos // Pass this so the home page displays it
         ]);
     }
 
@@ -75,4 +81,43 @@ class HomeController extends Controller
         // 3. Return success
         return redirect()->back()->with('success', 'Methodology section saved!');
     }
+
+   
+
+public function getLogos()
+{
+    $data = PartnerLogo::first();
+    // Return empty array if no record exists yet
+    return response()->json($data ? $data->logos : []);
+}
+
+public function updateLogos(Request $request)
+{
+    $request->validate([
+        'logos' => 'nullable|array',
+        'logos.*.file' => 'nullable|image|max:2048', // for new uploads
+        'logos.*.url' => 'nullable|string',          // for existing ones
+    ]);
+
+    $storedLogos = [];
+
+    if ($request->has('logos')) {
+        foreach ($request->logos as $index => $logo) {
+            // Case 1: New file upload
+            if ($request->hasFile("logos.$index.file")) {
+                $file = $request->file("logos.$index.file");
+                $path = $file->store('logos', 'public');
+                $storedLogos[] = Storage::url($path);
+            } 
+            // Case 2: Keep existing logo
+            elseif (isset($logo['url'])) {
+                $storedLogos[] = $logo['url'];
+            }
+        }
+    }
+
+    PartnerLogo::updateOrCreate(['id' => 1], ['logos' => $storedLogos]);
+
+    return redirect()->back()->with('success', 'Partners updated!');
+}
 }
