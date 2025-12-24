@@ -91,33 +91,25 @@ public function getLogos()
     return response()->json($data ? $data->logos : []);
 }
 
-public function updateLogos(Request $request)
-{
-    $request->validate([
-        'logos' => 'nullable|array',
-        'logos.*.file' => 'nullable|image|max:2048', // for new uploads
-        'logos.*.url' => 'nullable|string',          // for existing ones
-    ]);
+ public function updateLogos(Request $request)
+    {
+        // 1. Validate: We now expect a simple array of strings (URLs)
+        $data = $request->validate([
+            'logos' => 'nullable|array',
+            'logos.*' => 'string', // Ensure every item is just a text URL
+        ]);
 
-    $storedLogos = [];
+        // 2. Extract the array (or empty if null)
+        $logoUrls = $data['logos'] ?? [];
 
-    if ($request->has('logos')) {
-        foreach ($request->logos as $index => $logo) {
-            // Case 1: New file upload
-            if ($request->hasFile("logos.$index.file")) {
-                $file = $request->file("logos.$index.file");
-                $path = $file->store('logos', 'public');
-                $storedLogos[] = Storage::url($path);
-            } 
-            // Case 2: Keep existing logo
-            elseif (isset($logo['url'])) {
-                $storedLogos[] = $logo['url'];
-            }
-        }
+        // 3. Save directly. 
+        // No need to loop, check for files, or store files. 
+        // The Media Manager already did the hard work.
+        PartnerLogo::updateOrCreate(
+            ['id' => 1], 
+            ['logos' => $logoUrls]
+        );
+
+        return redirect()->back()->with('success', 'Partners updated successfully!');
     }
-
-    PartnerLogo::updateOrCreate(['id' => 1], ['logos' => $storedLogos]);
-
-    return redirect()->back()->with('success', 'Partners updated!');
-}
 }

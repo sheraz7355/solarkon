@@ -2,26 +2,33 @@ import { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AdminPartnersForm from "../../components/admin/AdminPartnersForm";
-import AdminStepsForm from "../../components/admin/AdminStepsForm"; // Import new form
 import { 
   faHeading, faImages, faSave, faTrash, faChartLine, 
-  faUpload, faImage, faExclamationTriangle, faCheckCircle, 
-  faRotateLeft, faSpinner, faBug 
+  faFolderOpen, faImage, faExclamationTriangle, faSpinner 
 } from '@fortawesome/free-solid-svg-icons';
+
+// COMPONENTS
+import AdminPartnersForm from "../../components/admin/AdminPartnersForm"; // Check path
+import AdminStepsForm from "../../components/admin/AdminStepsForm";       // Check path
+import MediaPickerModal from '../../components/admin/MediaPickerModal';   // Check path
 
 // ==========================================
 // 1. CHILD: HERO FORM COMPONENT
 // ==========================================
 function HeroForm({ initialData, onRefresh }) {
+  // --- MODAL STATE ---
+  const [showMediaModal, setShowMediaModal] = useState(false);
+  const [pickerMode, setPickerMode] = useState(null); // 'bg' or 'slider'
+
   const { data, setData, post, processing, isDirty, reset } = useForm({
     page_name: 'home', 
     title: initialData?.title || '',
     description: initialData?.description || '',
-    image: null, 
-    current_image: initialData?.image_url || null, 
     
-    // 👇 FIX: Force it to be an array. If it's not an array, use [].
+    // We now just store the URL string directly
+    image_url: initialData?.image_url || '', 
+    
+    // Slider is just an array of URL strings
     slider: Array.isArray(initialData?.slider_url) ? initialData.slider_url : [], 
     
     stats: (initialData?.stats && initialData.stats.length > 0) ? initialData.stats : [
@@ -29,7 +36,7 @@ function HeroForm({ initialData, onRefresh }) {
       { label: 'Total Capacity', value: '150MW+' },
       { label: 'Pipeline Projects', value: '100MW+' }
     ]
-});
+  });
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -39,13 +46,22 @@ function HeroForm({ initialData, onRefresh }) {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [isDirty]);
 
-  const getPreview = (fileOrUrl) => {
-    if (!fileOrUrl) return null;
-    return typeof fileOrUrl === 'string' ? fileOrUrl : URL.createObjectURL(fileOrUrl);
+  // --- MEDIA HANDLERS ---
+  const openPicker = (mode) => {
+    setPickerMode(mode);
+    setShowMediaModal(true);
   };
 
-  const handleSliderUpload = (e) => {
-    setData('slider', [...data.slider, ...Array.from(e.target.files)]);
+  const handleMediaSelect = (url) => {
+    if (pickerMode === 'bg') {
+        setData('image_url', url); // Set Background
+        setShowMediaModal(false); // Close immediately for BG
+    } else if (pickerMode === 'slider') {
+        setData('slider', [...data.slider, url]); // Append to Slider
+        // We keep modal open for slider so you can pick multiple, 
+        // or close it manually if you prefer:
+        // setShowMediaModal(false); 
+    }
   };
 
   const removeSliderImage = (index) => {
@@ -62,8 +78,8 @@ function HeroForm({ initialData, onRefresh }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // No need for forceFormData anymore, we are sending JSON
     post('/hero-section', {
-        forceFormData: true, 
         onSuccess: () => {
             onRefresh(); 
         },
@@ -71,6 +87,7 @@ function HeroForm({ initialData, onRefresh }) {
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="mb-5 position-relative">
       {isDirty && (
         <div className="position-fixed top-0 start-0 w-100 bg-warning text-dark p-3 text-center fw-bold shadow-lg d-flex align-items-center justify-content-center gap-2" 
@@ -109,21 +126,29 @@ function HeroForm({ initialData, onRefresh }) {
             <div className="col-md-4">
               <label className="form-label fw-bold small text-muted">Background Image</label>
               <div className="border rounded-3 p-3 text-center bg-light position-relative" style={{ height: '200px' }}>
-                  {(data.image || data.current_image) ? (
-                      <img src={data.image ? getPreview(data.image) : getPreview(data.current_image)} alt="BG" className="w-100 h-100 object-fit-cover rounded-2" />
+                  {data.image_url ? (
+                      <img src={data.image_url} alt="BG" className="w-100 h-100 object-fit-cover rounded-2" />
                   ) : (
                       <div className="d-flex flex-column justify-content-center h-100 text-muted">
-                          <FontAwesomeIcon icon={faImage} size="2x" className="mb-2"/> <small>No Image</small>
+                          <FontAwesomeIcon icon={faImage} size="2x" className="mb-2"/> <small>No Image Selected</small>
                       </div>
                   )}
-                  {data.image && <div className="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow-sm">New</div>}
-                  <input type="file" accept="image/*" className="position-absolute top-0 start-0 w-100 h-100 opacity-0" style={{ cursor: 'pointer' }} onChange={e => setData('image', e.target.files[0])} />
+                  
+                  {/* BUTTON TO OPEN PICKER */}
+                  <button 
+                    type="button" 
+                    className="btn btn-sm btn-light position-absolute bottom-0 end-0 m-2 shadow-sm border"
+                    onClick={() => openPicker('bg')}
+                  >
+                    <FontAwesomeIcon icon={faFolderOpen} className="me-1"/> Change
+                  </button>
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* STATS SECTION (Unchanged) */}
       <div className="card border-0 shadow-sm rounded-4 mb-4">
            <div className="card-header bg-white p-4 border-bottom">
              <h5 className="mb-0 fw-bold text-success"><FontAwesomeIcon icon={faChartLine} className="me-2"/> Statistics</h5>
@@ -148,34 +173,47 @@ function HeroForm({ initialData, onRefresh }) {
            </div>
         </div>
 
+      {/* SLIDER SECTION */}
       <div className="card border-0 shadow-sm rounded-4 mb-4">
           <div className="card-header bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
             <h5 className="mb-0 fw-bold text-success"><FontAwesomeIcon icon={faImages} className="me-2"/> Financing Slider</h5>
-            <label className="btn btn-sm btn-success text-white shadow-sm">
-                <FontAwesomeIcon icon={faUpload} className="me-2"/> Add Images
-                <input type="file" multiple accept="image/*" hidden onChange={handleSliderUpload} />
-            </label>
+            
+            {/* BUTTON TO OPEN PICKER */}
+            <button 
+                type="button" 
+                className="btn btn-sm btn-success text-white shadow-sm"
+                onClick={() => openPicker('slider')}
+            >
+                <FontAwesomeIcon icon={faFolderOpen} className="me-2"/> Select from Library
+            </button>
           </div>
           <div className="card-body p-4">
             <div className="row g-3">
-              {data.slider.map((item, index) => (
+              {data.slider.map((url, index) => (
                 <div key={index} className="col-6 col-md-3">
                   <div className="position-relative rounded-3 overflow-hidden border shadow-sm bg-white" style={{ height: '140px' }}>
-                    <img src={getPreview(item)} alt="Slider" className="w-100 h-100 object-fit-cover" />
+                    <img src={url} alt="Slider" className="w-100 h-100 object-fit-cover" />
                     <button type="button" onClick={() => removeSliderImage(index)} className="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle" style={{ width: '30px', height: '30px', padding: 0 }}><FontAwesomeIcon icon={faTrash} size="sm"/></button>
                   </div>
                 </div>
               ))}
-              {data.slider.length === 0 && <div className="col-12 py-5 text-center text-muted border rounded bg-light border-dashed">No slider images found.</div>}
+              {data.slider.length === 0 && <div className="col-12 py-5 text-center text-muted border rounded bg-light border-dashed">No slider images selected.</div>}
             </div>
           </div>
       </div>
 
       <div className="d-flex justify-content-end">
-           {isDirty && <button type="button" onClick={() => reset()} className="btn btn-outline-danger rounded-pill px-4 me-2"><FontAwesomeIcon icon={faRotateLeft} className="me-2" /> Discard</button>}
            <button type="submit" disabled={processing || !isDirty} className={`btn px-5 rounded-pill ${isDirty ? 'btn-success' : 'btn-secondary'}`}><FontAwesomeIcon icon={faSave} className="me-2" /> {processing ? 'Saving Hero...' : 'Save Hero Changes'}</button>
       </div>
     </form>
+
+    {/* SHARED MEDIA PICKER MODAL */}
+    <MediaPickerModal 
+        isOpen={showMediaModal}
+        onClose={() => setShowMediaModal(false)}
+        onSelectImage={handleMediaSelect}
+    />
+    </>
   );
 }
 
@@ -186,9 +224,8 @@ function HeroForm({ initialData, onRefresh }) {
 export default function AdminHome() {
   const [heroData, setHeroData] = useState(null);
   const [stepsData, setStepsData] = useState(null);
-  const [logosData, setLogosData] = useState([]); // New state for logos
+  const [logosData, setLogosData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0); 
 
   useEffect(() => {
@@ -206,7 +243,6 @@ export default function AdminHome() {
             setLoading(false);
         } catch (error) {
             console.error("API Error:", error);
-            setFetchError("Failed to load content data.");
             setLoading(false);
         }
     };

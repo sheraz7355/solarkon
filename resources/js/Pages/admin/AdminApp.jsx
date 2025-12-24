@@ -9,7 +9,7 @@ const Dashboard = lazy(() => import('./Dashboard'));
 const Home = lazy(() => import('./Home'));
 const AdminProjects = lazy(() => import('./Projects'));
 const AdminProfile = lazy(() => import('./Profile'));
-const NavbarFooterContent = lazy(() => import('./NavbarFooterContent'));
+const MediaManager = lazy(() => import('./MediaManager'));
 const Settings = lazy(() => import('./Settings'));
 const AboutUs = lazy(() => import('./AboutUs'));
 const AdminFinancing = lazy(() => import('./Financing')); 
@@ -42,7 +42,7 @@ export default function AdminApp() {
             <Route path="projects" element={<AdminProjects/>} />
             <Route path="financing" element={<AdminFinancing/>} />
             <Route path="contact" element={<AdminContact/>} />
-            <Route path="navbar-footer" element={<NavbarFooterContent/>} />
+            <Route path="MediaManager" element={<MediaManager/>} />
             <Route path="profile" element={<AdminProfile/>} />
             <Route path="settings" element={<Settings/>} />
             

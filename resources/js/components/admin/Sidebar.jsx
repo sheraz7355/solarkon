@@ -39,7 +39,7 @@ function Sidebar() {
     { icon: faFolderOpen, label: 'Projects', path: '/admin/projects' },
     { icon: faDollarSign, label: 'Financing', path: '/admin/financing' },
     { icon: faEnvelope, label: 'Contact', path: '/admin/contact' },
-    { icon: faBars, label: 'Navbar & Footer', path: '/admin/navbar-footer' },
+    { icon: faBars, label: 'MediaManager', path: '/admin/MediaManager' },
     { icon: faCog, label: 'Settings', path: '/admin/settings' },
   ];
 

@@ -22,11 +22,8 @@ class HeroSectionsSeeder extends Seeder
                 'projects',
                 'contact',
             ]),
-            'slider_url'  => json_encode([
-                $faker->imageUrl(1200, 400, 'business'),
-                $faker->imageUrl(1200, 400, 'technology'),
-            ]),
-            'image_url'   => $faker->imageUrl(800, 600, 'solar'),
+            'slider_url'  => null,
+            'image_url'   => null,
             'stats'       => $faker->numberBetween(10, 500),
         ]);
     }

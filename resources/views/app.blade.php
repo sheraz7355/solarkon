@@ -31,10 +31,9 @@
         <meta name="twitter:image" content="{{ asset('images/web-logo.webp') }}">
 
         <!-- --- FAVICON (Browser Tab Icon) --- -->
-        <!-- Ensure you copy your logo to public/images/web-logo.webp -->
-        <link rel="icon" href="/images/web-logo.webp" type="image/webp">
-        <link rel="shortcut icon" href="/images/web-logo.webp" type="image/webp">
-        <link rel="apple-touch-icon" href="/images/web-logo.webp">
+        <link rel="icon" href="{{ asset('build/assets/web-logo-EF-qaTbw.webp') }}" type="image/webp">
+        <link rel="shortcut icon" href="{{ asset('build/assets/web-logo-EF-qaTbw.webp') }}" type="image/webp">
+        <link rel="apple-touch-icon" href="{{ asset('build/assets/web-logo-EF-qaTbw.webp') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

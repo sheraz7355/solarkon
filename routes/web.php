@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HeroSectionsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MediaController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 Route::get('/work-data',[HomeController::class,'getMethadologyData'])->name('admin.work-data');
@@ -10,6 +11,12 @@ Route::get('/logos',[HomeController::class,'getLogos'])->name('admin.getLogos');
 Route::post('/hero-section', [HeroSectionsController::class, 'update'])->name('admin.hero.update');
 Route::post('/work-data',[HomeController::class,'updateData'])->name('admin.work-data.update');
 Route::post('/logos',[HomeController::class,'updateLogos'])->name('admin.updateLogos');
+
+// --- MEDIA ROUTES ---
+Route::get('/media', [MediaController::class, 'index'])->name('media.index');
+Route::post('/media/upload', [MediaController::class, 'store'])->name('media.store');
+Route::delete('/media/{id}', [MediaController::class, 'destroy'])->name('media.destroy');
+
 
 
 
