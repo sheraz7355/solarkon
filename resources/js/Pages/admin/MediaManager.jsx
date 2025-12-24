@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import imageCompression from 'browser-image-compression';
-// Import FontAwesome for better icons (optional, but standard)
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
-// import { faTrash, faPlay } from '@fortawesome/free-solid-svg-icons';
 
 const MediaManager = ({ onSelect, isModalMode = false }) => {
   const [mediaFiles, setMediaFiles] = useState([]);
@@ -11,7 +8,6 @@ const MediaManager = ({ onSelect, isModalMode = false }) => {
   const [uploadStatus, setUploadStatus] = useState(''); 
   const [loading, setLoading] = useState(true);
 
-  // 1. FETCH DATA
   useEffect(() => {
     fetchMedia();
   }, []);
@@ -27,80 +23,87 @@ const MediaManager = ({ onSelect, isModalMode = false }) => {
     }
   };
 
-  // 2. UPLOAD LOGIC
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setUploading(true);
-    
-    try {
-      let fileToUpload = file;
-      const isImage = file.type.startsWith('image/');
-      const isVideo = file.type.startsWith('video/');
-
-      if (isImage) {
-        setUploadStatus(`Compressing image...`);
-        const options = {
-          maxSizeMB: 1,           
-          maxWidthOrHeight: 1920, 
-          useWebWorker: true,      
-          fileType: 'image/webp'   
-        };
-        const compressedFile = await imageCompression(file, options);
-        const newFileName = file.name.split('.')[0] + '.webp';
-        fileToUpload = new File([compressedFile], newFileName, { type: 'image/webp' });
-      } 
-      else if (isVideo) {
-         if (file.size > 50 * 1024 * 1024) { 
-             alert("Video is too large! Please upload under 50MB.");
-             setUploading(false);
-             return;
-         }
-         setUploadStatus(`Preparing video...`);
-      }
-
-      setUploadStatus('Uploading to server...');
-      const formData = new FormData();
-      formData.append('file', fileToUpload); 
-
-      const res = await axios.post('/media/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      setMediaFiles([res.data, ...mediaFiles]); 
-      setUploadStatus('Done!');
-
-    } catch (err) {
-      console.error(err);
-      const errMsg = err.response?.data?.message || "Upload failed.";
-      alert(errMsg);
-    } finally {
-      setUploading(false);
-      setUploadStatus('');
-      e.target.value = null;
-    }
+  // --- HELPER: FORMAT BYTES TO KB/MB ---
+  const formatBytes = (bytes, decimals = 0) => {
+    if (!bytes) return '0 B';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   };
 
-  // ---------------------------------------------------------
-  // ✅ 3. DELETE LOGIC (This is what you asked for)
-  // ---------------------------------------------------------
+  // --- NEW MULTI-UPLOAD LOGIC ---
+  const handleFileUpload = async (e) => {
+    // 1. Get all selected files
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setUploading(true);
+    let successCount = 0;
+    
+    // 2. Process each file one by one
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        try {
+            setUploadStatus(`Processing ${i + 1}/${files.length}: ${file.name}...`);
+            
+            let fileToUpload = file;
+            const isImage = file.type.startsWith('image/');
+            const isVideo = file.type.startsWith('video/');
+
+            // Compression
+            if (isImage) {
+                const options = {
+                    maxSizeMB: 1,           
+                    maxWidthOrHeight: 1920, 
+                    useWebWorker: true,      
+                    fileType: 'image/webp'   
+                };
+                const compressedFile = await imageCompression(file, options);
+                const newFileName = file.name.split('.')[0] + '.webp';
+                fileToUpload = new File([compressedFile], newFileName, { type: 'image/webp' });
+            } 
+            else if (isVideo) {
+                 if (file.size > 50 * 1024 * 1024) { 
+                     console.warn(`Skipped ${file.name}: Too large`);
+                     continue; 
+                 }
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileToUpload); 
+
+            // Upload
+            const res = await axios.post('/media/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            // Add to list immediately
+            setMediaFiles(prev => [res.data, ...prev]); 
+            successCount++;
+
+        } catch (err) {
+            console.error(`Failed to upload ${file.name}`, err);
+        }
+    }
+
+    setUploadStatus(`Done! Uploaded ${successCount}/${files.length} files.`);
+    setUploading(false);
+    
+    // Clear status after 3 seconds
+    setTimeout(() => setUploadStatus(''), 3000);
+    e.target.value = null;
+  };
+
   const handleDelete = async (id, e) => {
-    // Stop the click from bubbling up (prevents selecting the image while deleting)
-    e.stopPropagation(); 
-    
-    // 1. Ask for confirmation
-    if(!window.confirm("Are you sure you want to permanently delete this file?")) return;
-    
+    e.stopPropagation();
+    if(!window.confirm("Delete this media?")) return;
     try {
-      // 2. Send DELETE request to Laravel Route: Route::delete('/media/{id}')...
       await axios.delete(`/media/${id}`);
-      
-      // 3. Update UI immediately (remove the item from the array)
       setMediaFiles(prevFiles => prevFiles.filter(img => img.id !== id && img._id !== id)); 
     } catch (err) {
       console.error("Delete failed", err);
-      alert("Failed to delete image.");
     }
   };
 
@@ -111,10 +114,12 @@ const MediaManager = ({ onSelect, isModalMode = false }) => {
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <h5 className="m-0">Media Library</h5>
         <div>
+          {/* ENABLE MULTIPLE SELECTION */}
           <input 
             type="file" 
             id="fileUpload" 
             hidden 
+            multiple 
             onChange={handleFileUpload} 
             accept="image/*,video/*"
           />
@@ -122,12 +127,12 @@ const MediaManager = ({ onSelect, isModalMode = false }) => {
             htmlFor="fileUpload" 
             className={`btn btn-primary ${uploading ? 'disabled' : ''}`}
           >
-            {uploading ? 'Processing...' : '+ Upload Media'}
+            {uploading ? 'Uploading...' : '+ Upload Media'}
           </label>
         </div>
       </div>
 
-      {uploading && <div className="alert alert-info py-1 mb-3 small">{uploadStatus}</div>}
+      {uploadStatus && <div className="alert alert-info py-1 mb-3 small">{uploadStatus}</div>}
 
       <div className="flex-grow-1 overflow-auto">
         {loading ? <div className="text-center py-5">Loading...</div> : (
@@ -135,71 +140,45 @@ const MediaManager = ({ onSelect, isModalMode = false }) => {
             {mediaFiles.map((file) => (
                 <div 
                   key={file.id || file._id} 
-                  className="position-relative border rounded overflow-hidden shadow-sm bg-light group" // Added 'group' for hover
+                  className="position-relative border rounded overflow-hidden shadow-sm bg-light group"
                   style={{ cursor: 'pointer', aspectRatio: '1/1' }}
                   onClick={() => isModalMode && onSelect(file.url)} 
-                  onMouseEnter={(e) => {
-                     // Manual hover logic if CSS group-hover isn't set up
-                     const overlay = e.currentTarget.querySelector('.overlay-actions');
-                     if(overlay) overlay.style.opacity = '1';
-                  }}
-                  onMouseLeave={(e) => {
-                     const overlay = e.currentTarget.querySelector('.overlay-actions');
-                     if(overlay) overlay.style.opacity = '0';
-                  }}
                 >
                   {isVideo(file.mime_type) ? (
-                    // --- VIDEO DISPLAY ---
                     <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-dark text-white">
-                        <video 
-                           src={file.url} 
-                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                           muted
-                        />
+                        <video src={file.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
                         <div className="position-absolute d-flex align-items-center justify-content-center" style={{ pointerEvents: 'none' }}>
-                             {/* Play Icon */}
-                             <svg width="40" height="40" fill="currentColor" className="bi bi-play-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/>
-                             </svg>
+                             <svg width="40" height="40" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/></svg>
                         </div>
                     </div>
                   ) : (
-                    // --- IMAGE DISPLAY (FIXED LOGOS) ---
                     <div className="w-100 h-100 d-flex align-items-center justify-content-center p-2 bg-white">
                         <img 
                             src={file.url} 
                             alt="media" 
-                            style={{ 
-                                maxWidth: '100%', 
-                                maxHeight: '100%', 
-                                objectFit: 'contain', // ✅ FIX: Prevents cropping of logos
-                                filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.1))' 
-                            }} 
+                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} 
                         />
                     </div>
                   )}
                 
-                  {/* --- DELETE OVERLAY --- */}
-                  <div 
-                      className="overlay-actions position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-2" 
-                      style={{ 
-                          transition: 'opacity 0.2s', 
-                          background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-                          opacity: 0 // Hidden by default, shown on hover
-                      }}
+                  {/* --- NEW: SIZE BADGE --- */}
+                  <div className="position-absolute top-0 end-0 m-1">
+                      <span className="badge bg-dark bg-opacity-75" style={{fontSize: '0.65rem'}}>
+                          {formatBytes(file.size)}
+                      </span>
+                  </div>
+
+                  <div className="overlay-actions position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-2" 
+                       style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)', opacity: 0, transition: 'opacity 0.2s' }}
+                       onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                       onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}
                   >
                       <div className="d-flex justify-content-between align-items-center w-100">
-                          <small className="text-white text-truncate" style={{maxWidth: '70%', fontSize: '0.75rem'}}>
-                            {file.name}
-                          </small>
-                          
-                          {/* DELETE BUTTON */}
+                          <small className="text-white text-truncate" style={{maxWidth: '70%', fontSize: '0.75rem'}}>{file.name}</small>
                           <button 
                               className="btn btn-danger btn-sm p-0 d-flex justify-content-center align-items-center" 
-                              style={{ width: '28px', height: '28px', borderRadius: '4px' }}
+                              style={{ width: '28px', height: '28px' }}
                               onClick={(e) => handleDelete(file.id || file._id, e)}
-                              title="Delete File"
                           >
                              <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>&times;</span>
                           </button>
