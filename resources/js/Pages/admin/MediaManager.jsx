@@ -33,7 +33,7 @@ const MediaManager = ({ onSelect, isModalMode = false }) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   };
 
-  // --- NEW MULTI-UPLOAD LOGIC ---
+  // --- MULTI-UPLOAD LOGIC ---
   const handleFileUpload = async (e) => {
     // 1. Get all selected files
     const files = Array.from(e.target.files);
@@ -52,15 +52,30 @@ const MediaManager = ({ onSelect, isModalMode = false }) => {
             const isImage = file.type.startsWith('image/');
             const isVideo = file.type.startsWith('video/');
 
-            // Compression
+            // ==================================================
+            // ✅ AGGRESSIVE COMPRESSION LOGIC (UPDATED HERE)
+            // ==================================================
             if (isImage) {
                 const options = {
-                    maxSizeMB: 1,           
-                    maxWidthOrHeight: 1920, 
+                    // Target ~200KB (WhatsApp Size)
+                    maxSizeMB: 0.2,           
+                    
+                    // Reduce dimensions to HD (1280px) 
+                    // 1920px is often too big for simple website assets
+                    maxWidthOrHeight: 1280, 
+                    
+                    // Start compression at 70% quality immediately
+                    initialQuality: 0.7,
+
                     useWebWorker: true,      
                     fileType: 'image/webp'   
                 };
+
                 const compressedFile = await imageCompression(file, options);
+                
+                // Debug: Check size reduction in console
+                console.log(`Compressed ${file.name}: ${(file.size/1024).toFixed(0)}KB -> ${(compressedFile.size/1024).toFixed(0)}KB`);
+
                 const newFileName = file.name.split('.')[0] + '.webp';
                 fileToUpload = new File([compressedFile], newFileName, { type: 'image/webp' });
             } 
@@ -161,7 +176,7 @@ const MediaManager = ({ onSelect, isModalMode = false }) => {
                     </div>
                   )}
                 
-                  {/* --- NEW: SIZE BADGE --- */}
+                  {/* --- SIZE BADGE --- */}
                   <div className="position-absolute top-0 end-0 m-1">
                       <span className="badge bg-dark bg-opacity-75" style={{fontSize: '0.65rem'}}>
                           {formatBytes(file.size)}

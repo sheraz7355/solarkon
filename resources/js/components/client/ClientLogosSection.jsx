@@ -15,13 +15,12 @@ const ClientLogosSection = ({ partnerLogos = [] }) => {
     { url: huaweiLogo, name: 'Huawei' },
   ];
 
-  // 2. Decide what to show (Data handling remains unchanged)
+  // 2. Decide what to show
   const displayLogos = partnerLogos.length > 0 
     ? partnerLogos.map(url => ({ url, name: 'Partner' })) 
     : defaults;
 
-  // FIX 1: Duplicate the list 4 times instead of 2. 
-  // This ensures the track is long enough to never show empty space on wide screens.
+  // Duplicate 4 times for smooth infinite loop
   const duplicatedLogos = [
     ...displayLogos, 
     ...displayLogos, 
@@ -38,9 +37,10 @@ const ClientLogosSection = ({ partnerLogos = [] }) => {
         </div>
 
         <div className='partners-slider-wrapper' style={{ overflow: 'hidden', position: 'relative' }}>
-          {/* FIX 2: Changed time to 15s (faster) and width to max-content (prevents wrapping) */}
+          
+          {/* FIX 1: Removed 'gap-5' class. We use margin on children instead for perfect math. */}
           <div 
-            className='d-flex align-items-center gap-5 partners-slider' 
+            className='d-flex align-items-center partners-slider' 
             style={{ 
               animation: 'scroll 15s linear infinite', 
               width: 'max-content',
@@ -52,27 +52,29 @@ const ClientLogosSection = ({ partnerLogos = [] }) => {
               <div 
                 key={index} 
                 className='d-flex align-items-center justify-content-center' 
-                // FIX 3: Added flex-shrink: 0 to ensure logos stay proper size
-                style={{ minWidth: '150px', height: '80px', padding: '1rem', flexShrink: 0 }}
+                // FIX 2: Added 'marginRight: 4rem' to replace gap-5. 
+                // Now every item is mathematically identical (width + space).
+                style={{ 
+                    minWidth: '150px', 
+                    height: '80px', 
+                    padding: '1rem', 
+                    flexShrink: 0,
+                    marginRight: '4rem' 
+                }}
               >
                 <img 
                     src={logo.url} 
                     alt={logo.name} 
-                    style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                    style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain'}}
                 />
               </div>
             ))}
           </div>
         </div>
       </div>
-      {/* FIX 4: Changed transform to -25% (because we have 4 sets of data, we loop after 1 set passes) */}
+      
+      {/* FIX 3: Simplified the keyframes. -25% works perfectly now. */}
       <style>{`
-        @keyframes scroll { 
-          0% { transform: translateX(0); } 
-          100% { transform: translateX(calc(-25% - 1.25rem)); } 
-        }
-        /* Note: The calc(-25% - 1.25rem) accounts for the gap visual alignment if strictly necessary, 
-           but -25% usually works perfectly with flex-gap. */
         @keyframes scroll { 
             0% { transform: translateX(0); } 
             100% { transform: translateX(-25%); } 

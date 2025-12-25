@@ -1,10 +1,8 @@
-import { lazy, Suspense } from 'react'; // 1. Import lazy & Suspense
+import { lazy, Suspense, useEffect, useState } from 'react'; 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from '@/Layouts/AdminLayout';
 
-// 2. CONVERT STATIC IMPORTS TO LAZY IMPORTS
-// const Dashboard = lazy(() => import('./Dashboard'));
-// This splits the code into small chunks.
+// Lazy Imports
 const Dashboard = lazy(() => import('./Dashboard'));
 const Home = lazy(() => import('./Home'));
 const AdminProjects = lazy(() => import('./Projects'));
@@ -16,7 +14,7 @@ const AdminFinancing = lazy(() => import('./Financing'));
 const AdminContact = lazy(() => import('./Contact'));     
 const AdminSolutions = lazy(() => import('./Solutions')); 
 
-// 3. Create a simple Loading Spinner for page transitions
+// Loading Spinner
 const AdminLoader = () => (
   <div className="d-flex justify-content-center align-items-center vh-100">
     <div className="spinner-border text-success" role="status" style={{ width: '3rem', height: '3rem' }}>
@@ -26,13 +24,28 @@ const AdminLoader = () => (
 );
 
 export default function AdminApp() {
+  // ✅ FIX: State to ensure we only render on the client
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // This only runs in the browser, triggering the render
+    setIsClient(true);
+  }, []);
+
+  // 1. SSR CHECK: If running on Server, render NOTHING (or a loader).
+  // This prevents 'document is not defined' error from BrowserRouter.
+  if (!isClient) {
+    return <AdminLoader />;
+  }
+
+  // 2. CLIENT RENDER: Safe to use BrowserRouter now
   return (
-    <BrowserRouter>
-      {/* 4. Wrap Routes in Suspense to handle the loading state */}
+    <BrowserRouter basename="/admin">
       <Suspense fallback={<AdminLoader />}>
         <Routes>
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/" element={<AdminLayout />}>
             
+            {/* Redirect /admin to /admin/dashboard */}
             <Route index element={<Navigate to="dashboard" replace />} />
             
             <Route path="dashboard" element={<Dashboard />} />

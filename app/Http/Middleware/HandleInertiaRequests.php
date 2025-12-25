@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Tighten\Ziggy\Ziggy; 
 
 class HandleInertiaRequests extends Middleware
 {
@@ -45,6 +46,12 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            // ✅ 2. Cleaned up Syntax
+            'ziggy' => function () use ($request) {
+                return array_merge((new Ziggy)->toArray(), [
+                    'location' => $request->url(),
+                ]);
+            },
         ];
     }
 }
