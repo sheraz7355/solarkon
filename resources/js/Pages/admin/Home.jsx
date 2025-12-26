@@ -8,9 +8,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 // COMPONENTS
-import AdminPartnersForm from "../../components/admin/AdminPartnersForm"; // Check path
-import AdminStepsForm from "../../components/admin/AdminStepsForm";       // Check path
-import MediaPickerModal from '../../components/admin/MediaPickerModal';   // Check path
+import AdminPartnersForm from "../../components/admin/AdminPartnersForm"; 
+import AdminStepsForm from "../../components/admin/AdminStepsForm";       
+import MediaPickerModal from '../../components/admin/MediaPickerModal';   
 
 // ==========================================
 // 1. CHILD: HERO FORM COMPONENT
@@ -54,13 +54,10 @@ function HeroForm({ initialData, onRefresh }) {
 
   const handleMediaSelect = (url) => {
     if (pickerMode === 'bg') {
-        setData('image_url', url); // Set Background
-        setShowMediaModal(false); // Close immediately for BG
+        setData('image_url', url); 
+        setShowMediaModal(false); 
     } else if (pickerMode === 'slider') {
-        setData('slider', [...data.slider, url]); // Append to Slider
-        // We keep modal open for slider so you can pick multiple, 
-        // or close it manually if you prefer:
-        // setShowMediaModal(false); 
+        setData('slider', [...data.slider, url]); 
     }
   };
 
@@ -78,7 +75,6 @@ function HeroForm({ initialData, onRefresh }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // No need for forceFormData anymore, we are sending JSON
     post('/hero-section', {
         onSuccess: () => {
             onRefresh(); 
@@ -173,12 +169,14 @@ function HeroForm({ initialData, onRefresh }) {
            </div>
         </div>
 
-      {/* SLIDER SECTION */}
+      {/* 
+      =========================================================
+      --- SLIDER SECTION (COMMENTED OUT FOR FUTURE USE) ---
+      =========================================================
       <div className="card border-0 shadow-sm rounded-4 mb-4">
           <div className="card-header bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
             <h5 className="mb-0 fw-bold text-success"><FontAwesomeIcon icon={faImages} className="me-2"/> Financing Slider</h5>
             
-            {/* BUTTON TO OPEN PICKER */}
             <button 
                 type="button" 
                 className="btn btn-sm btn-success text-white shadow-sm"
@@ -201,6 +199,7 @@ function HeroForm({ initialData, onRefresh }) {
             </div>
           </div>
       </div>
+      */}
 
       <div className="d-flex justify-content-end">
            <button type="submit" disabled={processing || !isDirty} className={`btn px-5 rounded-pill ${isDirty ? 'btn-success' : 'btn-secondary'}`}><FontAwesomeIcon icon={faSave} className="me-2" /> {processing ? 'Saving Hero...' : 'Save Hero Changes'}</button>

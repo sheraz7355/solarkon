@@ -13,7 +13,7 @@ import {
   faEnvelope,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
-import webLogo from '../../assets/web-logo.webp'; // Check your extension (.svg or .webp)
+// import webLogo from '../../assets/web-logo.webp'; // (Uncomment if needed)
 
 function Sidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -28,19 +28,18 @@ function Sidebar() {
     return () => window.removeEventListener('resize', checkDesktop);
   }, []);
 
-  // 2. PATHS MUST MATCH YOUR ADMIN ROUTES
-  // Since your BrowserRouter has basename="/admin", 
-  // you can use relative paths OR full paths. React Router v6 is smart enough to handle "/admin/..."
+  // ✅ CORRECTED PATHS: Removed '/admin' prefix
+  // The Basename in AdminApp.jsx handles the prefix automatically.
   const menuItems = [
-    { icon: faHome, label: 'Dashboard', path: '/admin/dashboard' }, // Changed label to Dashboard
-    { icon: faLightbulb, label: 'Home', path: '/admin/home' },
-    { icon: faInfoCircle, label: 'About Us', path: '/admin/about-us' },
-    { icon: faLightbulb, label: 'Solutions', path: '/admin/solutions' },
-    { icon: faFolderOpen, label: 'Projects', path: '/admin/projects' },
-    { icon: faDollarSign, label: 'Financing', path: '/admin/financing' },
-    { icon: faEnvelope, label: 'Contact', path: '/admin/contact' },
-    { icon: faBars, label: 'MediaManager', path: '/admin/MediaManager' },
-    { icon: faCog, label: 'Settings', path: '/admin/settings' },
+    { icon: faHome, label: 'Dashboard', path: '/dashboard' }, 
+    { icon: faLightbulb, label: 'Home Page Content', path: '/home' }, // Renamed for clarity
+    { icon: faInfoCircle, label: 'About Us', path: '/about-us' },
+    { icon: faLightbulb, label: 'Solutions', path: '/solutions' },
+    { icon: faFolderOpen, label: 'Projects', path: '/projects' },
+    { icon: faDollarSign, label: 'Financing', path: '/financing' },
+    { icon: faEnvelope, label: 'Contact', path: '/contact' },
+    { icon: faBars, label: 'Media Manager', path: '/MediaManager' },
+    { icon: faCog, label: 'Settings', path: '/settings' },
   ];
 
   return (
@@ -65,19 +64,17 @@ function Sidebar() {
         }}
       >
         <div className="p-4 border-bottom">
-           {/* LOGO HERE */}
-           <span className="fw-bold">SOLARKON ADMIN</span>
+           <span className="fw-bold fs-5 text-success">SOLARKON ADMIN</span>
         </div>
 
         <nav className="p-3">
           {menuItems.map((item) => (
-            // 3. USE NAVLINK (React Router) instead of Link (Inertia)
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
                 `d-flex align-items-center gap-3 p-3 mb-2 rounded-3 text-decoration-none ${
-                  isActive ? 'bg-success text-white' : 'text-dark'
+                  isActive ? 'bg-success text-white' : 'text-dark hover-bg-light'
                 }`
               }
               onClick={() => setIsMobileOpen(false)}

@@ -1,53 +1,110 @@
-import { useState, useEffect } from 'react';
-import { HiArrowRight } from 'react-icons/hi2';
-import { motion } from 'framer-motion';
+// resources/js/components/client/HeroSection.jsx
+import { useState, useEffect, useRef } from 'react';
+import { HiArrowRight, HiOutlineShieldCheck, HiOutlineBolt, HiOutlineGlobeAlt } from 'react-icons/hi2'; 
+import { motion, useInView } from 'framer-motion';
 import { Link } from '@inertiajs/react';
 
+// Default Fallback Image
 import defaultHeroBg from '../../assets/images/solarimg-1.webp'; 
-const defaultSliderImages = [
-  'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=1200&q=80',
-];
 
-function HeroSection({ data }) {
-  
-  const title = data?.title || "Solar-Kon Best Company"; // Default for testing
-  const description = data?.description || "Solarkon Private Limited is a premier solar energy solutions provider.";
-  const backgroundImage = data?.image_url || defaultHeroBg;
-  const sliderImagesToUse = (Array.isArray(data?.slider_url) && data.slider_url.length > 0) 
-    ? data.slider_url 
-    : defaultSliderImages;
-
-  const [currentSlide, setCurrentSlide] = useState(0);
+// --- 1. COUNTER HOOK ---
+function useCounter(targetValue, duration = 1500) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-10px' });
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
-    if (sliderImagesToUse.length > 1) {
-      const interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % sliderImagesToUse.length);
-      }, 4000);
-      return () => clearInterval(interval);
+    if (!targetValue || isNaN(targetValue)) return;
+    if (inView && !hasAnimated.current) {
+      hasAnimated.current = true;
+      let startTime = null;
+      const startValue = 0;
+      const endValue = targetValue;
+      const animate = (currentTime) => {
+        if (startTime === null) startTime = currentTime;
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const current = Math.floor(startValue + (endValue - startValue) * easeOutQuart);
+        setCount(current);
+        if (progress < 1) requestAnimationFrame(animate);
+        else setCount(endValue);
+      };
+      requestAnimationFrame(animate);
     }
-  }, [sliderImagesToUse.length]);
+  }, [inView, targetValue, duration]);
+  return [count, ref];
+}
 
-  // --- CUSTOM TITLE STYLING LOGIC ---
+// --- 2. STAT ITEM (Classic Style) ---
+const HeroStatItem = ({ item, index }) => {
+  const parseValue = (str) => {
+    const match = String(str).match(/(\d+)(.*)/);
+    return match 
+      ? { number: parseInt(match[1], 10), suffix: match[2] || '' } 
+      : { number: 0, suffix: str, isText: true };
+  };
+
+  const { number, suffix, isText } = parseValue(item.value);
+  const [count, ref] = useCounter(number, 1500);
+
+  // Icons corresponding to the order of stats
+  const getIcon = (i) => {
+    if (i === 0) return <HiOutlineShieldCheck size={32} />; 
+    if (i === 1) return <HiOutlineBolt size={32} />;       
+    return <HiOutlineGlobeAlt size={32} />;                
+  };
+
+  return (
+    <div className="col-4 text-center px-1 px-md-3 border-end border-light border-opacity-25 last-no-border">
+      <div ref={ref}>
+        <div className="d-flex justify-content-center align-items-center gap-2 mb-1">
+           {/* Classic Green Icon */}
+           <span style={{ color: '#4ade80' }}>{getIcon(index)}</span>
+           
+           {/* Number */}
+           <div className="fw-bold text-white lh-1" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)', fontFamily: 'sans-serif' }}>
+              {isText ? suffix : count}
+              <span style={{ color: '#4ade80', fontSize: '0.6em', verticalAlign: 'top', marginLeft: '2px' }}>
+                  {suffix}
+              </span>
+           </div>
+        </div>
+        
+        {/* Label */}
+        <div className="text-uppercase text-white opacity-75" 
+             style={{ fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 500 }}>
+           {item.label}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- 3. HERO SECTION ---
+function HeroSection({ content, stats }) {
+  
+  const title = content?.title || "Solar-Kon Best Company";
+  const description = content?.description || "Solarkon Private Limited is a premier solar energy solutions provider.";
+  const backgroundImage = content?.image_url || defaultHeroBg;
+  
+  const displayStats = (stats && stats.length > 0) ? stats : [
+      { label: 'Years Experience', value: '10+' },
+      { label: 'Installations', value: '5000+' },
+      { label: 'Clean Energy', value: '50MW+' }
+  ];
+
+  // Title Styling (Green First/Last letter)
   const renderStyledTitle = (text) => {
       if (!text) return null;
-      // 1. Get First Letter
       const firstChar = text.charAt(0);
-      // 2. Get Last Letter
       const lastChar = text.slice(-1);
-      // 3. Get Everything in between
       const middleText = text.slice(1, -1);
 
       return (
           <span style={{ fontWeight: 800 }}>
-              {/* Beautiful Bright Green */}
               <span style={{ color: '#4ade80' }}>{firstChar}</span>
-              
-              {/* Pure White */}
               <span style={{ color: '#ffffff' }}>{middleText}</span>
-              
-              {/* Dark Blackish Green */}
               <span style={{ color: '#4ade80' }}>{lastChar}</span>
           </span>
       );
@@ -63,46 +120,60 @@ function HeroSection({ data }) {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        minHeight: '100vh',
+        minHeight: '100vh', 
         display: 'flex',
-        alignItems: 'center',
-        paddingTop: '6rem',
-        paddingBottom: '4rem',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        paddingTop: '6rem', 
+        paddingBottom: '2rem', 
       }}
     >
-      {/* Dark Overlay */}
+      {/* 
+        NO GREEN GRADIENT. 
+        Just a simple, flat dark overlay to ensure text is readable. 
+        opacity 0.5 = 50% darkness. 
+      */}
       <div 
         className="position-absolute top-0 start-0 w-100 h-100"
         style={{
-          background: 'linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20, 83, 45, 0.5) 100%)',
+          backgroundColor: 'rgba(0, 0, 0, 0)', 
           zIndex: 1,
         }}
       ></div>
       
-      <div className='container-fluid position-relative px-3 px-lg-5' style={{ zIndex: 2 }}>
-        <div className='row align-items-center g-4 g-lg-5'>
-          
-          {/* --- LEFT CONTENT --- */}
-          <div className='col-lg-5 text-center text-lg-start'>
+      <div className='container position-relative h-100 d-flex flex-column justify-content-center' style={{ zIndex: 2 }}>
+        
+        {/* MAIN TEXT CONTENT */}
+        <div className='row justify-content-center flex-grow-1 align-items-center'>
+          <div className='col-lg-10 col-xl-9 text-center'>
+            
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className='mb-3'
             >
-               <span className='fw-bold text-uppercase' 
-                    style={{ color: '#86efac', letterSpacing: '2px', fontSize: '0.85rem' }}>
+               <span className='fw-bold text-uppercase px-3 py-1 rounded-pill' 
+                    style={{ 
+                        color: '#ffffff', 
+                        fontSize: '0.85rem',
+                        letterSpacing: '2px',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        background: 'rgba(255, 255, 255, 0.1)'
+                    }}>
                 Nature Produces & We Deliver
               </span>
             </motion.div>
 
-            {/* ARTISTIC TITLE */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.85, delay: 0.1 }}
-              className='lh-sm mb-3 section-title'
-              style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)' }}
+              className='lh-sm mb-4 section-title'
+              style={{ 
+                  fontSize: 'clamp(3.5rem, 6vw, 5.5rem)',
+                  textShadow: '0 4px 20px rgba(0,0,0,0.5)' 
+              }}
             >
               {renderStyledTitle(title)}
             </motion.h1>
@@ -111,8 +182,14 @@ function HeroSection({ data }) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.15 }}
-              className='mb-5'
-              style={{ color: '#cbd5e1', fontSize: '1.15rem', lineHeight: 1.8, fontWeight: 300 }}
+              className='mb-5 mx-auto'
+              style={{ 
+                  color: '#f8fafc', 
+                  fontSize: '1.25rem', 
+                  lineHeight: 1.8, 
+                  fontWeight: 300,
+                  maxWidth: '800px'
+              }}
             >
               {description}
             </motion.p>
@@ -121,80 +198,61 @@ function HeroSection({ data }) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.25 }}
-              className='d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start'
+              className='d-flex flex-column flex-sm-row gap-3 justify-content-center'
             >
               <Link 
                 href="/contact"
-                className='btn btn-lg btn-pill d-inline-flex align-items-center justify-content-center gap-2 btn-soft-hover'
-                style={{ background: 'linear-gradient(135deg, #166534 0%, #166534 50%, #4ade80 100%)', color: '#ffffff', fontWeight: 600, border: 'none' }}
+                className='btn btn-lg btn-pill d-inline-flex align-items-center justify-content-center gap-2 btn-soft-hover px-5 py-3'
+                style={{ 
+                    background: '#1bbb55ff', 
+                    color: '#eaeaeaff', 
+                    fontWeight: 700, 
+                    border: 'none',
+                    boxShadow: '0 4px 15px rgba(74, 222, 128, 0.3)'
+                }}
               >
                 Get Free Consultation
                 <HiArrowRight size={20} />
               </Link>
             </motion.div>
           </div>
-
-          {/* --- RIGHT SLIDER (LINKED TO FINANCING) --- */}
-          <div className='col-lg-7'>
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
-            >
-              {/* WRAPPED IN LINK TO MAKE IT CLICKABLE */}
-              <Link href="/financing" className="d-block text-decoration-none">
-                  <div 
-                    className='surface-card rounded-5 overflow-hidden position-relative' 
-                    style={{ 
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                      cursor: 'pointer' // Shows it is clickable
-                    }}
-                  >
-                    <div className='position-relative' style={{ height: '420px' }}>
-                      {sliderImagesToUse.map((img, index) => (
-                        <div
-                          key={index}
-                          className='position-absolute top-0 start-0 w-100 h-100'
-                          style={{
-                            backgroundImage: `url(${img})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            opacity: currentSlide === index ? 1 : 0,
-                            transition: 'opacity 1s ease-in-out',
-                            zIndex: currentSlide === index ? 1 : 0,
-                          }}
-                        />
-                      ))}
-                      
-                      {/* Subtle "Click to view" hint */}
-                      <div className="position-absolute top-0 end-0 m-3 badge bg-dark text-white opacity-75 rounded-pill px-3 py-2">
-                          View Financing Plans ↗
-                      </div>
-
-                      {/* Slider Dots */}
-                      <div className='position-absolute bottom-0 start-50 translate-middle-x d-flex gap-2 mb-4' style={{ zIndex: 3 }}>
-                        {sliderImagesToUse.map((_, index) => (
-                          <div
-                            key={index}
-                            className='rounded-pill transition-all'
-                            style={{
-                              width: currentSlide === index ? '30px' : '8px',
-                              height: '4px',
-                              backgroundColor: currentSlide === index ? '#4ade80' : 'rgba(255,255,255,0.5)',
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-              </Link>
-            </motion.div>
-          </div>
         </div>
+
+        {/* 
+          STATS SECTION (Pinned to Bottom)
+          Added a subtle top border to separate it slightly
+        */}
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="row justify-content-center pt-4 mt-5"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}
+        >
+             <div className="col-lg-10">
+                <div className="row">
+                    {displayStats.map((stat, index) => (
+                        <HeroStatItem key={index} item={stat} index={index} />
+                    ))}
+                </div>
+             </div>
+        </motion.div>
+
       </div>
+
+      <style>{`
+        /* Remove border from the last item for a cleaner look */
+        .last-no-border:last-child {
+            border-right: none !important;
+        }
+        /* On Mobile, remove borders entirely to avoid clutter */
+        @media (max-width: 768px) {
+            .last-no-border {
+                border-right: none !important;
+                margin-bottom: 20px;
+            }
+        }
+      `}</style>
     </section>
   );
 }
