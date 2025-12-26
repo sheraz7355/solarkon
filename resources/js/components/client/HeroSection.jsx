@@ -35,7 +35,7 @@ function useCounter(targetValue, duration = 1500) {
   return [count, ref];
 }
 
-// --- 2. STAT ITEM (Responsive: Stacked on Mobile, Row on Desktop) ---
+// --- 2. STAT ITEM ---
 const HeroStatItem = ({ item, index }) => {
   const parseValue = (str) => {
     const match = String(str).match(/(\d+)(.*)/);
@@ -48,22 +48,19 @@ const HeroStatItem = ({ item, index }) => {
   const [count, ref] = useCounter(number, 1500);
 
   const getIcon = (i) => {
-    if (i === 0) return <HiOutlineShieldCheck size={32} />; 
-    if (i === 1) return <HiOutlineBolt size={32} />;       
-    return <HiOutlineGlobeAlt size={32} />;                
+    if (i === 0) return <HiOutlineShieldCheck size={28} />; 
+    if (i === 1) return <HiOutlineBolt size={28} />;       
+    return <HiOutlineGlobeAlt size={28} />;                
   };
 
   return (
-    // FIX 1: 'col-12' for mobile (full width ladder), 'col-md-4' for desktop (3 in a row)
     <div className="col-12 col-md-4 text-center px-1 px-md-3 stat-item">
-      <div ref={ref} className="py-3 py-md-0"> {/* Added padding Y for mobile spacing */}
+      <div ref={ref} className="py-1 py-md-0"> {/* Minimal padding for tight stack */}
         
-        <div className="d-flex justify-content-center align-items-center gap-3 mb-1">
-           {/* Classic Green Icon */}
+        <div className="d-flex justify-content-center align-items-center gap-2 mb-1">
            <span style={{ color: '#4ade80' }}>{getIcon(index)}</span>
            
-           {/* Number */}
-           <div className="fw-bold text-white lh-1" style={{ fontSize: 'clamp(2rem, 2.5vw, 2.5rem)', fontFamily: 'sans-serif' }}>
+           <div className="fw-bold text-white lh-1" style={{ fontSize: 'clamp(1.8rem, 2.5vw, 2.5rem)', fontFamily: 'sans-serif' }}>
               {isText ? suffix : count}
               <span style={{ color: '#4ade80', fontSize: '0.6em', verticalAlign: 'top', marginLeft: '2px' }}>
                   {suffix}
@@ -71,9 +68,8 @@ const HeroStatItem = ({ item, index }) => {
            </div>
         </div>
         
-        {/* Label */}
         <div className="text-uppercase text-white opacity-75" 
-             style={{ fontSize: '0.85rem', letterSpacing: '1px', fontWeight: 500 }}>
+             style={{ fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 500 }}>
            {item.label}
         </div>
       </div>
@@ -119,13 +115,14 @@ function HeroSection({ content, stats }) {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        // FIX 2: changed minHeight to allow content to push it larger on mobile
-        minHeight: '100vh', 
+        // FIX 1: Increased height to 110vh to stretch background more on mobile
+        minHeight: '110vh', 
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        paddingTop: '7rem', 
-        paddingBottom: '3rem', // Add breathing room at bottom
+        // FIX 2: Increased padding top to 12rem so "Nature" badge doesn't touch navbar
+        paddingTop: '12rem', 
+        paddingBottom: '4rem',
       }}
     >
       <div 
@@ -138,35 +135,39 @@ function HeroSection({ content, stats }) {
       
       <div className='container position-relative h-100 d-flex flex-column justify-content-center' style={{ zIndex: 2 }}>
         
-        {/* MAIN TEXT CONTENT */}
         <div className='row justify-content-center flex-grow-1 align-items-center'>
           <div className='col-lg-10 col-xl-9 text-center'>
             
+            {/* BADGE */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className='mb-3'
+              className='mb-4'
             >
-               <span className='fw-bold text-uppercase px-3 py-1 rounded-pill' 
+               <span className='fw-bold text-uppercase px-3 py-2 rounded-pill d-inline-block' 
                     style={{ 
                         color: '#ffffff', 
-                        fontSize: '0.85rem',
+                        fontSize: '0.75rem', 
                         letterSpacing: '2px',
                         border: '1px solid rgba(255, 255, 255, 0.3)',
-                        background: 'rgba(255, 255, 255, 0.1)'
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        maxWidth: '100%',
+                        whiteSpace: 'normal',
+                        lineHeight: '1.4'
                     }}>
                 Nature Produces & We Deliver
               </span>
             </motion.div>
 
+            {/* TITLE */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.85, delay: 0.1 }}
               className='lh-sm mb-4 section-title'
               style={{ 
-                  fontSize: 'clamp(2.5rem, 6vw, 5.5rem)', // Adjusted clamp for smaller mobiles
+                  fontSize: 'clamp(2rem, 5vw, 5.5rem)', 
                   textShadow: '0 4px 20px rgba(0,0,0,0.5)' 
               }}
             >
@@ -180,7 +181,7 @@ function HeroSection({ content, stats }) {
               className='mb-5 mx-auto'
               style={{ 
                   color: '#f8fafc', 
-                  fontSize: 'clamp(1rem, 2vw, 1.25rem)', // Responsive font size
+                  fontSize: 'clamp(0.95rem, 2vw, 1.25rem)', 
                   lineHeight: 1.8, 
                   fontWeight: 300,
                   maxWidth: '800px'
@@ -193,17 +194,18 @@ function HeroSection({ content, stats }) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.25 }}
-              className='d-flex flex-column flex-sm-row gap-3 justify-content-center'
+              className='d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center'
             >
               <Link 
                 href="/contact"
                 className='btn btn-lg btn-pill d-inline-flex align-items-center justify-content-center gap-2 btn-soft-hover px-5 py-3'
                 style={{ 
                     background: '#4ade80', 
-                    color: '#052e16', 
+                    color: '#ffffffff', 
                     fontWeight: 700, 
                     border: 'none',
-                    boxShadow: '0 4px 15px rgba(74, 222, 128, 0.3)'
+                    boxShadow: '0 4px 15px rgba(74, 222, 128, 0.3)',
+                    width: 'auto'
                 }}
               >
                 Get Free Consultation
@@ -213,19 +215,15 @@ function HeroSection({ content, stats }) {
           </div>
         </div>
 
-        {/* 
-          STATS SECTION 
-          - Mobile: Stacked (Ladder) with bottom borders
-          - Desktop: Row with right borders
-        */}
+        {/* STATS SECTION */}
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="row justify-content-center pt-4 mt-5 stats-container"
+            className="row justify-content-center stats-container"
         >
              <div className="col-lg-10">
-                <div className="row g-0"> {/* g-0 removes gaps to handle borders manually */}
+                <div className="row g-0"> 
                     {displayStats.map((stat, index) => (
                         <HeroStatItem key={index} item={stat} index={index} />
                     ))}
@@ -235,9 +233,7 @@ function HeroSection({ content, stats }) {
 
       </div>
 
-      {/* FIX 3: Custom CSS for the Ladder/Grid Borders */}
       <style>{`
-        /* DESKTOP (md and up): Borders on the RIGHT */
         @media (min-width: 768px) {
             .stat-item {
                 border-right: 1px solid rgba(255, 255, 255, 0.2);
@@ -245,27 +241,30 @@ function HeroSection({ content, stats }) {
             .stat-item:last-child {
                 border-right: none;
             }
-            /* Stats container divider on desktop */
             .stats-container {
                 border-top: 1px solid rgba(255, 255, 255, 0.15);
+                margin-top: 3rem !important;
+                padding-top: 2rem !important;
             }
         }
 
-        /* MOBILE (below md): Borders on the BOTTOM (Ladder style) */
         @media (max-width: 767px) {
             .stat-item {
                 border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-                padding-bottom: 1.5rem;
-                margin-bottom: 1.5rem;
+                /* FIX 3: Reduced gap between stats (ladder steps) */
+                padding-bottom: 0.75rem; 
+                margin-bottom: 0.75rem;
             }
             .stat-item:last-child {
                 border-bottom: none;
                 padding-bottom: 0;
                 margin-bottom: 0;
             }
-            /* Remove top container border on mobile to avoid double lines */
             .stats-container {
-                border-top: none; 
+                border-top: none;
+                /* FIX 4: Increased gap between Button and First Stat */
+                margin-top: 4rem !important; 
+                padding-top: 0 !important;
             }
         }
       `}</style>
