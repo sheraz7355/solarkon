@@ -1,4 +1,3 @@
-// resources/js/components/client/HeroSection.jsx
 import { useState, useEffect, useRef } from 'react';
 import { HiArrowRight, HiOutlineShieldCheck, HiOutlineBolt, HiOutlineGlobeAlt } from 'react-icons/hi2'; 
 import { motion, useInView } from 'framer-motion';
@@ -36,7 +35,7 @@ function useCounter(targetValue, duration = 1500) {
   return [count, ref];
 }
 
-// --- 2. STAT ITEM (Classic Style) ---
+// --- 2. STAT ITEM (Responsive: Stacked on Mobile, Row on Desktop) ---
 const HeroStatItem = ({ item, index }) => {
   const parseValue = (str) => {
     const match = String(str).match(/(\d+)(.*)/);
@@ -48,7 +47,6 @@ const HeroStatItem = ({ item, index }) => {
   const { number, suffix, isText } = parseValue(item.value);
   const [count, ref] = useCounter(number, 1500);
 
-  // Icons corresponding to the order of stats
   const getIcon = (i) => {
     if (i === 0) return <HiOutlineShieldCheck size={32} />; 
     if (i === 1) return <HiOutlineBolt size={32} />;       
@@ -56,14 +54,16 @@ const HeroStatItem = ({ item, index }) => {
   };
 
   return (
-    <div className="col-4 text-center px-1 px-md-3 border-end border-light border-opacity-25 last-no-border">
-      <div ref={ref}>
-        <div className="d-flex justify-content-center align-items-center gap-2 mb-1">
+    // FIX 1: 'col-12' for mobile (full width ladder), 'col-md-4' for desktop (3 in a row)
+    <div className="col-12 col-md-4 text-center px-1 px-md-3 stat-item">
+      <div ref={ref} className="py-3 py-md-0"> {/* Added padding Y for mobile spacing */}
+        
+        <div className="d-flex justify-content-center align-items-center gap-3 mb-1">
            {/* Classic Green Icon */}
            <span style={{ color: '#4ade80' }}>{getIcon(index)}</span>
            
            {/* Number */}
-           <div className="fw-bold text-white lh-1" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)', fontFamily: 'sans-serif' }}>
+           <div className="fw-bold text-white lh-1" style={{ fontSize: 'clamp(2rem, 2.5vw, 2.5rem)', fontFamily: 'sans-serif' }}>
               {isText ? suffix : count}
               <span style={{ color: '#4ade80', fontSize: '0.6em', verticalAlign: 'top', marginLeft: '2px' }}>
                   {suffix}
@@ -73,7 +73,7 @@ const HeroStatItem = ({ item, index }) => {
         
         {/* Label */}
         <div className="text-uppercase text-white opacity-75" 
-             style={{ fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 500 }}>
+             style={{ fontSize: '0.85rem', letterSpacing: '1px', fontWeight: 500 }}>
            {item.label}
         </div>
       </div>
@@ -94,7 +94,6 @@ function HeroSection({ content, stats }) {
       { label: 'Clean Energy', value: '50MW+' }
   ];
 
-  // Title Styling (Green First/Last letter)
   const renderStyledTitle = (text) => {
       if (!text) return null;
       const firstChar = text.charAt(0);
@@ -120,23 +119,19 @@ function HeroSection({ content, stats }) {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
+        // FIX 2: changed minHeight to allow content to push it larger on mobile
         minHeight: '100vh', 
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        paddingTop: '6rem', 
-        paddingBottom: '2rem', 
+        paddingTop: '7rem', 
+        paddingBottom: '3rem', // Add breathing room at bottom
       }}
     >
-      {/* 
-        NO GREEN GRADIENT. 
-        Just a simple, flat dark overlay to ensure text is readable. 
-        opacity 0.5 = 50% darkness. 
-      */}
       <div 
         className="position-absolute top-0 start-0 w-100 h-100"
         style={{
-          backgroundColor: 'rgba(0, 0, 0, 0)', 
+          backgroundColor: 'rgba(0, 0, 0, 0.5)', 
           zIndex: 1,
         }}
       ></div>
@@ -171,7 +166,7 @@ function HeroSection({ content, stats }) {
               transition={{ duration: 0.85, delay: 0.1 }}
               className='lh-sm mb-4 section-title'
               style={{ 
-                  fontSize: 'clamp(3.5rem, 6vw, 5.5rem)',
+                  fontSize: 'clamp(2.5rem, 6vw, 5.5rem)', // Adjusted clamp for smaller mobiles
                   textShadow: '0 4px 20px rgba(0,0,0,0.5)' 
               }}
             >
@@ -185,7 +180,7 @@ function HeroSection({ content, stats }) {
               className='mb-5 mx-auto'
               style={{ 
                   color: '#f8fafc', 
-                  fontSize: '1.25rem', 
+                  fontSize: 'clamp(1rem, 2vw, 1.25rem)', // Responsive font size
                   lineHeight: 1.8, 
                   fontWeight: 300,
                   maxWidth: '800px'
@@ -204,8 +199,8 @@ function HeroSection({ content, stats }) {
                 href="/contact"
                 className='btn btn-lg btn-pill d-inline-flex align-items-center justify-content-center gap-2 btn-soft-hover px-5 py-3'
                 style={{ 
-                    background: '#1bbb55ff', 
-                    color: '#eaeaeaff', 
+                    background: '#4ade80', 
+                    color: '#052e16', 
                     fontWeight: 700, 
                     border: 'none',
                     boxShadow: '0 4px 15px rgba(74, 222, 128, 0.3)'
@@ -219,18 +214,18 @@ function HeroSection({ content, stats }) {
         </div>
 
         {/* 
-          STATS SECTION (Pinned to Bottom)
-          Added a subtle top border to separate it slightly
+          STATS SECTION 
+          - Mobile: Stacked (Ladder) with bottom borders
+          - Desktop: Row with right borders
         */}
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="row justify-content-center pt-4 mt-5"
-            style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}
+            className="row justify-content-center pt-4 mt-5 stats-container"
         >
              <div className="col-lg-10">
-                <div className="row">
+                <div className="row g-0"> {/* g-0 removes gaps to handle borders manually */}
                     {displayStats.map((stat, index) => (
                         <HeroStatItem key={index} item={stat} index={index} />
                     ))}
@@ -240,16 +235,37 @@ function HeroSection({ content, stats }) {
 
       </div>
 
+      {/* FIX 3: Custom CSS for the Ladder/Grid Borders */}
       <style>{`
-        /* Remove border from the last item for a cleaner look */
-        .last-no-border:last-child {
-            border-right: none !important;
+        /* DESKTOP (md and up): Borders on the RIGHT */
+        @media (min-width: 768px) {
+            .stat-item {
+                border-right: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .stat-item:last-child {
+                border-right: none;
+            }
+            /* Stats container divider on desktop */
+            .stats-container {
+                border-top: 1px solid rgba(255, 255, 255, 0.15);
+            }
         }
-        /* On Mobile, remove borders entirely to avoid clutter */
-        @media (max-width: 768px) {
-            .last-no-border {
-                border-right: none !important;
-                margin-bottom: 20px;
+
+        /* MOBILE (below md): Borders on the BOTTOM (Ladder style) */
+        @media (max-width: 767px) {
+            .stat-item {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+                padding-bottom: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            .stat-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+            /* Remove top container border on mobile to avoid double lines */
+            .stats-container {
+                border-top: none; 
             }
         }
       `}</style>
