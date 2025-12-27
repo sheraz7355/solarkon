@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\HeroSections; // Ensure this matches your actual model filename
 use App\Models\MethodologySection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use App\Models\PartnerLogo;
 

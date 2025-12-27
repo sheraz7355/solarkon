@@ -5,53 +5,39 @@ namespace App\Http\Middleware;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use Tighten\Ziggy\Ziggy; 
+use Tighten\Ziggy\Ziggy;
+use App\Models\Setting; // <--- ✅ IMPORT YOUR MODEL HERE
 
 class HandleInertiaRequests extends Middleware
 {
-    /**
-     * The root template that's loaded on the first page visit.
-     *
-     * @see https://inertiajs.com/server-side-setup#root-template
-     *
-     * @var string
-     */
     protected $rootView = 'app';
 
-    /**
-     * Determines the current asset version.
-     *
-     * @see https://inertiajs.com/asset-versioning
-     */
     public function version(Request $request): ?string
     {
         return parent::version($request);
     }
 
-    /**
-     * Define the props that are shared by default.
-     *
-     * @see https://inertiajs.com/shared-data
-     *
-     * @return array<string, mixed>
-     */
+    // This function runs automatically on every page load
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
-
-        return [
-            ...parent::share($request),
-            'name' => config('app.name'),
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
+        return array_merge(parent::share($request), [
+            
+            // 1. Existing Auth Logic (Don't touch)
             'auth' => [
                 'user' => $request->user(),
             ],
-            // ✅ 2. Cleaned up Syntax
+
+            // 2. ✅ NEW: Global Site Settings
+            // This fetches ALL settings from DB and converts them to a simple list:
+            // ['phone' => '+92...', 'email' => '...', 'site_name' => '...']
+            'site_settings' => Setting::all()->pluck('value', 'key'),
+
+            // 3. Existing Ziggy Logic (Don't touch)
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),
                 ]);
             },
-        ];
+        ]);
     }
 }

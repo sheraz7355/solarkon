@@ -1,16 +1,24 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HeroSectionsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 Route::get('/work-data',[HomeController::class,'getMethadologyData'])->name('admin.work-data');
 Route::get('/hero-sections', [HomeController::class, 'getHeroData'])->name('admin.getHeroData');
 Route::get('/logos',[HomeController::class,'getLogos'])->name('admin.getLogos');
+Route::get('/settings',[SettingsController::class,'getSettings'])->name('admin.getSettings');
+Route::get('/userDetails',[ContactController::class,'index'])->name('admin.getUserDetails');
 Route::post('/hero-section', [HeroSectionsController::class, 'update'])->name('admin.hero.update');
 Route::post('/work-data',[HomeController::class,'updateData'])->name('admin.work-data.update');
 Route::post('/logos',[HomeController::class,'updateLogos'])->name('admin.updateLogos');
+Route::post('/settings',[SettingsController::class,'updateSettings'])->name('admin.updateSettings');
+Route::post('/userDetails',[ContactController::class,'store'])->name('admin.updateUserDetails');
+
+Route::delete('/userDetails/{id}',[ContactController::class,'destroy'])->name('admin.deleteUserDetails');
 
 // --- MEDIA ROUTES ---
 Route::get('/media', [MediaController::class, 'index'])->name('media.index');

@@ -1,502 +1,222 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios'; // Use Axios to fetch data
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGlobe, faFileAlt, faEnvelope, faCog, faUser, faPhone, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { 
+  faHeading, faAlignLeft, faMapMarkerAlt, faPhone, faEnvelope, 
+  faSave, faSpinner 
+} from '@fortawesome/free-solid-svg-icons';
+import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
-function Settings() {
-  const [activeTab, setActiveTab] = useState('general');
+export default function Settings() {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  
+  // State for form data
+  const [formData, setFormData] = useState({
+    site_name: '',
+    footer_description: '',
+    address: '',
+    phone: '',
+    email: '',
+    facebook_url: '',
+    twitter_url: '',
+    instagram_url: '',
+    linkedin_url: ''
+  });
+
+  // 1. FETCH DATA FROM DB ON LOAD
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await axios.get('/settings'); // Call your API
+        // Merge DB data into form state
+        // If DB returns { phone: "123" }, it updates formData.phone
+        setFormData(prev => ({ ...prev, ...res.data }));
+      } catch (err) {
+        console.error("Failed to load settings", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  // 2. HANDLE INPUT CHANGE
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // 3. SUBMIT FORM
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      await axios.post('/settings', formData); // Save to API
+      alert('Settings saved successfully!');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to save settings.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <div className="vh-100 d-flex justify-content-center align-items-center"><FontAwesomeIcon icon={faSpinner} spin size="2x" className="text-success" /></div>;
+
   return (
-    <div className="container-fluid px-2 px-sm-3 px-md-4 px-lg-5 py-3 py-sm-4 py-md-5" style={{ background: '#f8faf9', minHeight: '100vh' }}>
-      <div className="mb-4 mb-sm-5 fade-up">
-        <div style={{ 
-          background: 'linear-gradient(135deg, rgba(45, 80, 22, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%)',
-          padding: '2rem 2.5rem',
-          borderRadius: '20px',
-          border: '1px solid rgba(45, 80, 22, 0.1)',
-          marginBottom: '2rem',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.05)'
-        }}>
-          <h2 className="fw-bold mb-2 mb-sm-3 dashboard-title" style={{ 
-            background: 'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            fontSize: '2.25rem',
-            fontWeight: 800,
-            letterSpacing: '-0.02em'
-          }}>
-            System Settings
-          </h2>
-          <p className="mb-0 small small-md-normal" style={{ color: '#64748b', fontSize: '1.05rem', fontWeight: 500 }}>Configure system-wide settings and manage your profile</p>
+    <div className="container-fluid px-4 py-5" style={{ background: '#f8faf9', minHeight: '100vh' }}>
+      
+      <div className="mb-5">
+        <h2 className="fw-bold mb-2" style={{ color: '#14532d' }}>Footer & Contact Settings</h2>
+        <p className="text-muted">Manage the content displayed in the website footer.</p>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        
+        {/* 1. General Footer Info */}
+        <div className="card border-0 shadow-sm rounded-4 mb-4">
+          <div className="card-header bg-white p-4 border-bottom">
+            <h5 className="mb-0 fw-bold text-success">General Information</h5>
+          </div>
+          <div className="card-body p-4">
+            <div className="row g-4">
+              <div className="col-md-6">
+                <label className="form-label fw-bold small text-muted">Site Name (Footer Heading)</label>
+                <div className="input-group">
+                  <span className="input-group-text bg-light"><FontAwesomeIcon icon={faHeading} /></span>
+                  <input 
+                    type="text" 
+                    name="site_name"
+                    className="form-control" 
+                    value={formData.site_name}
+                    onChange={handleChange}
+                    placeholder="SOLARKON"
+                  />
+                </div>
+              </div>
+              <div className="col-12">
+                <label className="form-label fw-bold small text-muted">Footer Description</label>
+                <div className="input-group">
+                  <span className="input-group-text bg-light"><FontAwesomeIcon icon={faAlignLeft} /></span>
+                  <textarea 
+                    className="form-control" 
+                    name="footer_description"
+                    rows="3"
+                    value={formData.footer_description}
+                    onChange={handleChange}
+                    placeholder="Brief description about the company..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Tabs */}
-      <div className="d-flex gap-2 mb-4 fade-up fade-delay-1">
-        <button
-          type="button"
-          className={`btn rounded-pill px-4 ${activeTab === 'general' ? 'btn-success' : 'btn-outline-success'}`}
-          onClick={() => setActiveTab('general')}
-          style={{ fontWeight: 600 }}
-        >
-          General Settings
-        </button>
-        <button
-          type="button"
-          className={`btn rounded-pill px-4 ${activeTab === 'profile' ? 'btn-success' : 'btn-outline-success'}`}
-          onClick={() => setActiveTab('profile')}
-          style={{ fontWeight: 600 }}
-        >
-          Profile Settings
-        </button>
-      </div>
-
-      {/* General Settings Tab */}
-      {activeTab === 'general' && (
-        <div
-          className="rounded-4 p-4 p-md-5 surface-card admin-form-card fade-up fade-delay-1"
-          style={{
-            background: 'linear-gradient(135deg, #ffffff 0%, #f8faf9 100%)',
-            border: '1px solid rgba(45, 80, 22, 0.1)',
-            maxWidth: '800px',
-            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '4px',
-            background: 'linear-gradient(90deg, #2D5016 0%, #22C55E 100%)'
-          }}></div>
-          <div className="admin-form-card-bg"></div>
-          <h3 className="fw-bold mb-4 mb-sm-5 chart-title position-relative" style={{ 
-            background: 'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            fontSize: '1.75rem',
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem'
-          }}>
-            <span style={{
-              width: '5px',
-              height: '28px',
-              background: 'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
-              borderRadius: '3px'
-            }}></span>
-            General Settings
-          </h3>
-          <form className="row g-4 position-relative">
-          <div className="col-12 fade-up fade-delay-2 form-field-wrapper">
-            <label className="form-label fw-semibold mb-3 admin-form-label" style={{ color: '#1e293b', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <FontAwesomeIcon icon={faGlobe} style={{ color: '#22C55E', fontSize: '1rem' }} />
-              Site Name
-            </label>
-            <div className="admin-input-wrapper" style={{ position: 'relative' }}>
-              <div style={{
-                position: 'absolute',
-                left: '16px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: '#94a3b8',
-                zIndex: 2,
-                pointerEvents: 'none'
-              }}>
-                <FontAwesomeIcon icon={faGlobe} />
-              </div>
-              <input
-                type="text"
-                className="form-control rounded-3 admin-form-input"
-                defaultValue="SOLARKON"
-                style={{ paddingLeft: '48px', paddingRight: '16px', paddingTop: '14px', paddingBottom: '14px', fontSize: '0.95rem' }}
-              />
-              <span className="admin-input-focus-line"></span>
-            </div>
+        {/* 2. Contact Details */}
+        <div className="card border-0 shadow-sm rounded-4 mb-4">
+          <div className="card-header bg-white p-4 border-bottom">
+            <h5 className="mb-0 fw-bold text-success">Contact Details</h5>
           </div>
-
-          <div className="col-12 fade-up fade-delay-2 form-field-wrapper">
-            <label className="form-label fw-semibold mb-3 admin-form-label" style={{ color: '#1e293b', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <FontAwesomeIcon icon={faFileAlt} style={{ color: '#22C55E', fontSize: '1rem' }} />
-              Site Description
-            </label>
-            <div className="admin-input-wrapper" style={{ position: 'relative' }}>
-              <div style={{
-                position: 'absolute',
-                left: '16px',
-                top: '20px',
-                color: '#94a3b8',
-                zIndex: 2,
-                pointerEvents: 'none'
-              }}>
-                <FontAwesomeIcon icon={faFileAlt} />
+          <div className="card-body p-4">
+            <div className="row g-4">
+              <div className="col-12">
+                <label className="form-label fw-bold small text-muted">Address</label>
+                <div className="input-group">
+                  <span className="input-group-text bg-light"><FontAwesomeIcon icon={faMapMarkerAlt} /></span>
+                  <input 
+                    type="text" 
+                    name="address"
+                    className="form-control" 
+                    value={formData.address} 
+                    onChange={handleChange}
+                    placeholder="123 Main St, City, Country" 
+                  />
+                </div>
               </div>
-              <textarea
-                className="form-control rounded-3 admin-form-input"
-                rows="3"
-                defaultValue="Leading provider of solar energy solutions"
-                style={{ paddingLeft: '48px', paddingRight: '16px', paddingTop: '14px', paddingBottom: '14px', fontSize: '0.95rem', resize: 'vertical' }}
-              />
-              <span className="admin-input-focus-line"></span>
-            </div>
-          </div>
-
-          <div className="col-12 fade-up fade-delay-3 form-field-wrapper">
-            <label className="form-label fw-semibold mb-3 admin-form-label" style={{ color: '#1e293b', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <FontAwesomeIcon icon={faEnvelope} style={{ color: '#22C55E', fontSize: '1rem' }} />
-              Admin Email
-            </label>
-            <div className="admin-input-wrapper" style={{ position: 'relative' }}>
-              <div style={{
-                position: 'absolute',
-                left: '16px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: '#94a3b8',
-                zIndex: 2,
-                pointerEvents: 'none'
-              }}>
-                <FontAwesomeIcon icon={faEnvelope} />
+              <div className="col-md-6">
+                <label className="form-label fw-bold small text-muted">Phone Number</label>
+                <div className="input-group">
+                  <span className="input-group-text bg-light"><FontAwesomeIcon icon={faPhone} /></span>
+                  <input 
+                    type="text" 
+                    name="phone"
+                    className="form-control" 
+                    value={formData.phone} 
+                    onChange={handleChange}
+                    placeholder="+92 300 1234567" 
+                  />
+                </div>
               </div>
-              <input
-                type="email"
-                className="form-control rounded-3 admin-form-input"
-                defaultValue="admin@solarkon.com"
-                style={{ paddingLeft: '48px', paddingRight: '16px', paddingTop: '14px', paddingBottom: '14px', fontSize: '0.95rem' }}
-              />
-              <span className="admin-input-focus-line"></span>
-            </div>
-          </div>
-
-          <div className="col-12 fade-up fade-delay-3">
-            <div className="form-check form-switch admin-switch-wrapper p-4 rounded-3" style={{ 
-              background: 'linear-gradient(135deg, #f9fafb 0%, #ffffff 100%)', 
-              border: '1px solid #e2e8f0',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#cbd5e1';
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <FontAwesomeIcon icon={faCog} style={{ color: '#2D5016', fontSize: '1.1rem' }} />
-                <input
-                  className="form-check-input admin-switch"
-                  type="checkbox"
-                  id="maintenanceMode"
-                  defaultChecked={false}
-                  style={{ marginTop: 0, cursor: 'pointer' }}
-                />
-                <label className="form-check-label fw-semibold ms-2" htmlFor="maintenanceMode" style={{ color: '#1e293b', cursor: 'pointer', fontSize: '0.95rem' }}>
-                  Maintenance Mode
-                </label>
+              <div className="col-md-6">
+                <label className="form-label fw-bold small text-muted">Email Address</label>
+                <div className="input-group">
+                  <span className="input-group-text bg-light"><FontAwesomeIcon icon={faEnvelope} /></span>
+                  <input 
+                    type="email" 
+                    name="email"
+                    className="form-control" 
+                    value={formData.email} 
+                    onChange={handleChange} 
+                    placeholder="info@example.com"
+                  />
+                </div>
               </div>
             </div>
           </div>
-
-          <div className="col-12 d-flex justify-content-end gap-3 mt-4 fade-up fade-delay-4">
-            <button
-              type="button"
-              className="btn rounded-pill px-4 px-md-5 admin-btn-cancel"
-              style={{ 
-                background: '#f8faf9',
-                color: '#64748b',
-                border: '1px solid rgba(45, 80, 22, 0.2)',
-                fontWeight: 600,
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#e5e7eb';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#f8faf9';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn rounded-pill px-4 px-md-5 admin-btn-primary"
-              style={{ 
-                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%)',
-                color: '#ffffff',
-                border: 'none',
-                fontWeight: 600,
-                boxShadow: '0 4px 16px rgba(59, 130, 246, 0.4)',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%)';
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.5)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(59, 130, 246, 0.4)';
-              }}
-            >
-              Save Settings
-            </button>
-          </div>
-        </form>
-      </div>
-      )}
-
-      {/* Profile Settings Tab */}
-      {activeTab === 'profile' && (
-        <div
-          className="rounded-4 p-4 p-md-5 surface-card admin-form-card fade-up fade-delay-1"
-          style={{
-            background: 'linear-gradient(135deg, #ffffff 0%, #f8faf9 100%)',
-            border: '1px solid rgba(45, 80, 22, 0.1)',
-            maxWidth: '800px',
-            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '4px',
-            background: 'linear-gradient(90deg, #2D5016 0%, #22C55E 100%)'
-          }}></div>
-          <div className="admin-form-card-bg"></div>
-          <h3 className="fw-bold mb-4 mb-sm-5 chart-title position-relative" style={{ 
-            background: 'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            fontSize: '1.75rem',
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem'
-          }}>
-            <span style={{
-              width: '5px',
-              height: '28px',
-              background: 'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
-              borderRadius: '3px'
-            }}></span>
-            Profile Settings
-          </h3>
-          <form className="row g-4 position-relative">
-            <div className="col-12 fade-up fade-delay-2 form-field-wrapper">
-              <label className="form-label fw-semibold mb-3 admin-form-label" style={{ 
-                background: 'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontSize: '0.95rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                fontWeight: 600
-              }}>
-                <FontAwesomeIcon icon={faUser} style={{ color: '#22C55E', fontSize: '1rem' }} />
-                Full Name
-              </label>
-              <div className="admin-input-wrapper" style={{ position: 'relative' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: '16px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: '#94a3b8',
-                  zIndex: 2,
-                  pointerEvents: 'none'
-                }}>
-                  <FontAwesomeIcon icon={faUser} />
-                </div>
-                <input
-                  type="text"
-                  className="form-control rounded-3 admin-form-input"
-                  placeholder="John Doe"
-                  defaultValue="Admin User"
-                  style={{ paddingLeft: '48px', paddingRight: '16px', paddingTop: '14px', paddingBottom: '14px', fontSize: '0.95rem' }}
-                />
-                <span className="admin-input-focus-line"></span>
-              </div>
-            </div>
-
-            <div className="col-md-6 fade-up fade-delay-2 form-field-wrapper">
-              <label className="form-label fw-semibold mb-3 admin-form-label" style={{ color: '#1e293b', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <FontAwesomeIcon icon={faEnvelope} style={{ color: '#22C55E', fontSize: '1rem' }} />
-                Email Address
-              </label>
-              <div className="admin-input-wrapper" style={{ position: 'relative' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: '16px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: '#94a3b8',
-                  zIndex: 2,
-                  pointerEvents: 'none'
-                }}>
-                  <FontAwesomeIcon icon={faEnvelope} />
-                </div>
-                <input
-                  type="email"
-                  className="form-control rounded-3 admin-form-input"
-                  placeholder="admin@solarkon.com"
-                  defaultValue="admin@solarkon.com"
-                  style={{ paddingLeft: '48px', paddingRight: '16px', paddingTop: '14px', paddingBottom: '14px', fontSize: '0.95rem' }}
-                />
-                <span className="admin-input-focus-line"></span>
-              </div>
-            </div>
-
-            <div className="col-md-6 fade-up fade-delay-3 form-field-wrapper">
-              <label className="form-label fw-semibold mb-3 admin-form-label" style={{ color: '#1e293b', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <FontAwesomeIcon icon={faPhone} style={{ color: '#22C55E', fontSize: '1rem' }} />
-                Phone Number
-              </label>
-              <div className="admin-input-wrapper" style={{ position: 'relative' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: '16px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: '#94a3b8',
-                  zIndex: 2,
-                  pointerEvents: 'none'
-                }}>
-                  <FontAwesomeIcon icon={faPhone} />
-                </div>
-                <input
-                  type="tel"
-                  className="form-control rounded-3 admin-form-input"
-                  placeholder="+1 (555) 123-4567"
-                  defaultValue="+1 (555) 123-4567"
-                  style={{ paddingLeft: '48px', paddingRight: '16px', paddingTop: '14px', paddingBottom: '14px', fontSize: '0.95rem' }}
-                />
-                <span className="admin-input-focus-line"></span>
-              </div>
-            </div>
-
-            <div className="col-12 fade-up fade-delay-3 form-field-wrapper">
-              <label className="form-label fw-semibold mb-3 admin-form-label" style={{ color: '#1e293b', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <FontAwesomeIcon icon={faMapMarkerAlt} style={{ color: '#16a34a', fontSize: '1rem' }} />
-                Address
-              </label>
-              <div className="admin-input-wrapper" style={{ position: 'relative' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: '16px',
-                  top: '20px',
-                  color: '#94a3b8',
-                  zIndex: 2,
-                  pointerEvents: 'none'
-                }}>
-                  <FontAwesomeIcon icon={faMapMarkerAlt} />
-                </div>
-                <textarea
-                  className="form-control rounded-3 admin-form-input"
-                  rows="3"
-                  placeholder="123 Main Street, City, State, ZIP"
-                  defaultValue="123 Main Street, Anytown, USA 12345"
-                  style={{ paddingLeft: '48px', paddingRight: '16px', paddingTop: '14px', paddingBottom: '14px', fontSize: '0.95rem', resize: 'vertical' }}
-                />
-                <span className="admin-input-focus-line"></span>
-              </div>
-            </div>
-
-            <div className="col-12 fade-up fade-delay-4 form-field-wrapper">
-              <label className="form-label fw-semibold mb-3 admin-form-label" style={{ color: '#1e293b', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <FontAwesomeIcon icon={faFileAlt} style={{ color: '#22C55E', fontSize: '1rem' }} />
-                Bio
-              </label>
-              <div className="admin-input-wrapper" style={{ position: 'relative' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: '16px',
-                  top: '20px',
-                  color: '#94a3b8',
-                  zIndex: 2,
-                  pointerEvents: 'none'
-                }}>
-                  <FontAwesomeIcon icon={faFileAlt} />
-                </div>
-                <textarea
-                  className="form-control rounded-3 admin-form-input"
-                  rows="4"
-                  placeholder="Tell us about yourself..."
-                  defaultValue="Administrator for SOLARKON Solar Solutions"
-                  style={{ paddingLeft: '48px', paddingRight: '16px', paddingTop: '14px', paddingBottom: '14px', fontSize: '0.95rem', resize: 'vertical' }}
-                />
-                <span className="admin-input-focus-line"></span>
-              </div>
-            </div>
-
-            <div className="col-12 d-flex justify-content-end gap-3 mt-4 fade-up fade-delay-4">
-              <button
-                type="button"
-                className="btn rounded-pill px-4 px-md-5 admin-btn-cancel"
-                style={{ 
-                  background: '#f8faf9',
-                  color: '#64748b',
-                  border: '1px solid rgba(45, 80, 22, 0.2)',
-                  fontWeight: 600,
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#e5e7eb';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#f8faf9';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn rounded-pill px-4 px-md-5 admin-btn-primary"
-                style={{ 
-                  background: '#2D5016',
-                  color: '#ffffff',
-                  border: 'none',
-                  fontWeight: 600,
-                  boxShadow: '0 4px 16px rgba(45, 80, 22, 0.3)',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#22C55E';
-                  e.currentTarget.style.transform = 'translateY(-3px)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(34, 197, 94, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#2D5016';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(45, 80, 22, 0.3)';
-                }}
-              >
-                Save Changes
-              </button>
-            </div>
-          </form>
         </div>
-      )}
+
+        {/* 3. Social Media Links */}
+        <div className="card border-0 shadow-sm rounded-4 mb-4">
+          <div className="card-header bg-white p-4 border-bottom">
+            <h5 className="mb-0 fw-bold text-success">Social Media Links</h5>
+          </div>
+          <div className="card-body p-4">
+            <div className="row g-4">
+              <div className="col-md-6">
+                <label className="form-label fw-bold small text-muted">Facebook URL</label>
+                <div className="input-group">
+                  <span className="input-group-text bg-light"><FontAwesomeIcon icon={faFacebook} /></span>
+                  <input type="text" name="facebook_url" className="form-control" value={formData.facebook_url} onChange={handleChange} placeholder="https://facebook.com/..." />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-bold small text-muted">Twitter/X URL</label>
+                <div className="input-group">
+                  <span className="input-group-text bg-light"><FontAwesomeIcon icon={faTwitter} /></span>
+                  <input type="text" name="twitter_url" className="form-control" value={formData.twitter_url} onChange={handleChange} placeholder="https://twitter.com/..." />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-bold small text-muted">Instagram URL</label>
+                <div className="input-group">
+                  <span className="input-group-text bg-light"><FontAwesomeIcon icon={faInstagram} /></span>
+                  <input type="text" name="instagram_url" className="form-control" value={formData.instagram_url} onChange={handleChange} placeholder="https://instagram.com/..." />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-bold small text-muted">LinkedIn URL</label>
+                <div className="input-group">
+                  <span className="input-group-text bg-light"><FontAwesomeIcon icon={faLinkedin} /></span>
+                  <input type="text" name="linkedin_url" className="form-control" value={formData.linkedin_url} onChange={handleChange} placeholder="https://linkedin.com/..." />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Save Button */}
+        <div className="d-flex justify-content-end pb-5">
+           <button 
+             type="submit" 
+             disabled={saving} 
+             className="btn btn-success px-5 rounded-pill py-3 fw-bold shadow"
+           >
+              {saving ? <><FontAwesomeIcon icon={faSpinner} spin /> Saving...</> : <><FontAwesomeIcon icon={faSave} /> Save Settings</>}
+           </button>
+        </div>
+
+      </form>
     </div>
   );
 }
-
-export default Settings;
-

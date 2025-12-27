@@ -1,56 +1,80 @@
-function CTASection() {
-  return (
-    <section className='section-shell position-relative overflow-hidden' data-aos='fade-up'>
-      <div
-        className='position-absolute top-0 start-50 translate-middle-x'
-        style={{
-          width: '120%',
-          height: '100%',
-          background: 'linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%)',
-          opacity: 0.95,
-          zIndex: 0,
-        }}
-      ></div>
-      <div className='container position-relative' style={{ zIndex: 1 }}>
-        <div className='text-center mx-auto p-4 p-md-5' style={{ maxWidth: 720 }}>
-          <div className='text-uppercase small fw-semibold mb-2' style={{ color: '#D1FAE5' }}>
-            Get Started
-          </div>
-          <h2 className='fw-bold mb-3' style={{ color: '#ffffff', fontSize: '2.2rem' }}>
-            Get A Free Quote Today!
-          </h2>
-          <p className='mb-4' style={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: '1.05rem' }}>
-            Ready to switch to solar? Contact us today for a free, no-obligation quote. Our team will
-            help you find the perfect solar solution for your home or business.
-          </p>
+import { useForm } from '@inertiajs/react';
+import { HiArrowRight } from 'react-icons/hi2';
 
-          <form className='d-flex flex-column flex-sm-row justify-content-center gap-3 mx-auto' style={{ maxWidth: 480 }}>
-            <input 
-              type='email' 
-              className='form-control' 
-              placeholder='Enter your email'
-              style={{
-                borderRadius: '50px',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                padding: '0.75rem 1.5rem',
-                fontSize: '1rem',
-              }}
-            />
-            <button 
-              type='submit' 
-              className='btn btn-pill px-4'
-              style={{ 
-                background: 'linear-gradient(135deg, #166534 0%, #15803d 50%, #16a34a 100%)', 
-                color: '#ffffff',
-                fontWeight: 600,
-                border: 'none',
-                padding: '0.75rem 2rem',
-              }}
-            >
-              Send
-            </button>
-          </form>
+function CTASection() {
+  const { data, setData, post, processing } = useForm({
+    name: '',
+    phone: '',
+    email: '',
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    post('/userDetails', {
+      onSuccess: () => alert('Request sent! We will contact you shortly.'),
+    });
+  };
+
+  return (
+    <section className='section-shell py-5' data-aos='fade-up'>
+      <div className='container'>
+        <div
+          className='mx-auto rounded-4 position-relative'
+          style={{
+            maxWidth: '650px',
+            background: 'linear-gradient(135deg, #d9f99d 0%, #bbf7d0 100%)',
+            boxShadow: '0 15px 30px -5px rgba(187, 247, 208, 0.6)', 
+            border: '1px solid #bbf7d0',
+            // Spacing Fix: 2.5rem top/bottom, 1.5rem sides
+            padding: '2.5rem 1.5rem', 
+          }}
+        >
+          <div className="text-center position-relative" style={{ zIndex: 2 }}>
+            <h2 className="fw-bold mb-3" style={{ color: '#14532d', fontSize: '1.75rem', lineHeight: 1.2, marginTop: '0.5rem' }}>
+              Ready To Go Solar? Let's Talk!
+            </h2>
+            <p className="mb-4 mx-auto" style={{ color: '#166534', fontSize: '0.95rem', fontWeight: 500, maxWidth: '480px' }}>
+              Fill out the form below and we will get back to you with a free quote.
+            </p>
+
+            <form onSubmit={handleSubmit} className="d-flex flex-column gap-3 mx-auto" style={{ width: '100%' }}>
+              <div className="d-flex flex-column flex-sm-row gap-3">
+                <input 
+                  type="text" placeholder="Your Name" className="form-control border-0"
+                  value={data.name} onChange={e => setData('name', e.target.value)}
+                  style={{ borderRadius: '8px', padding: '0.8rem 1.2rem', fontSize: '0.95rem', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}
+                  required
+                />
+                <input 
+                  type="tel" placeholder="Phone Number" className="form-control border-0"
+                  value={data.phone} onChange={e => setData('phone', e.target.value)}
+                  style={{ borderRadius: '8px', padding: '0.8rem 1.2rem', fontSize: '0.95rem', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}
+                  required
+                />
+              </div>
+              <input 
+                type="email" placeholder="Email Address" className="form-control border-0"
+                value={data.email} onChange={e => setData('email', e.target.value)}
+                style={{ borderRadius: '8px', padding: '0.8rem 1.2rem', fontSize: '0.95rem', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}
+                required
+              />
+              <button
+                type="submit" disabled={processing}
+                className="btn w-100 d-flex align-items-center justify-content-center gap-2"
+                style={{
+                  backgroundColor: '#14532d', color: '#ffffff', fontWeight: 700, border: 'none',
+                  borderRadius: '50px', padding: '0.8rem', fontSize: '1rem', marginTop: '0.5rem',
+                  boxShadow: '0 4px 12px rgba(20, 83, 45, 0.2)', transition: 'transform 0.2s ease', width: '100%'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                {processing ? 'Sending...' : 'Schedule Free Call'}
+                {!processing && <HiArrowRight size={18} />}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </section>
@@ -58,4 +82,3 @@ function CTASection() {
 }
 
 export default CTASection;
-
