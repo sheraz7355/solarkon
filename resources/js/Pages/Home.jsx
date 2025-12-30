@@ -7,15 +7,17 @@ import ClientLogosSection from '@/components/client/ClientLogosSection';
 import TestimonialsSection from '@/components/client/TestimonialsSection';
 import CTASection from '@/components/client/CTASection';
 import Footer from '@/components/client/Footer';
+import ServicesShowcase from '@/components/client/ServicesShowcase'; 
 
-function Home({ heroContent, heroStats, methodologyData, partnerLogos }) {
+
+function Home({ heroContent, heroStats, methodologyData, partnerLogos,servicesData}) {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
       <main className="flex-grow-1">
         {/* Pass content and stats separately for cleaner handling */}
         <HeroSection content={heroContent} stats={heroStats} />
-        
+        <ServicesShowcase data = {servicesData} />
         <StepsSection steps={methodologyData} />
         <ClientLogosSection partnerLogos={partnerLogos} />
         <TestimonialsSection />

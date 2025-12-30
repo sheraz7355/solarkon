@@ -4,13 +4,15 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faHeading, faImages, faSave, faTrash, faChartLine, 
-  faFolderOpen, faImage, faExclamationTriangle, faSpinner 
+  faFolderOpen, faImage, faExclamationTriangle, faSpinner, faLayerGroup 
 } from '@fortawesome/free-solid-svg-icons';
 
 // COMPONENTS
 import AdminPartnersForm from "../../components/admin/AdminPartnersForm"; 
 import AdminStepsForm from "../../components/admin/AdminStepsForm";       
 import MediaPickerModal from '../../components/admin/MediaPickerModal';   
+import AdminServicesForm from '../../components/admin/AdminServicesForm'; // ✅ Corrected Import
+
 
 // ==========================================
 // 1. CHILD: HERO FORM COMPONENT
@@ -169,38 +171,6 @@ function HeroForm({ initialData, onRefresh }) {
            </div>
         </div>
 
-      {/* 
-      =========================================================
-      --- SLIDER SECTION (COMMENTED OUT FOR FUTURE USE) ---
-      =========================================================
-      <div className="card border-0 shadow-sm rounded-4 mb-4">
-          <div className="card-header bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
-            <h5 className="mb-0 fw-bold text-success"><FontAwesomeIcon icon={faImages} className="me-2"/> Financing Slider</h5>
-            
-            <button 
-                type="button" 
-                className="btn btn-sm btn-success text-white shadow-sm"
-                onClick={() => openPicker('slider')}
-            >
-                <FontAwesomeIcon icon={faFolderOpen} className="me-2"/> Select from Library
-            </button>
-          </div>
-          <div className="card-body p-4">
-            <div className="row g-3">
-              {data.slider.map((url, index) => (
-                <div key={index} className="col-6 col-md-3">
-                  <div className="position-relative rounded-3 overflow-hidden border shadow-sm bg-white" style={{ height: '140px' }}>
-                    <img src={url} alt="Slider" className="w-100 h-100 object-fit-cover" />
-                    <button type="button" onClick={() => removeSliderImage(index)} className="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle" style={{ width: '30px', height: '30px', padding: 0 }}><FontAwesomeIcon icon={faTrash} size="sm"/></button>
-                  </div>
-                </div>
-              ))}
-              {data.slider.length === 0 && <div className="col-12 py-5 text-center text-muted border rounded bg-light border-dashed">No slider images selected.</div>}
-            </div>
-          </div>
-      </div>
-      */}
-
       <div className="d-flex justify-content-end">
            <button type="submit" disabled={processing || !isDirty} className={`btn px-5 rounded-pill ${isDirty ? 'btn-success' : 'btn-secondary'}`}><FontAwesomeIcon icon={faSave} className="me-2" /> {processing ? 'Saving Hero...' : 'Save Hero Changes'}</button>
       </div>
@@ -262,9 +232,25 @@ export default function AdminHome() {
 
         <hr className="my-5 opacity-25" />
 
-        {/* 2. METHODOLOGY SECTION */}
+        {/* 2. SERVICES SECTION (New) */}
         <div className="d-flex align-items-center mb-4">
-            <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}><span className="fw-bold">2</span></div>
+            <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}>
+                <span className="fw-bold">2</span>
+            </div>
+            <div>
+                <h4 className="fw-bold mb-0 text-dark">Services Showcase</h4>
+                <p className="text-muted small mb-0">The 4 expanding service cards</p>
+            </div>
+        </div>
+        <AdminServicesForm />
+
+        <hr className="my-5 opacity-25" />
+
+        {/* 3. METHODOLOGY SECTION */}
+        <div className="d-flex align-items-center mb-4">
+            <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}>
+                <span className="fw-bold">3</span>
+            </div>
             <div>
                 <h4 className="fw-bold mb-0 text-dark">Methodology Steps</h4>
                 <p className="text-muted small mb-0">The scrolling workflow section</p>
@@ -274,9 +260,11 @@ export default function AdminHome() {
 
         <hr className="my-5 opacity-25" />
 
-        {/* 3. PARTNER LOGOS SECTION */}
+        {/* 4. PARTNER LOGOS SECTION */}
         <div className="d-flex align-items-center mb-4">
-            <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}><span className="fw-bold">3</span></div>
+            <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}>
+                <span className="fw-bold">4</span>
+            </div>
             <div>
                 <h4 className="fw-bold mb-0 text-dark">Partner Logos</h4>
                 <p className="text-muted small mb-0">Brands shown in the partners slider</p>

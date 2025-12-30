@@ -31,9 +31,11 @@
         <meta name="twitter:image" content="{{ asset('images/web-logo.webp') }}">
 
         <!-- --- FAVICON (Browser Tab Icon) --- -->
-        <link rel="icon" href="{{ asset('build/assets/web-logo-EF-qaTbw.webp') }}" type="image/webp">
-        <link rel="shortcut icon" href="{{ asset('build/assets/web-logo-EF-qaTbw.webp') }}" type="image/webp">
-        <link rel="apple-touch-icon" href="{{ asset('build/assets/web-logo-EF-qaTbw.webp') }}">
+        <link rel="icon" type="image/x-icon" href="/web-logo.ico?v=2">
+        <link rel="shortcut icon" type="image/x-icon" href="/web-logo.ico?v=2">
+        <link rel="icon" type="image/x-icon" sizes="16x16" href="/web-logo.ico?v=2">
+        <link rel="icon" type="image/x-icon" sizes="32x32" href="/web-logo.ico?v=2">
+        <link rel="apple-touch-icon" href="/web-logo.ico?v=2">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

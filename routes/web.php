@@ -12,11 +12,13 @@ Route::get('/hero-sections', [HomeController::class, 'getHeroData'])->name('admi
 Route::get('/logos',[HomeController::class,'getLogos'])->name('admin.getLogos');
 Route::get('/settings',[SettingsController::class,'getSettings'])->name('admin.getSettings');
 Route::get('/userDetails',[ContactController::class,'index'])->name('admin.getUserDetails');
+Route::get('/homeServices',[HomeController::class,'getServices'])->name('admin.getServices');
 Route::post('/hero-section', [HeroSectionsController::class, 'update'])->name('admin.hero.update');
 Route::post('/work-data',[HomeController::class,'updateData'])->name('admin.work-data.update');
 Route::post('/logos',[HomeController::class,'updateLogos'])->name('admin.updateLogos');
 Route::post('/settings',[SettingsController::class,'updateSettings'])->name('admin.updateSettings');
 Route::post('/userDetails',[ContactController::class,'store'])->name('admin.updateUserDetails');
+Route::post('/homeServices',[HomeController::class,'storeServices'])->name('admin.storeServices');
 
 Route::delete('/userDetails/{id}',[ContactController::class,'destroy'])->name('admin.deleteUserDetails');
 

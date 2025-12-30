@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\HeroSections; // Ensure this matches your actual model filename
+use App\Models\HeroSections; 
 use App\Models\MethodologySection;
+use App\Models\PartnerLogo;
+use App\Models\HomeServiceSection; 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\PartnerLogo;
-
 
 class HomeController extends Controller
 {
@@ -16,18 +16,67 @@ class HomeController extends Controller
         $heroData  = HeroSections::where('page_name', 'home')->first();
         $heroStats = $heroData ? $heroData->stats : [];
         
-        // Fetch methodology data for the frontend props
         $methodologyData = MethodologySection::first();
-         $logosRecord = PartnerLogo::first();
-    $partnerLogos = $logosRecord ? $logosRecord->logos : [];
+        
+        $logosRecord = PartnerLogo::first();
+        $partnerLogos = $logosRecord ? $logosRecord->logos : [];
+
+        // Fetch Services Data
+        $servicesData = HomeServiceSection::first();
 
         return Inertia::render('Home', [
             'heroContent' => $heroData,
             'heroStats'   => $heroStats,
             'methodologyData' => $methodologyData,
-            'partnerLogos' => $partnerLogos // Pass this so the home page displays it
+            'partnerLogos' => $partnerLogos,
+            'servicesData' => $servicesData, 
         ]);
     }
+
+    // --- NEW: Get Services Data for Admin Form ---
+    public function getServices()
+    {
+        // Get data or return default structure if DB is empty
+        $data = HomeServiceSection::firstOrNew([], [
+            'heading_green' => 'Our services',
+            'heading_dark'  => 'in the field of photovoltaics & renewable energies',
+            'description'   => 'We plan and install photovoltaic systems for roofs, carports, and PV fences.',
+            'services'      => [
+                ['title' => 'PV Roof Systems', 'image' => ''],
+                ['title' => 'In-Roof Systems', 'image' => ''],
+                ['title' => 'PV Fences', 'image' => ''],
+                ['title' => 'Solar Carports', 'image' => '']
+            ]
+        ]);
+
+        return response()->json($data);
+    }
+
+    public function storeServices(Request $request)
+    {
+        $validated = $request->validate([
+            'heading_green' => 'nullable|string|max:255',
+            'heading_dark'  => 'nullable|string|max:255',
+            'description'   => 'nullable|string',
+            'services'      => 'nullable|array|min:1',
+            'services.*.title' => 'required|string',
+            'services.*.image' => 'nullable|string',
+        ]);
+
+        HomeServiceSection::updateOrCreate(
+            ['id' => 1], // Always update the first record
+            [
+                'heading_green' => $validated['heading_green'],
+                'heading_dark'  => $validated['heading_dark'],
+                'description'   => $validated['description'],
+                'services'      => $validated['services'] ?? []
+            ]
+        );
+
+        return response()->json(['message' => 'Services updated successfully']);
+    }
+
+    // ❌ THE ERROR WAS HERE: You had a '}' here that closed the class too early. I removed it.
 
     // ✅ FIX: This function was empty, now it returns data for the Admin Form
     public function getMethadologyData()
@@ -43,12 +92,13 @@ class HomeController extends Controller
 
     public function getHeroData()
     {
-        $hero = HeroSections::where('page_name', 'home')->firstOrFail();
+        // Recommendation: Use first() instead of firstOrFail() to prevent 404 errors if DB is empty
+        $hero = HeroSections::where('page_name', 'home')->first(); 
       
         return response()->json([
-            'title'       => $hero->title,
-            'description' => $hero->description,
-            'image_url'   => $hero->image_url,
+            'title'       => $hero->title ?? '',
+            'description' => $hero->description ?? '',
+            'image_url'   => $hero->image_url ?? '',
             'slider_url'  => $hero->slider_url ?? [],
             'stats'       => $hero->stats ?? [],
         ]);
@@ -81,16 +131,14 @@ class HomeController extends Controller
         return redirect()->back()->with('success', 'Methodology section saved!');
     }
 
-   
+    public function getLogos()
+    {
+        $data = PartnerLogo::first();
+        // Return empty array if no record exists yet
+        return response()->json($data ? $data->logos : []);
+    }
 
-public function getLogos()
-{
-    $data = PartnerLogo::first();
-    // Return empty array if no record exists yet
-    return response()->json($data ? $data->logos : []);
-}
-
- public function updateLogos(Request $request)
+    public function updateLogos(Request $request)
     {
         // 1. Validate: We now expect a simple array of strings (URLs)
         $data = $request->validate([
@@ -102,8 +150,6 @@ public function getLogos()
         $logoUrls = $data['logos'] ?? [];
 
         // 3. Save directly. 
-        // No need to loop, check for files, or store files. 
-        // The Media Manager already did the hard work.
         PartnerLogo::updateOrCreate(
             ['id' => 1], 
             ['logos' => $logoUrls]
