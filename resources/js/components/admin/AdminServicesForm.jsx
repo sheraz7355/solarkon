@@ -10,7 +10,7 @@ export default function AdminServicesForm() {
   const [showModal, setShowModal] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(null);
 
-  // 1. STATE: Current Data
+  // 1. STATE
   const [formData, setFormData] = useState({
     heading_green: '',
     heading_dark: '',
@@ -21,13 +21,12 @@ export default function AdminServicesForm() {
     ]
   });
 
-  // 2. STATE: Original Data (to check for changes)
   const [initialData, setInitialData] = useState(null);
 
-  // 3. LOGIC: Check if data has changed (Deep comparison using JSON stringify)
+  // 2. DIRTY CHECK
   const isDirty = JSON.stringify(formData) !== JSON.stringify(initialData);
 
-  // Fetch Data
+  // 3. FETCH DATA
   useEffect(() => {
     axios.get('/homeServices') 
       .then(res => {
@@ -46,7 +45,10 @@ export default function AdminServicesForm() {
           };
 
           setFormData(mappedData);
-          setInitialData(mappedData); // <--- Save a copy of the original data
+          // FIX 1: Create a Deep Copy for initialData using JSON parse/stringify
+          // This breaks the reference link so initialData doesn't change when you type
+          setInitialData(JSON.parse(JSON.stringify(mappedData))); 
+          
           setLoading(false);
       })
       .catch(err => {
@@ -60,11 +62,19 @@ export default function AdminServicesForm() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  // Handle Service Item Change
+  // FIX 2: Handle Service Item Change (Immutable Update)
   const handleServiceChange = (index, field, value) => {
-    const newServices = [...formData.services];
-    newServices[index][field] = value;
-    setFormData(prev => ({ ...prev, services: newServices }));
+    setFormData(prev => {
+        // Create a new array, and create a NEW object for the specific item being changed
+        const newServices = prev.services.map((item, i) => {
+            if (i === index) {
+                return { ...item, [field]: value }; // New object reference
+            }
+            return item; // Keep existing reference for others
+        });
+
+        return { ...prev, services: newServices };
+    });
   };
 
   const openPicker = (index) => {
@@ -79,12 +89,13 @@ export default function AdminServicesForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isDirty) return; // Prevent submitting if nothing changed
+    if (!isDirty) return; 
 
     setSaving(true);
     try {
       await axios.post('/homeServices', formData);
-      setInitialData(formData); // <--- Update initialData so button goes back to disabled
+      // Update initialData to match the new saved state (Deep Copy again)
+      setInitialData(JSON.parse(JSON.stringify(formData))); 
       alert('Services saved successfully!');
     } catch (err) {
       console.error(err);
@@ -100,7 +111,6 @@ export default function AdminServicesForm() {
     <div className="card border-0 shadow-sm rounded-4 mb-5">
       <div className="card-header bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
         <h5 className="mb-0 fw-bold text-success">Services Showcase Section</h5>
-        {/* Optional: Visual indicator that changes are unsaved */}
         {isDirty && <span className="badge bg-warning text-dark">Unsaved Changes</span>}
       </div>
       
@@ -154,7 +164,6 @@ export default function AdminServicesForm() {
           </div>
 
           <div className="text-end mt-4">
-            {/* 4. BUTTON: Only enabled if Dirty or Saving */}
             <button 
                 type="submit" 
                 disabled={saving || !isDirty} 

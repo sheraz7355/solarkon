@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios'; // Use Axios to fetch data
+import axios from 'axios'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faHeading, faAlignLeft, faMapMarkerAlt, faPhone, faEnvelope, 
-  faSave, faSpinner 
+  faSave, faSpinner, faExclamationTriangle 
 } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
@@ -11,7 +11,7 @@ export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   
-  // State for form data
+  // 1. STATE: Form Data
   const [formData, setFormData] = useState({
     site_name: '',
     footer_description: '',
@@ -24,14 +24,34 @@ export default function Settings() {
     linkedin_url: ''
   });
 
-  // 1. FETCH DATA FROM DB ON LOAD
+  // 2. STATE: Original Data (Snapshot)
+  const [initialData, setInitialData] = useState(null);
+
+  // 3. LOGIC: Check if Dirty
+  const isDirty = JSON.stringify(formData) !== JSON.stringify(initialData);
+
+  // 4. FETCH DATA
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const res = await axios.get('/settings'); // Call your API
-        // Merge DB data into form state
-        // If DB returns { phone: "123" }, it updates formData.phone
-        setFormData(prev => ({ ...prev, ...res.data }));
+        const res = await axios.get('/settings');
+        
+        // Sanitize data: Ensure nulls become empty strings to prevent React warnings
+        const cleanData = {
+            site_name: res.data.site_name || '',
+            footer_description: res.data.footer_description || '',
+            address: res.data.address || '',
+            phone: res.data.phone || '',
+            email: res.data.email || '',
+            facebook_url: res.data.facebook_url || '',
+            twitter_url: res.data.twitter_url || '',
+            instagram_url: res.data.instagram_url || '',
+            linkedin_url: res.data.linkedin_url || ''
+        };
+
+        setFormData(cleanData);
+        // Create Deep Copy for comparison
+        setInitialData(JSON.parse(JSON.stringify(cleanData)));
       } catch (err) {
         console.error("Failed to load settings", err);
       } finally {
@@ -41,18 +61,22 @@ export default function Settings() {
     fetchSettings();
   }, []);
 
-  // 2. HANDLE INPUT CHANGE
+  // 5. HANDLE CHANGE
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // 3. SUBMIT FORM
+  // 6. SUBMIT FORM
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isDirty) return; // Stop if no changes
+
     setSaving(true);
     try {
-      await axios.post('/settings', formData); // Save to API
+      await axios.post('/settings', formData);
+      // Update the snapshot to match the new saved data
+      setInitialData(JSON.parse(JSON.stringify(formData))); 
       alert('Settings saved successfully!');
     } catch (err) {
       console.error(err);
@@ -67,9 +91,18 @@ export default function Settings() {
   return (
     <div className="container-fluid px-4 py-5" style={{ background: '#f8faf9', minHeight: '100vh' }}>
       
-      <div className="mb-5">
-        <h2 className="fw-bold mb-2" style={{ color: '#14532d' }}>Footer & Contact Settings</h2>
-        <p className="text-muted">Manage the content displayed in the website footer.</p>
+      {/* Header with Dirty Indicator */}
+      <div className="mb-5 d-flex align-items-center justify-content-between">
+        <div>
+            <h2 className="fw-bold mb-2" style={{ color: '#14532d' }}>Footer & Contact Settings</h2>
+            <p className="text-muted mb-0">Manage the content displayed in the website footer.</p>
+        </div>
+        {isDirty && (
+            <div className="alert alert-warning py-2 px-3 mb-0 fw-bold shadow-sm d-flex align-items-center">
+                <FontAwesomeIcon icon={faExclamationTriangle} className="me-2" />
+                Unsaved Changes
+            </div>
+        )}
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -209,8 +242,8 @@ export default function Settings() {
         <div className="d-flex justify-content-end pb-5">
            <button 
              type="submit" 
-             disabled={saving} 
-             className="btn btn-success px-5 rounded-pill py-3 fw-bold shadow"
+             disabled={saving || !isDirty} 
+             className={`btn px-5 rounded-pill py-3 fw-bold shadow ${isDirty ? 'btn-success' : 'btn-secondary'}`}
            >
               {saving ? <><FontAwesomeIcon icon={faSpinner} spin /> Saving...</> : <><FontAwesomeIcon icon={faSave} /> Save Settings</>}
            </button>

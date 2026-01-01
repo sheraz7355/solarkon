@@ -10,7 +10,8 @@ createServer((page) =>
     createInertiaApp({
         page,
         render: ReactDOMServer.renderToString,
-        title: (title) => `${title} - ${appName}`,
+// Change it to this:
+        title: (title) => title ? `${title} - ${appName}` : appName,
         resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
         setup: ({ App, props }) => {
             // Set up Ziggy for SSR so route() works

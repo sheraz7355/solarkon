@@ -71,9 +71,7 @@ function ServicesShowcase({ data }) {
                 >
                   <div 
                     className="position-absolute bottom-0 start-0 w-100 h-50 d-flex align-items-end justify-content-center pb-4"
-                    style={{
-                      background: 'linear-gradient(to top, rgba(22, 101, 52, 0.95) 0%, transparent 100%)'
-                    }}
+                    
                   >
                     <h4 className="text-white fw-bold text-center px-2 mb-0 text-shadow">
                       {service.title}
