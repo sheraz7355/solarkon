@@ -3,10 +3,11 @@ import Navbar from '../components/client/Navbar';
 import Footer from '../components/client/Footer';
 import { motion } from 'framer-motion';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
+import WhatsAppFloat from '../components/client/WhatsAppFloat';
 
 function Financing() {
   const [openAccordion, setOpenAccordion] = useState(0);
-
+ <WhatsAppFloat/>
   const financingOptions = [
     {
       title: 'Client Self Finance',

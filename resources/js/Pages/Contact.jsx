@@ -5,11 +5,13 @@ import ContactPanels from '../components/client/Contact/ContactPanels';
 import ContactMap from '../components/client/Contact/ContactMap';
 import ContactFAQ from '../components/client/Contact/ContactFAQ';
 import ContactCTA from '../components/client/Contact/ContactCTA';
+import WhatsAppFloat from '../components/client/WhatsAppFloat';
 
 function Contact() {
   return (
     <div className="d-flex flex-column min-vh-100 bg-white">
       <Navbar />
+      <WhatsAppFloat/>
       <main className="flex-grow-1">
         <ContactHero />
         <ContactPanels />
