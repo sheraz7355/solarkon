@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Navbar from '../components/client/Navbar';
 import Footer from '../components/client/Footer';
 import { motion } from 'framer-motion';
+import WhatsAppFloat from '../components/client/WhatsAppFloat';
 
 function Projects() {
   const [filter, setFilter] = useState('All');
@@ -28,6 +29,7 @@ function Projects() {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
+      <WhatsAppFloat/>
       <main className="flex-grow-1">
         {/* Hero Section */}
         <section className="section-shell bg-white" data-aos="fade-up">

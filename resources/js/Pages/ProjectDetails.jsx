@@ -6,12 +6,13 @@ import ProjectSection from '../components/client/ProjectDetails/ProjectSection';
 import TestimonialCard from '../components/client/ProjectDetails/TestimonialCard';
 import ProjectGallery from '../components/client/ProjectDetails/ProjectGallery';
 import ProjectCTA from '../components/client/ProjectDetails/ProjectCTA';
+import WhatsAppFloat from '../components/client/WhatsAppFloat';
 
 function ProjectDetails() {
   return (
     <div className="min-vh-100 d-flex flex-column bg-white">
       <Navbar />
-
+      <WhatsAppFloat/>
       <main className="flex-grow-1">
         <section className="section-shell pt-4">
           <div className="container">

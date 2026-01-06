@@ -37,6 +37,9 @@ Route::get('/solutions', function () { return Inertia::render('Solutions'); });
 Route::get('/projects', function () { return Inertia::render('Projects'); }); 
 Route::get('/financing', function () { return Inertia::render('Financing'); });
 Route::get('/project-details', function () {return Inertia::render('ProjectDetails');})->name('project.details');
+Route::get('/store', function () {
+    return Inertia::render('Store');
+});
 
 // // (Your Navbar linked to '/profile', so we map that here)
 // Route::get('/profile', function () {
