@@ -68,9 +68,9 @@ function ProjectDetails() {
           </div>
         </section>
 
-        <section className="section-shell section-dark pt-0">
-          <ProjectCTA />
-        </section>
+        {/* <section className="section-shell section-dark pt-0">
+          {/* <ProjectCTA /> */}
+        {/* </section> */} */}
       </main>
 
       <Footer />

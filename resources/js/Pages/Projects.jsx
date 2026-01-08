@@ -3,6 +3,8 @@ import Navbar from '../components/client/Navbar';
 import Footer from '../components/client/Footer';
 import WhatsAppFloat from '../components/client/WhatsAppFloat';
 import ProjectsHeroSlider from '../components/client/ProjectHerosection';
+import { Link, router, usePage } from '@inertiajs/react';
+
 
 import {
   FaArrowLeft,
@@ -75,7 +77,8 @@ export default function Projects() {
       <Navbar />
       <WhatsAppFloat />
 
-      <main>
+      {/* Make main take full remaining height */}
+      <main className="flex-grow-1">
         {/* HEADER */}
         <section className="py-5 text-center">
           <div className="container">
@@ -189,6 +192,7 @@ export default function Projects() {
                       </div>
 
                       <button
+                      onClick={() => router.visit('/project-details', { data: { id: p.id } })}
                         className="btn rounded-pill px-4 py-2 fw-semibold"
                         style={{
                           background: '#022c22',
@@ -254,3 +258,4 @@ export default function Projects() {
     </div>
   );
 }
+
