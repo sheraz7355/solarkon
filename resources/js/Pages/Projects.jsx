@@ -63,7 +63,6 @@ export default function Projects() {
 
       <main>
 
-        {/* ================= HERO TEXT SECTION ================= */}
         <section className="py-5 text-center">
           <div className="container">
             <h1 className="fw-bold display-5 mb-3">
@@ -74,7 +73,7 @@ export default function Projects() {
               className="text-muted mx-auto"
               style={{ maxWidth: 640, fontSize: 16 }}
             >
-              Explore how Solvix is transforming homes, businesses, and
+              Explore how Solarkon is transforming homes, businesses, and
               communities with cutting-edge solar energy solutions.
             </p>
           </div>
