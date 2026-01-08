@@ -1,3 +1,5 @@
+import React from 'react';
+
 const images = [
   'https://images.pexels.com/photos/9875450/pexels-photo-9875450.jpeg?auto=compress&cs=tinysrgb&w=1200',
   'https://images.pexels.com/photos/9875446/pexels-photo-9875446.jpeg?auto=compress&cs=tinysrgb&w=1200',
@@ -8,30 +10,69 @@ const images = [
 
 function ProjectGallery() {
   return (
-    <div className="d-flex flex-column gap-3 gap-lg-4" data-aos="fade-up">
-      <h2 className="h5 mb-0" style={{ color: '#1F2933' }}>
-        Project Gallery
-      </h2>
+    <>
+      {/* 🔹 INLINE CSS */}
+      <style>{`
+        .project-gallery-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
 
-      <div className="d-none d-lg-grid" style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 20 }}>
-        {images.slice(0, 3).map((src) => (
-          <img key={src} src={src} alt="" className="rounded-4 w-100" style={{ height: 220, objectFit: 'cover' }} />
-        ))}
-        <img
-          src={images[3]}
-          alt=""
-          className="rounded-4 w-100"
-          style={{ height: 220, objectFit: 'cover', gridColumn: 'span 2 / span 2' }}
-        />
-        <img src={images[4]} alt="" className="rounded-4 w-100" style={{ height: 220, objectFit: 'cover' }} />
-      </div>
+        .gallery-title {
+          font-size: 1.25rem;
+          font-weight: 600;
+          color: #1f2933;
+          margin: 0;
+        }
 
-      <div className="d-grid d-lg-none" style={{ gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 12 }}>
-        {images.map((src) => (
-          <img key={src} src={src} alt="" className="rounded-4 w-100" style={{ height: 130, objectFit: 'cover' }} />
-        ))}
+        .project-gallery-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .gallery-img {
+          width: 100%;
+          height: 180px;
+          object-fit: cover;
+          border-radius: 16px;
+          transition: transform 0.3s ease;
+        }
+
+        .gallery-img:hover {
+          transform: scale(1.03);
+        }
+
+        /* ⭐ MAGIC: if image count is odd → last image full width */
+        .project-gallery-grid img:last-child:nth-child(odd) {
+          grid-column: span 2;
+        }
+
+        @media (min-width: 992px) {
+          .gallery-img {
+            height: 240px;
+          }
+        }
+      `}</style>
+
+      {/* 🔹 COMPONENT */}
+      <div className="project-gallery-wrapper" data-aos="fade-up">
+        <h2 className="gallery-title">Project Gallery</h2>
+
+        <div className="project-gallery-grid">
+          {images.map((src, index) => (
+            <img
+              key={index}
+              src={src}
+              alt={`Project ${index + 1}`}
+              className="gallery-img"
+              loading="lazy"
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
