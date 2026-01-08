@@ -7,6 +7,7 @@ import TestimonialCard from '../components/client/ProjectDetails/TestimonialCard
 import ProjectGallery from '../components/client/ProjectDetails/ProjectGallery';
 import ProjectCTA from '../components/client/ProjectDetails/ProjectCTA';
 import WhatsAppFloat from '../components/client/WhatsAppFloat';
+import ProfileSettings from '../components/client/Profile/ProfileSettings';
 
 function ProjectDetails() {
   return (
@@ -58,7 +59,7 @@ function ProjectDetails() {
 
         <section className="section-shell pt-0">
           <div className="container">
-            <TestimonialCard />
+            {/* <TestimonialCard /> */}
           </div>
         </section>
 
@@ -68,9 +69,8 @@ function ProjectDetails() {
           </div>
         </section>
 
-        {/* <section className="section-shell section-dark pt-0">
-          {/* <ProjectCTA /> */}
-        {/* </section> */} */}
+                       <ProfileSettings/>
+       
       </main>
 
       <Footer />

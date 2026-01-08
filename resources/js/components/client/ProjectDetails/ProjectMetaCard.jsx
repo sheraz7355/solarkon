@@ -42,18 +42,18 @@ function ProjectMetaCard() {
               <div
                 className="d-flex align-items-center justify-content-center rounded-3"
                 style={{
-                  width: 36,
-                  height: 36,
+                  width: 40,
+                  height: 40,
                   backgroundColor: '#E7F6DD',
                   color: '#5EA82F',
                 }}
               >
-                <Icon size={18} />
+                <Icon size={23} />
               </div>
               <div>
                 <p
                   className="text-uppercase mb-1"
-                  style={{ fontSize: 11, letterSpacing: '0.16em', color: '#6B7280' }}
+                  style={{ fontSize: 14, letterSpacing: '0.16em', color: '#6B7280' }}
                 >
                   {label}
                 </p>

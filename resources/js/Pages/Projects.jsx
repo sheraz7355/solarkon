@@ -15,6 +15,7 @@ import {
   FaCheckCircle,
   FaClock,
 } from 'react-icons/fa';
+import ProfileSettings from '../components/client/Profile/ProfileSettings';
 
 const PROJECTS_PER_PAGE = 4;
 
@@ -252,6 +253,8 @@ export default function Projects() {
             )}
           </div>
         </section>
+                <ProfileSettings />
+        
       </main>
 
       <Footer />
