@@ -1,123 +1,264 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Navbar from '../components/client/Navbar';
 import Footer from '../components/client/Footer';
-import { motion } from 'framer-motion';
 import WhatsAppFloat from '../components/client/WhatsAppFloat';
+import ProjectsHeroSlider from '../components/client/ProjectHerosection';
+import { Link, router, usePage } from '@inertiajs/react';
 
-function Projects() {
+
+import {
+  FaArrowLeft,
+  FaArrowRight,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaSolarPanel,
+  FaCheckCircle,
+  FaClock,
+} from 'react-icons/fa';
+import ProfileSettings from '../components/client/Profile/ProfileSettings';
+
+const PROJECTS_PER_PAGE = 4;
+
+const projects = [
+  {
+    id: 1,
+    status: 'Completed',
+    tag: 'Off-Grid Solutions',
+    title: 'Green Warehouse Initiative',
+    desc: 'Installed a 500 kW rooftop solar system, helping MetroLogix reduce carbon emissions by 40% and cut annual energy costs by over $70,000.',
+    location: 'Dallas, Texas',
+    date: 'March 2024',
+    image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276',
+  },
+  {
+    id: 2,
+    status: 'Completed',
+    tag: 'Educational Solar Integration',
+    title: 'Sustainable Schools Program',
+    desc: 'Designed and implemented a 180 kW solar array across three campuses, promoting clean energy education while saving the district an estimated $25,000 per year.',
+    location: 'Ridgefield, Oregon',
+    date: 'June 2024',
+    image: 'https://images.unsplash.com/photo-1581090700227-1e37b190418e',
+  },
+  {
+    id: 3,
+    status: 'Ongoing',
+    tag: 'Solar + Battery Backup',
+    title: 'Solar For Health',
+    desc: 'Delivered a 300 kW solar system with battery storage, ensuring uninterrupted power for critical equipment and reducing grid reliance by 60%.',
+    location: 'Sacramento, California',
+    date: 'July 2024',
+    image: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d',
+  },
+];
+
+export default function Projects() {
+  const [page, setPage] = useState(1);
   const [filter, setFilter] = useState('All');
 
-  // This will be fetched from API later
-  const projects = [
-    { id: 1, name: 'Bashir Sons Steel Industry', capacity: '5 MWp', sector: 'Industrial', status: 'Completed', location: 'Kala Shah Kaku' },
-    { id: 2, name: 'Gourmet Bakeries', capacity: '3.5 MWp', sector: 'Commercial', status: 'Completed', location: 'Multiple Branches' },
-    { id: 3, name: 'Hajvery Foods', capacity: '1.2 MWp', sector: 'Industrial', status: 'Completed', location: 'Daska, Sialkot' },
-    { id: 4, name: 'Hajvery Beverages', capacity: '1 MWp', sector: 'Industrial', status: 'Completed', location: 'Kala Shah Kaku' },
-    { id: 5, name: 'Gourmet Oil & Ghee Mills', capacity: '1.075 MWp', sector: 'Industrial', status: 'Completed', location: 'Gujranwala' },
-    { id: 6, name: 'Lahore Grammar School', capacity: '500 KWp', sector: 'Commercial', status: 'Completed', location: 'Multiple Branches' },
-    { id: 7, name: 'Bashir Sons Steel Industry', capacity: '10 MWp', sector: 'Industrial', status: 'Ongoing', location: 'Kala Shah Kaku' },
-    { id: 8, name: 'Five Star Steel Industry', capacity: '5 MWp', sector: 'Industrial', status: 'Ongoing', location: 'Lahore' },
-    { id: 9, name: 'Al Fateh Steel Mill', capacity: '6 MWp', sector: 'Industrial', status: 'Ongoing', location: 'Karachi' },
-  ];
+  const filteredProjects = useMemo(() => {
+    return filter === 'All'
+      ? projects
+      : projects.filter(p => p.status === filter);
+  }, [filter]);
 
-  const filteredProjects = filter === 'All' 
-    ? projects 
-    : projects.filter(p => p.status === filter);
+  const totalPages = Math.ceil(
+    filteredProjects.length / PROJECTS_PER_PAGE
+  );
 
-  const filters = ['All', 'Completed', 'Ongoing'];
+  const paginatedProjects = useMemo(() => {
+    return filteredProjects.slice(
+      (page - 1) * PROJECTS_PER_PAGE,
+      page * PROJECTS_PER_PAGE
+    );
+  }, [page, filteredProjects]);
 
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
-      <WhatsAppFloat/>
+      <WhatsAppFloat />
+
+      {/* Make main take full remaining height */}
       <main className="flex-grow-1">
-        {/* Hero Section */}
-        <section className="section-shell bg-white" data-aos="fade-up">
+        {/* HEADER */}
+        <section className="py-5 text-center">
           <div className="container">
-            <div className="text-center mb-5">
-              <span className="eyebrow">Our Portfolio</span>
-              <h1 className="fw-bold section-title mt-3" style={{ fontSize: '2.5rem' }}>
-                Our Projects
-              </h1>
-              <p className="text-muted mt-3 mx-auto" style={{ maxWidth: '700px' }}>
-                700+ Solar Installations across Pakistan with 150MW+ Total Capacity
-              </p>
+            <h1 className="fw-bold display-5 mb-3">
+              Our <span style={{ color: '#6b8e23' }}>Solar</span> Success Stories
+            </h1>
+            <p className="text-muted mx-auto" style={{ maxWidth: 640 }}>
+              Explore how Solarkon is transforming homes, businesses, and communities with cutting-edge solar energy solutions.
+            </p>
+          </div>
+        </section>
+
+        {/* HERO */}
+        <ProjectsHeroSlider />
+
+        {/* FILTER */}
+        <section className="py-5">
+          <div className="container">
+            <div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-4 border-bottom pb-4">
+              <h2 className="fw-bold mb-0" style={{ color: '#022c22' }}>
+                Explore All Our Solar Installations
+              </h2>
+
+              <div className="d-flex gap-2 flex-wrap">
+                {['All', 'Completed', 'Ongoing'].map(f => (
+                  <button
+                    key={f}
+                    onClick={() => {
+                      setFilter(f);
+                      setPage(1);
+                    }}
+                    className="btn rounded-pill px-4 py-2 fw-semibold"
+                    style={{
+                      background: filter === f ? '#022c22' : '#e6f4ef',
+                      color: filter === f ? '#fff' : '#022c22',
+                      border: '1px solid #022c22',
+                    }}
+                  >
+                    {f === 'All' ? 'All Categories' : f}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Filter Bar */}
-        <section className="section-shell pt-0" data-aos="fade-up">
+        {/* GRID */}
+        <section className="pb-5">
           <div className="container">
-            <div className="d-flex flex-wrap justify-content-center gap-2 mb-5">
-              {filters.map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setFilter(f)}
-                  className={`btn btn-pill px-4 ${
-                    filter === f
-                      ? 'text-white'
-                      : 'btn-outline-secondary'
-                  }`}
-                  style={{
-                    backgroundColor: filter === f ? '#2D5016' : 'transparent',
-                    borderColor: filter === f ? '#2D5016' : '#e2e8f0',
-                    color: filter === f ? '#ffffff' : '#64748b',
-                    fontWeight: 600,
-                  }}
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
-
-            {/* Projects Grid */}
             <div className="row g-4">
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  className="col-12 col-md-6 col-lg-4"
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <div className="surface-card h-100 p-4 rounded-4">
-                    <div className="d-flex align-items-center justify-content-between mb-3">
-                      <span
-                        className="badge rounded-pill px-3 py-2"
+              {paginatedProjects.map(p => (
+                <div key={p.id} className="col-12 col-md-6">
+                  <div
+                    className="h-100 rounded-4 overflow-hidden"
+                    style={{
+                      background: '#f0f7f4',
+                      border: '1px solid #d1e7dd',
+                      boxShadow: '0 10px 25px rgba(0,0,0,0.06)',
+                    }}
+                  >
+                    <img
+                      src={p.image}
+                      alt={p.title}
+                      loading="lazy"
+                      className="w-100"
+                      style={{ height: 240, objectFit: 'cover' }}
+                    />
+
+                    <div className="p-4">
+                      <div className="d-flex align-items-center gap-2 mb-2">
+                        {p.status === 'Completed' ? (
+                          <FaCheckCircle color="#198754" />
+                        ) : (
+                          <FaClock color="#d97706" />
+                        )}
+                        <span
+                          className="fw-semibold small"
+                          style={{
+                            color:
+                              p.status === 'Completed'
+                                ? '#198754'
+                                : '#d97706',
+                          }}
+                        >
+                          {p.status}
+                        </span>
+                      </div>
+
+                      <p className="fw-semibold mb-1" style={{ color: '#6b8e23' }}>
+                        <FaSolarPanel className="me-2" />
+                        {p.tag}
+                      </p>
+
+                      <h5 className="fw-bold mb-2" style={{ color: '#022c22' }}>
+                        {p.title}
+                      </h5>
+
+                      <p className="text-muted small mb-3">
+                        {p.desc}
+                      </p>
+
+                      <div className="d-flex flex-wrap gap-3 text-muted small mb-4">
+                        <span>
+                          <FaMapMarkerAlt className="me-1" />
+                          {p.location}
+                        </span>
+                        <span>
+                          <FaCalendarAlt className="me-1" />
+                          {p.date}
+                        </span>
+                      </div>
+
+                      <button
+                      onClick={() => router.visit('/project-details', { data: { id: p.id } })}
+                        className="btn rounded-pill px-4 py-2 fw-semibold"
                         style={{
-                          backgroundColor: project.status === 'Completed' ? '#D1FAE5' : '#FEF3C7',
-                          color: project.status === 'Completed' ? '#166534' : '#92400E',
-                          fontWeight: 600,
+                          background: '#022c22',
+                          color: '#fff',
+                          fontSize: 14,
                         }}
                       >
-                        {project.status}
-                      </span>
-                      <span className="text-muted small">{project.sector}</span>
-                    </div>
-                    <h3 className="fw-bold mb-2" style={{ color: '#2D5016', fontSize: '1.2rem' }}>
-                      {project.name}
-                    </h3>
-                    <p className="text-muted small mb-3">{project.location}</p>
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div>
-                        <p className="fw-bold mb-0" style={{ color: '#22C55E', fontSize: '1.5rem' }}>
-                          {project.capacity}
-                        </p>
-                        <p className="text-muted small mb-0">Capacity</p>
-                      </div>
+                        View Details →
+                      </button>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
+
+            {/* PAGINATION */}
+            {totalPages > 1 && (
+              <div className="d-flex justify-content-center align-items-center gap-2 mt-5">
+                <button
+                  className="btn rounded-pill px-3"
+                  disabled={page === 1}
+                  onClick={() => setPage(page - 1)}
+                  style={{ border: '1px solid #022c22' }}
+                >
+                  <FaArrowLeft className="me-1" />
+                  Prev
+                </button>
+
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setPage(i + 1)}
+                    className="btn rounded-circle"
+                    style={{
+                      width: 44,
+                      height: 44,
+                      background: page === i + 1 ? '#022c22' : '#e6f4ef',
+                      color: page === i + 1 ? '#fff' : '#022c22',
+                      border: '1px solid #022c22',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  className="btn rounded-pill px-3"
+                  disabled={page === totalPages}
+                  onClick={() => setPage(page + 1)}
+                  style={{ border: '1px solid #022c22' }}
+                >
+                  Next
+                  <FaArrowRight className="ms-1" />
+                </button>
+              </div>
+            )}
           </div>
         </section>
+                <ProfileSettings />
+        
       </main>
+
       <Footer />
     </div>
   );
 }
 
-export default Projects;

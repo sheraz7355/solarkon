@@ -41,10 +41,10 @@ Route::get('/store', function () {
     return Inertia::render('Store');
 });
 
-// // (Your Navbar linked to '/profile', so we map that here)
-// Route::get('/profile', function () {
-//     return Inertia::render('Profile');
-// })->name('profile');
+// (Your Navbar linked to '/profile', so we map that here)
+Route::get('/profile', function () {
+    return Inertia::render('Profile');
+})->name('profile');
 
 // ✅ 3. Finally, the "Catch-All" for Admin (React Router)
 // If this was above /hero-sections, your API fetch would fail!
