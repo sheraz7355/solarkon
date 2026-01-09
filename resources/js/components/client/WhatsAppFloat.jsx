@@ -135,11 +135,12 @@ function WhatsAppFloat() {
         }
         
         @media (max-width: 768px) {
-          .whatsapp-float {
-            bottom: 20px !important;
-            right: 20px !important;
-          }
-        }
+    .whatsapp-float {
+      --wa-size: 45px;
+      bottom: 20px;
+      right: 20px;
+    }
+  }
       `}</style>
         </>
     );
