@@ -53,7 +53,7 @@ export default function ProjectsHeroSlider() {
         <div
           style={{
             ...styles.content,
-            width: isMobile ? '100%' : '50%',
+            width: isMobile ? '100%' : '40%',
           }}
         >
           <h1 style={styles.title}>{slide.title}</h1>
@@ -82,7 +82,7 @@ export default function ProjectsHeroSlider() {
         <div
           style={{
             ...styles.imageWrap,
-            width: isMobile ? '100%' : '50%',
+            width: isMobile ? '100%' : '60%',
             height: isMobile ? '320px' : 'auto',
           }}
         >
@@ -117,9 +117,9 @@ const styles = {
   },
 
   title: {
-    fontSize: '42px',
-    fontWeight: 700,
-    lineHeight: 1.2,
+    fontSize: '38px',
+    fontWeight: 600,
+    lineHeight: 1.5,
   },
 
   description: {
