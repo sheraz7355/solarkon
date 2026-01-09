@@ -83,7 +83,7 @@ export default function Projects() {
         {/* HEADER */}
         <section className="py-5 text-center">
           <div className="container">
-            <h1 className="fw-bold display-5 mb-3">
+            <h1 className="fw-bold display-4 mb-3">
               Our <span style={{ color: '#6b8e23' }}>Solar</span> Success Stories
             </h1>
             <p className="text-muted mx-auto" style={{ maxWidth: 640 }}>

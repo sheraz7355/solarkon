@@ -15,11 +15,9 @@ function ProjectDetails() {
 
       <main className="flex-grow-1">
         {/* HERO */}
-        <section className="section-shell pt-4">
-          <div className="container">
-            <ProjectHero />
-          </div>
-        </section>
+        <section className="pt-4">
+  <ProjectHero />
+</section>
 
         {/* CONTENT */}
         <section className="section-shell pt-0">

@@ -2,199 +2,203 @@ import React, { useState } from 'react';
 import { useForm, Head } from '@inertiajs/react';
 import { User, Lock, Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react';
 
-// Import your components
-import Navbar from '@/components/client/Navbar'; // Adjust path if needed (e.g. ../components/...)
-import Footer from '@/components/client/Footer'; // Adjust path if needed
+import Navbar from '@/components/client/Navbar';
+import Footer from '@/components/client/Footer';
 
 export default function Login() {
-    // 1. Use Inertia's useForm for Laravel authentication
-    const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        password: '',
-    });
+  const { data, setData, post, processing, errors } = useForm({
+    name: '',
+    password: '',
+  });
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [focusedField, setFocusedField] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [focused, setFocused] = useState(null);
 
-    // 2. Handle Login
-    const submit = (e) => {
-        e.preventDefault();
-        post('/login');
-    };
+  const submit = (e) => {
+    e.preventDefault();
+    post('/login');
+  };
 
-    // Brand Colors
-    const THEME = {
-        primary: '#022c22', // Dark Green
-        accent: '#bef264',  // Lime
-        text: '#1f2937',
-    };
+  const THEME = {
+    primary: '#022c22',
+    accent: '#bef264',
+  };
 
-    return (
-        <div className="d-flex flex-column min-vh-100 bg-light">
-            <Head title="Admin Login" />
-            
-            {/* 1. Navbar */}
-            <Navbar />
+  return (
+    <div className="min-vh-100 d-flex flex-column bg-light">
+      <Head title="Admin Login" />
+      <Navbar />
 
-            {/* 2. Main Content Area */}
-            <div className="flex-grow-1 d-flex align-items-stretch overflow-hidden">
-                <div className="container-fluid p-0">
-                    <div className="row g-0 h-100">
-                        
-                        {/* LEFT SIDE: Branding (Hidden on mobile, visible on Large screens) */}
-                        <div className="col-lg-6 d-none d-lg-block position-relative" style={{ minHeight: '80vh' }}>
-                            <img 
-                                src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=2070&auto=format&fit=crop" 
-                                alt="Solar Panels"
-                                className="w-100 h-100 object-fit-cover position-absolute top-0 start-0"
-                                style={{ filter: 'brightness(0.4)' }}
-                            />
-                            
-                            {/* Green Overlay */}
-                            <div 
-                                className="position-absolute top-0 start-0 w-100 h-100"
-                                style={{ 
-                                    background: `linear-gradient(135deg, ${THEME.primary} 0%, rgba(3, 61, 46, 0.9) 50%, ${THEME.primary} 100%)`,
-                                    opacity: 0.9
-                                }} 
-                            />
+      <main className="flex-grow-1">
+        <div className="container-fluid">
+          <div className="row min-vh-100">
 
-                            {/* Text Content */}
-                            <div className="position-relative z-2 d-flex flex-col justify-content-between p-5 h-100 text-white">
-                                <div className="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill border border-white border-opacity-25 bg-white bg-opacity-10">
-                                    <div className="rounded-circle bg-warning" style={{ width: 8, height: 8 }}></div>
-                                    <span className="small fw-bold tracking-wider">ADMIN PORTAL</span>
-                                </div>
+            {/* LEFT BRAND */}
+            <div className="col-lg-6 d-none d-lg-flex align-items-center position-relative p-0">
+              <img
+                src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=2070"
+                alt="Solar"
+                className="position-absolute w-100 h-100 object-fit-cover"
+                style={{ filter: 'brightness(0.4)' }}
+              />
 
-                                <div className="mb-5">
-                                    <h1 className="display-3 fw-bold lh-1 mb-4">
-                                        SOLAR<span style={{ color: THEME.accent }}>KON</span>
-                                    </h1>
-                                    <h2 className="display-6 fw-bold mb-3">
-                                        Powering the future, <br />
-                                        <span style={{ color: THEME.accent }}>sustainably.</span>
-                                    </h2>
-                                    <p className="fs-5 opacity-75" style={{ maxWidth: '450px' }}>
-                                        Secure access point for administrative controls, project management, and system analytics.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+              <div
+                className="position-absolute w-100 h-100"
+                style={{
+                  background: `linear-gradient(135deg, ${THEME.primary}, #064e3b)`,
+                  opacity: 0.9,
+                }}
+              />
 
-                        {/* RIGHT SIDE: Login Form */}
-                        <div className="col-lg-6 col-12 d-flex align-items-center justify-content-center bg-white">
-                            <div className="w-100 p-4 p-md-5" style={{ maxWidth: '480px' }}>
-                                
-                                {/* Mobile Header */}
-                                <div className="text-center d-lg-none mb-4">
-                                    <h2 className="fw-bold" style={{ color: THEME.primary }}>SOLARKON</h2>
-                                </div>
-
-                                <div className="mb-4">
-                                    <h3 className="fw-bold text-dark mb-1">Welcome Back</h3>
-                                    <p className="text-muted">Please enter your details to sign in.</p>
-                                </div>
-
-                                <form onSubmit={submit}>
-                                    {/* Username Field */}
-                                    <div className="mb-4">
-                                        <label className="form-label fw-semibold small text-secondary">USERNAME</label>
-                                        <div className="position-relative">
-                                            <div className="position-absolute top-50 start-0 translate-middle-y ps-3 text-secondary">
-                                                <User size={20} color={focusedField === 'name' ? THEME.primary : '#9ca3af'} />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                value={data.name}
-                                                onChange={(e) => setData('name', e.target.value)}
-                                                onFocus={() => setFocusedField('name')}
-                                                onBlur={() => setFocusedField(null)}
-                                                className="form-control form-control-lg ps-5"
-                                                placeholder="Enter username"
-                                                style={{ 
-                                                    fontSize: '15px', 
-                                                    paddingTop: '12px', 
-                                                    paddingBottom: '12px',
-                                                    borderColor: errors.name ? '#dc3545' : (focusedField === 'name' ? THEME.primary : '#dee2e6'),
-                                                    boxShadow: 'none',
-                                                    backgroundColor: '#f8f9fa'
-                                                }}
-                                            />
-                                        </div>
-                                        {errors.name && <small className="text-danger mt-1 d-block">{errors.name}</small>}
-                                    </div>
-
-                                    {/* Password Field */}
-                                    <div className="mb-4">
-                                        <label className="form-label fw-semibold small text-secondary">PASSWORD</label>
-                                        <div className="position-relative">
-                                            <div className="position-absolute top-50 start-0 translate-middle-y ps-3 text-secondary">
-                                                <Lock size={20} color={focusedField === 'password' ? THEME.primary : '#9ca3af'} />
-                                            </div>
-                                            <input
-                                                type={showPassword ? "text" : "password"}
-                                                value={data.password}
-                                                onChange={(e) => setData('password', e.target.value)}
-                                                onFocus={() => setFocusedField('password')}
-                                                onBlur={() => setFocusedField(null)}
-                                                className="form-control form-control-lg ps-5 pe-5"
-                                                placeholder="Enter password"
-                                                style={{ 
-                                                    fontSize: '15px', 
-                                                    paddingTop: '12px', 
-                                                    paddingBottom: '12px',
-                                                    borderColor: errors.password ? '#dc3545' : (focusedField === 'password' ? THEME.primary : '#dee2e6'),
-                                                    boxShadow: 'none',
-                                                    backgroundColor: '#f8f9fa'
-                                                }}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="btn border-0 position-absolute top-50 end-0 translate-middle-y pe-3"
-                                                style={{ color: '#6c757d' }}
-                                            >
-                                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                                            </button>
-                                        </div>
-                                        {errors.password && <small className="text-danger mt-1 d-block">{errors.password}</small>}
-                                    </div>
-
-                                    {/* Submit Button */}
-                                    <button
-                                        type="submit"
-                                        disabled={processing}
-                                        className="btn w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2 fw-bold text-white shadow-sm"
-                                        style={{ backgroundColor: THEME.primary, border: 'none' }}
-                                    >
-                                        {processing ? (
-                                            <>
-                                                <Loader2 className="animate-spin" size={20} />
-                                                <span>Verifying...</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <span>Login to Dashboard</span>
-                                                <ArrowRight size={20} />
-                                            </>
-                                        )}
-                                    </button>
-                                </form>
-
-                                <div className="mt-4 text-center">
-                                    <small className="text-muted">
-                                        <Lock size={12} className="me-1 mb-1" />
-                                        Secured by Solarkon © 2024
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <div className="position-relative text-white px-5 ms-5" style={{ maxWidth: 460 }}>
+                <h1 className="fw-bold display-5 mb-3">
+                  SOLAR<span style={{ color: THEME.accent }}>KON</span>
+                </h1>
+                <p className="fs-6 opacity-75">
+                  Secure administrative access.
+                </p>
+              </div>
             </div>
 
-            {/* 3. Footer */}
-            <Footer />
+            {/* RIGHT FULL FORM PANEL */}
+            <div
+              className="col-lg-6 d-flex align-items-center justify-content-center"
+              style={{
+                background: 'linear-gradient(180deg, #ffffff, #f8fafc)',
+              }}
+            >
+              <div className="w-100 px-4 px-md-5" style={{ maxWidth: 520 }}>
+
+                {/* MOBILE LOGO */}
+                <div className="text-center d-lg-none mb-5">
+                  <h3 className="fw-bold" style={{ color: THEME.primary }}>
+                    SOLARKON
+                  </h3>
+                </div>
+
+                {/* FORM */}
+                <div>
+                  <h2 className="fw-bold mb-2">Welcome back</h2>
+                  <p className="text-muted mb-5">
+                    Sign in to continue to admin dashboard
+                  </p>
+
+                  <form onSubmit={submit}>
+                    {/* USERNAME */}
+                    <div className="mb-4">
+                      <label className="small text-muted mb-2">
+                        Username
+                      </label>
+
+                      <div className="position-relative">
+                        <User
+                          size={18}
+                          className="position-absolute top-50 start-0 translate-middle-y ms-3"
+                          color={focused === 'name' ? THEME.primary : '#9ca3af'}
+                        />
+
+                        <input
+                          type="text"
+                          value={data.name}
+                          onChange={(e) => setData('name', e.target.value)}
+                          onFocus={() => setFocused('name')}
+                          onBlur={() => setFocused(null)}
+                          className="form-control ps-5 py-3 rounded-pill"
+                          placeholder="Enter username"
+                          style={{
+                            background: '#ffffff',
+                            border: focused === 'name'
+                              ? `1px solid ${THEME.primary}`
+                              : '1px solid #e5e7eb',
+                          }}
+                        />
+                      </div>
+
+                      {errors.name && (
+                        <small className="text-danger">{errors.name}</small>
+                      )}
+                    </div>
+
+                    {/* PASSWORD */}
+                    <div className="mb-5">
+                      <label className="small text-muted mb-2">
+                        Password
+                      </label>
+
+                      <div className="position-relative">
+                        <Lock
+                          size={18}
+                          className="position-absolute top-50 start-0 translate-middle-y ms-3"
+                          color={focused === 'password' ? THEME.primary : '#9ca3af'}
+                        />
+
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          value={data.password}
+                          onChange={(e) => setData('password', e.target.value)}
+                          onFocus={() => setFocused('password')}
+                          onBlur={() => setFocused(null)}
+                          className="form-control ps-5 pe-5 py-3 rounded-pill"
+                          placeholder="Enter password"
+                          style={{
+                            background: '#ffffff',
+                            border: focused === 'password'
+                              ? `1px solid ${THEME.primary}`
+                              : '1px solid #e5e7eb',
+                          }}
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0 text-muted"
+                        >
+                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
+
+                      {errors.password && (
+                        <small className="text-danger">{errors.password}</small>
+                      )}
+                    </div>
+
+                    {/* BUTTON */}
+                    <button
+                      type="submit"
+                      disabled={processing}
+                      className="btn w-100 py-3 rounded-pill fw-bold text-white d-flex align-items-center justify-content-center gap-2"
+                      style={{
+                        background: THEME.primary,
+                        boxShadow: '0 12px 24px rgba(2,44,34,0.35)',
+                      }}
+                    >
+                      {processing ? (
+                        <>
+                          <Loader2 className="animate-spin" size={18} />
+                          Signing in...
+                        </>
+                      ) : (
+                        <>
+                          Login
+                          <ArrowRight size={18} />
+                        </>
+                      )}
+                    </button>
+                  </form>
+
+                  <p className="text-center mt-5 small text-muted">
+                    🔒 Secure Admin Access — Solarkon
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
-    );
+      </main>
+
+      <Footer />
+    </div>
+  );
 }
+
