@@ -4,6 +4,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HeroSectionsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/userDetails',[ContactController::class,'store'])->name('admin.updateUserDetails');
     Route::post('/homeServices',[HomeController::class,'storeServices'])->name('admin.storeServices');
     Route::delete('/userDetails/{id}',[ContactController::class,'destroy'])->name('admin.deleteUserDetails');
+
+    //project management routes
+    Route::get('/admin/projects-manager', [ProjectController::class, 'indexAdmin'])->name('admin.projects.index');
+    Route::post('/admin/projects', [ProjectController::class, 'store'])->name('admin.projects.store');
+    Route::post('/admin/projects/{id}', [ProjectController::class, 'update'])->name('admin.projects.update');
+    Route::delete('/admin/projects/{id}', [ProjectController::class, 'destroy'])->name('admin.projects.destroy');
 
     // Media Routes
     Route::get('/media', [MediaController::class, 'index'])->name('media.index');
