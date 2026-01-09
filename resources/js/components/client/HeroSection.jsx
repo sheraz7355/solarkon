@@ -93,7 +93,7 @@ function HeroSection({ content, stats }) {
 
         return (
             <span style={{ fontWeight: 800 }}>
-                <span style={{ color: '#14532d' }}>{firstChar}</span> {/* dark green first char */}
+                <span style={{ color: '#14532d' }}>{firstChar}</span>
                 <span style={{ color: '#ffffff' }}>{middleText}</span>
                 <span style={{ color: '#14532d' }}>{lastChar}</span> {/* dark green last char */}
             </span>
