@@ -19,7 +19,9 @@ Route::get('/financing', function () { return Inertia::render('Financing'); });
 Route::get('/projects/{slug}', [ProjectController::class, 'showProject'])->name('project.details');Route::get('/store', function () {
     return Inertia::render('Store');
 });
-
+Route::get('/product-details', function () {
+    return Inertia::render('ProductDetails');
+})->name('product-details');
  Route::get('/profile', function () {
      return Inertia::render('Profile');
  })->name('profile');
