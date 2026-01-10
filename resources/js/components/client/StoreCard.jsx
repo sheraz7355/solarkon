@@ -1,49 +1,62 @@
-import { motion } from 'framer-motion';
+import { Link, router, usePage } from '@inertiajs/react';
 
-/**
- * StoreCard Component
- * - Reusable
- * - Hover animation
- * - Clean UI
- */
-const StoreCard = ({ product, index }) => {
+const StoreCard = ({ product }) => {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            whileHover={{ y: -8 }}
-            className="card h-100 shadow-sm rounded-4 overflow-hidden border-0"
-        >
-            {/* Product Image */}
-            <img
-                src={product.image}
-                alt={product.title}
-                className="img-fluid"
-                style={{
-                    height: '220px',
-                    objectFit: 'cover',
-                }}
-            />
+        <div className="card h-100 border-0 shadow-sm overflow-hidden store-card">
+            
+            {/* Image Wrapper */}
+            <div className="position-relative bg-light">
+                <img
+                    src={product.image}
+                    alt={product.title}
+                    className="img-fluid w-100"
+                    style={{ height: '220px', objectFit: 'cover' }}
+                />
 
-            {/* Product Content */}
-            <div className="card-body p-4">
-                <h5 className="fw-bold mb-2">{product.title}</h5>
-                <p className="text-muted small mb-4">{product.desc}</p>
-
-                {/* CTA Button */}
-                <button
-                    className="btn w-100 rounded-pill fw-semibold"
+                {/* Power Badge */}
+                <span
+                    className="position-absolute top-0 start-0 m-3 badge"
                     style={{
                         backgroundColor: '#022c22',
-                        color: '#ecfdf5',
+                        color: '#fff',
+                        fontSize: '0.8rem',
+                        borderRadius: '6px',
                     }}
+                >
+                    {product.voltage}
+                </span>
+            </div>
+
+            {/* Content */}
+            <div className="card-body p-4 d-flex flex-column">
+
+                <h6 className="fw-bold mb-1">{product.title}</h6>
+                <p className="text-muted small mb-2">{product.type}</p>
+
+                <p className="small text-secondary mb-3">
+                    {product.desc}
+                </p>
+
+                {/* Price */}
+                <div className="mb-4">
+                    <span className="text-muted text-decoration-line-through small d-block">
+                        PKR {product.originalPrice}
+                    </span>
+                    <span className="fs-5 fw-bold" style={{ color: '#022c22' }}>
+                        PKR {product.discountPrice}
+                    </span>
+                </div>
+
+                {/* CTA */}
+                <button
+                 onClick={() => router.visit('/product-details', { data: { id: product.id } })}
+                    className="btn mt-auto w-100 fw-semibold store-btn"
+                    style={{backgroundColor:"#022c22",color:"white"}}
                 >
                     View Details
                 </button>
             </div>
-        </motion.div>
+        </div>
     );
 };
 
