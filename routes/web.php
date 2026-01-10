@@ -27,8 +27,8 @@ Route::get('/projects/{slug}', [ProjectController::class, 'showProject'])->name(
 
 
 
-Route::get('/login',[SessionController::class,'create'])->name('login');
-Route::post('/login',[SessionController::class,'store'])->name('login.store');
+Route::get('/login',[SessionController::class,'create'])->name('login')->middleware('guest');
+Route::post('/login',[SessionController::class,'store'])->name('login.store')->middleware('guest');
 
 
 
