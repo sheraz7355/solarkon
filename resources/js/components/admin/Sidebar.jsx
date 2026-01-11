@@ -33,10 +33,9 @@ function Sidebar() {
   const menuItems = [
     { icon: faHome, label: 'Dashboard', path: '/dashboard' }, 
     { icon: faLightbulb, label: 'Home Page Content', path: '/home' }, // Renamed for clarity
-    { icon: faInfoCircle, label: 'About Us', path: '/about-us' },
     { icon: faLightbulb, label: 'Solutions', path: '/solutions' },
     { icon: faFolderOpen, label: 'Projects', path: '/projects' },
-    { icon: faDollarSign, label: 'Financing', path: '/financing' },
+    { icon: faDollarSign, label: 'Store', path: '/store' },
     { icon: faEnvelope, label: 'Contact', path: '/contact' },
     { icon: faBars, label: 'Media Manager', path: '/MediaManager' },
     { icon: faCog, label: 'Settings', path: '/settings' },

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLightbulb, faList, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 
-function AdminFinancing() {
+function AdminStore() {
   const [formData, setFormData] = useState({
     heroTitle: 'Flexible Financing Solutions',
     heroSubtitle: 'Choose the financing option that best fits your needs and budget. We offer multiple ways to make solar energy accessible.',
@@ -281,4 +281,4 @@ function AdminFinancing() {
   );
 }
 
-export default AdminFinancing;
+export default AdminStore;

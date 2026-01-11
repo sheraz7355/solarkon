@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminSolutionController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HeroSectionsController;
 use App\Http\Controllers\HomeController;
@@ -13,7 +14,7 @@ use Inertia\Inertia;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', function () { return Inertia::render('About'); })->name('about');
 Route::get('/contact', function () {return Inertia::render('Contact');})->name('contact');
-Route::get('/solutions', function () { return Inertia::render('Solutions'); });
+Route::get('/solutions',[AdminSolutionController::class,'get'])->name('solutions');
 Route::get('/projects', [ProjectController::class,'index'])->name('projects'); 
 Route::get('/financing', function () { return Inertia::render('Financing'); });
 Route::get('/projects/{slug}', [ProjectController::class, 'showProject'])->name('project.details');Route::get('/store', function () {
@@ -36,6 +37,7 @@ Route::post('/login',[SessionController::class,'store'])->name('login.store')->m
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/logout',[SessionController::class,'destroy'])->name('logout');
 
     // Admin Data Endpoints
     Route::get('/work-data',[HomeController::class,'getMethadologyData'])->name('admin.work-data');
@@ -59,6 +61,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/projects', [ProjectController::class, 'store'])->name('admin.projects.store');
     Route::post('/admin/projects/{id}', [ProjectController::class, 'update'])->name('admin.projects.update');
     Route::delete('/admin/projects/{id}', [ProjectController::class, 'destroy'])->name('admin.projects.destroy');
+
+    //solutions management routes
+
+    Route::get('/admin/solutions-data', [AdminSolutionController::class, 'index']);
+    Route::post('/admin/solutions', [AdminSolutionController::class, 'update']);
 
     // Media Routes
     Route::get('/media', [MediaController::class, 'index'])->name('media.index');
