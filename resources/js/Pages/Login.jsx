@@ -187,7 +187,7 @@ export default function Login() {
                   </form>
 
                   <p className="text-center mt-5 small text-muted">
-                    🔒 Secure Admin Access — Solarkon
+                    🔒 Secure Admin Access — Solarkon By Sulehri 
                   </p>
                 </div>
               </div>

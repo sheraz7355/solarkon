@@ -3,68 +3,33 @@ import Navbar from '../components/client/Navbar';
 import Footer from '../components/client/Footer';
 import WhatsAppFloat from '../components/client/WhatsAppFloat';
 import ProjectsHeroSlider from '../components/client/ProjectHerosection';
-import { Link, router, usePage } from '@inertiajs/react';
-
+import { router, Head } from '@inertiajs/react';
 
 import {
-  FaArrowLeft,
-  FaArrowRight,
-  FaMapMarkerAlt,
-  FaCalendarAlt,
-  FaSolarPanel,
-  FaCheckCircle,
-  FaClock,
+  FaArrowLeft, FaArrowRight, FaMapMarkerAlt, 
+  FaCalendarAlt, FaSolarPanel, FaCheckCircle, FaClock,
 } from 'react-icons/fa';
-import ProfileSettings from '../components/client/Profile/ProfileSettings';
 
 const PROJECTS_PER_PAGE = 4;
 
-const projects = [
-  {
-    id: 1,
-    status: 'Completed',
-    tag: 'Off-Grid Solutions',
-    title: 'Green Warehouse Initiative',
-    desc: 'Installed a 500 kW rooftop solar system, helping MetroLogix reduce carbon emissions by 40% and cut annual energy costs by over $70,000.',
-    location: 'Dallas, Texas',
-    date: 'March 2024',
-    image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276',
-  },
-  {
-    id: 2,
-    status: 'Completed',
-    tag: 'Educational Solar Integration',
-    title: 'Sustainable Schools Program',
-    desc: 'Designed and implemented a 180 kW solar array across three campuses, promoting clean energy education while saving the district an estimated $25,000 per year.',
-    location: 'Ridgefield, Oregon',
-    date: 'June 2024',
-    image: 'https://images.unsplash.com/photo-1581090700227-1e37b190418e',
-  },
-  {
-    id: 3,
-    status: 'Ongoing',
-    tag: 'Solar + Battery Backup',
-    title: 'Solar For Health',
-    desc: 'Delivered a 300 kW solar system with battery storage, ensuring uninterrupted power for critical equipment and reducing grid reliance by 60%.',
-    location: 'Sacramento, California',
-    date: 'July 2024',
-    image: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d',
-  },
-];
-
-export default function Projects() {
+export default function Projects({ projectData }) {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState('All');
 
+  // Handle null/undefined data safely
+  const allProjects = projectData || [];
+
+  // FILTER: Get only Featured Projects for the Hero Slider
+  const featuredProjects = allProjects.filter(p => p.is_featured === 1 || p.is_featured === true);
+
+  // FILTER: Main List Logic
   const filteredProjects = useMemo(() => {
     return filter === 'All'
-      ? projects
-      : projects.filter(p => p.status === filter);
-  }, [filter]);
+      ? allProjects
+      : allProjects.filter(p => p.status === filter);
+  }, [filter, allProjects]);
 
-  const totalPages = Math.ceil(
-    filteredProjects.length / PROJECTS_PER_PAGE
-  );
+  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
 
   const paginatedProjects = useMemo(() => {
     return filteredProjects.slice(
@@ -75,10 +40,10 @@ export default function Projects() {
 
   return (
     <div className="d-flex flex-column min-vh-100">
+      <Head title="Our Projects" />
       <Navbar />
       <WhatsAppFloat />
 
-      {/* Make main take full remaining height */}
       <main className="flex-grow-1">
         {/* HEADER */}
         <section className="py-5 text-center">
@@ -87,17 +52,17 @@ export default function Projects() {
               Our <span style={{ color: '#6b8e23' }}>Solar</span> Success Stories
             </h1>
             <p className="text-muted mx-auto" style={{ maxWidth: 640 }}>
-              Explore how Solarkon is transforming homes, businesses, and communities with cutting-edge solar energy solutions.
+              Explore how Solarkon is transforming homes, businesses, and communities.
             </p>
           </div>
         </section>
 
-        {/* HERO */}
-        <ProjectsHeroSlider />
+        {/* HERO SLIDER (Dynamic Featured Projects) */}
+        <ProjectsHeroSlider featuredProjects={featuredProjects} />
 
-        {/* FILTER */}
+        {/* FILTER SECTION */}
         <section className="py-5">
-          <div className="container">
+             <div className="container">
             <div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-4 border-bottom pb-4">
               <h2 className="fw-bold mb-0" style={{ color: '#022c22' }}>
                 Explore All Our Solar Installations
@@ -126,20 +91,15 @@ export default function Projects() {
           </div>
         </section>
 
-        {/* GRID */}
+        {/* PROJECTS GRID */}
         <section className="pb-5">
           <div className="container">
             <div className="row g-4">
               {paginatedProjects.map(p => (
                 <div key={p.id} className="col-12 col-md-6">
-                  <div
-                    className="h-100 rounded-4 overflow-hidden"
-                    style={{
-                      background: '#f0f7f4',
-                      border: '1px solid #d1e7dd',
-                      boxShadow: '0 10px 25px rgba(0,0,0,0.06)',
-                    }}
-                  >
+                  <div className="h-100 rounded-4 overflow-hidden" style={{ background: '#f0f7f4', border: '1px solid #d1e7dd' }}>
+                    
+                    {/* Image */}
                     <img
                       src={p.image}
                       alt={p.title}
@@ -149,21 +109,10 @@ export default function Projects() {
                     />
 
                     <div className="p-4">
+                      {/* Status */}
                       <div className="d-flex align-items-center gap-2 mb-2">
-                        {p.status === 'Completed' ? (
-                          <FaCheckCircle color="#198754" />
-                        ) : (
-                          <FaClock color="#d97706" />
-                        )}
-                        <span
-                          className="fw-semibold small"
-                          style={{
-                            color:
-                              p.status === 'Completed'
-                                ? '#198754'
-                                : '#d97706',
-                          }}
-                        >
+                        {p.status === 'Completed' ? <FaCheckCircle color="#198754" /> : <FaClock color="#d97706" />}
+                        <span className="fw-semibold small" style={{ color: p.status === 'Completed' ? '#198754' : '#d97706' }}>
                           {p.status}
                         </span>
                       </div>
@@ -173,33 +122,22 @@ export default function Projects() {
                         {p.tag}
                       </p>
 
-                      <h5 className="fw-bold mb-2" style={{ color: '#022c22' }}>
-                        {p.title}
-                      </h5>
+                      <h5 className="fw-bold mb-2" style={{ color: '#022c22' }}>{p.title}</h5>
 
-                      <p className="text-muted small mb-3">
-                        {p.desc}
+                      {/* Description truncated */}
+                      <p className="text-muted small mb-3" style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
+                        {p.description}
                       </p>
 
                       <div className="d-flex flex-wrap gap-3 text-muted small mb-4">
-                        <span>
-                          <FaMapMarkerAlt className="me-1" />
-                          {p.location}
-                        </span>
-                        <span>
-                          <FaCalendarAlt className="me-1" />
-                          {p.date}
-                        </span>
+                        <span><FaMapMarkerAlt className="me-1" />{p.location}</span>
+                        <span><FaCalendarAlt className="me-1" />{p.date}</span>
                       </div>
 
                       <button
-                      onClick={() => router.visit('/project-details', { data: { id: p.id } })}
+                        onClick={() => router.visit(`/projects/${p.slug}`)}
                         className="btn rounded-pill px-4 py-2 fw-semibold"
-                        style={{
-                          background: '#022c22',
-                          color: '#fff',
-                          fontSize: 14,
-                        }}
+                        style={{ background: '#022c22', color: '#fff', fontSize: 14 }}
                       >
                         View Details →
                       </button>
@@ -207,10 +145,17 @@ export default function Projects() {
                   </div>
                 </div>
               ))}
+
+               {/* Empty State */}
+               {paginatedProjects.length === 0 && (
+                  <div className="col-12 text-center py-5">
+                    <h5 className="text-muted">No projects found.</h5>
+                  </div>
+              )}
             </div>
 
-            {/* PAGINATION */}
-            {totalPages > 1 && (
+            {/* Pagination */}
+             {totalPages > 1 && (
               <div className="d-flex justify-content-center align-items-center gap-2 mt-5">
                 <button
                   className="btn rounded-pill px-3"
@@ -253,12 +198,8 @@ export default function Projects() {
             )}
           </div>
         </section>
-                <ProfileSettings />
-        
       </main>
-
       <Footer />
     </div>
   );
 }
-

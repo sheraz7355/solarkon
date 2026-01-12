@@ -11,12 +11,10 @@ class SettingsController extends Controller
     // 1. GET: Fetch settings for the Admin Form (Axios)
     public function getSettings()
     {
-        // Returns: { "site_name": "Solarkon", "phone": "12345" }
         $settings = Setting::all()->pluck('value', 'key');
         return response()->json($settings);
     }
 
-    // 2. POST: Save settings from the Admin Form (Axios)
     public function updateSettings(Request $request)
     {
         // Allow any field to be saved
