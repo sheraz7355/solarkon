@@ -1,10 +1,9 @@
-// resources/js/Pages/ProductDetails.jsx
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import Navbar from '../components/client/Navbar';
 import Footer from '../components/client/Footer';
 import WhatsAppFloat from '../components/client/WhatsAppFloat';
-import { FaCheck } from 'react-icons/fa';
+import { FaCheck, FaArrowLeft } from 'react-icons/fa'; // Added FaArrowLeft
 
 export default function ProductDetails({ product }) {
     
@@ -16,9 +15,17 @@ export default function ProductDetails({ product }) {
             <Navbar />
             <WhatsAppFloat />
 
-            <main className="flex-grow-1 d-flex align-items-center justify-content-center py-5">
+            <main className="flex-grow-1 py-5">
                 <div className="container">
-                    <div className="row justify-content-center align-items-center g-5">
+                    
+                    {/* --- BACK BUTTON (Added Here) --- */}
+                    <div className="mb-4">
+                        <Link href="/store" className="btn btn-outline-secondary rounded-pill px-4 fw-bold d-inline-flex align-items-center gap-2 hover-back">
+                            <FaArrowLeft /> Back to Store
+                        </Link>
+                    </div>
+
+                    <div className="row align-items-center g-5">
                         
                         {/* LEFT: IMAGE */}
                         <div className="col-lg-6">
@@ -46,7 +53,7 @@ export default function ProductDetails({ product }) {
                                     {product.description}
                                 </p>
 
-                                {/* --- DYNAMIC FEATURES LIST --- */}
+                                {/* Features List */}
                                 <ul className="list-unstyled mb-5">
                                     <li className="d-flex align-items-center mb-3">
                                         <FaCheck className="text-dark me-3 fs-5" />
@@ -94,6 +101,15 @@ export default function ProductDetails({ product }) {
             </main>
 
             <Footer />
+
+            <style>{`
+                .hover-back:hover {
+                    background-color: #e5e7eb;
+                    color: #000;
+                    transform: translateX(-5px);
+                    transition: transform 0.2s ease;
+                }
+            `}</style>
         </div>
     );
 }
