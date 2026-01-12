@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminSolutionController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HeroSectionsController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingsController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -17,12 +19,9 @@ Route::get('/contact', function () {return Inertia::render('Contact');})->name('
 Route::get('/solutions',[AdminSolutionController::class,'get'])->name('solutions');
 Route::get('/projects', [ProjectController::class,'index'])->name('projects'); 
 Route::get('/financing', function () { return Inertia::render('Financing'); });
-Route::get('/projects/{slug}', [ProjectController::class, 'showProject'])->name('project.details');Route::get('/store', function () {
-    return Inertia::render('Store');
-});
-Route::get('/product-details', function () {
-    return Inertia::render('ProductDetails');
-})->name('product-details');
+Route::get('/projects/{slug}', [ProjectController::class, 'showProject'])->name('project.details');
+Route::get('/store',[AdminProductController::class,'get'])->name('store');
+Route::get('/product-details', [AdminProductController::class,'product_details'])->name('product-details');
  Route::get('/profile', function () {
      return Inertia::render('Profile');
  })->name('profile');
@@ -66,6 +65,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/solutions-data', [AdminSolutionController::class, 'index']);
     Route::post('/admin/solutions', [AdminSolutionController::class, 'update']);
+
+    //store product management routes
+     Route::get('/admin/products-data', [AdminProductController::class, 'index']);
+    Route::post('/admin/products', [AdminProductController::class, 'store']);
+    Route::delete('/admin/products/{id}', [AdminProductController::class, 'destroy']);
 
     // Media Routes
     Route::get('/media', [MediaController::class, 'index'])->name('media.index');

@@ -42,7 +42,7 @@ function Navbar() {
                         </span>
                     </div>
 
-                    {/* LINKS */}
+                    {/* DESKTOP LINKS */}
                     <div className="d-none d-md-flex align-items-center gap-4">
                         {navLinks.map((item) => (
                             <Link
@@ -55,13 +55,13 @@ function Navbar() {
                         ))}
                     </div>
 
-                    {/* RIGHT SIDE: ADMIN + CONTACT */}
+                    {/* DESKTOP RIGHT SIDE: ADMIN + CONTACT */}
                     <div 
                         className="d-none d-md-inline-flex align-items-center"
                         onMouseEnter={() => setHoverAdmin(true)}
                         onMouseLeave={() => setHoverAdmin(false)}
                     >
-                        {/* ADMIN AVATAR (Slides out on hover) */}
+                        {/* ADMIN AVATAR */}
                         <Link
                             href="/admin"
                             className="text-decoration-none"
@@ -89,10 +89,7 @@ function Navbar() {
                             >
                                 <FontAwesomeIcon 
                                     icon={faUserCircle} 
-                                    style={{ 
-                                        color: '#ffffff', 
-                                        fontSize: '1.2rem',
-                                    }} 
+                                    style={{ color: '#ffffff', fontSize: '1.2rem' }} 
                                 />
                             </div>
                         </Link>
@@ -123,11 +120,27 @@ function Navbar() {
                             className="mt-2 d-md-none rounded-4 p-3 bg-white shadow-lg border"
                         >
                             <div className="d-flex flex-column gap-3">
+                                {/* Standard Links */}
                                 {navLinks.map((item) => (
                                     <Link key={item.to} href={item.to} className={`fw-semibold text-decoration-none ${isLinkActive(item.to) ? 'text-success' : 'text-dark'}`} onClick={closeMenu}>
                                         {item.label}
                                     </Link>
                                 ))}
+
+                                {/* Divider */}
+                                <hr className="my-1 border-secondary opacity-25" />
+
+                                {/* --- ADDED ADMIN LINK HERE --- */}
+                                <Link 
+                                    href="/admin" 
+                                    className="fw-semibold text-decoration-none text-warning d-flex align-items-center gap-2"
+                                    onClick={closeMenu}
+                                >
+                                    <FontAwesomeIcon icon={faUserCircle} />
+                                    Admin Login
+                                </Link>
+
+                                {/* Contact Button */}
                                 <button className="btn btn-success rounded-pill mt-2" onClick={() => { closeMenu(); router.visit('/contact'); }}>
                                     <HiPhone className="me-2" size={18} /> Contact Us
                                 </button>

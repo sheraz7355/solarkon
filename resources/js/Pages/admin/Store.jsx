@@ -1,284 +1,278 @@
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLightbulb, faList, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { FaPlus, FaTrash, FaEdit, FaSave, FaImage, FaSpinner } from 'react-icons/fa';
+import MediaPickerModal from '../../components/admin/MediaPickerModal';
 
-function AdminStore() {
-  const [formData, setFormData] = useState({
-    heroTitle: 'Flexible Financing Solutions',
-    heroSubtitle: 'Choose the financing option that best fits your needs and budget. We offer multiple ways to make solar energy accessible.',
-    financingOptions: [
-      {
-        title: 'Client Self Finance',
-        description: 'Complete ownership, no interest, max long-term return, full government incentives.',
-        details: [
-          'Full system ownership from day one',
-          'No interest payments',
-          'Maximum long-term return on investment',
-          'Eligible for all government incentives and tax benefits',
-          'Complete control over your solar system',
-        ],
-      },
-      {
-        title: 'Solar on Installment',
-        description: 'Low upfront cost, monthly payments customized to budget, no bank involvement, faster approval.',
-        details: [
-          'Minimal upfront investment required',
-          'Flexible monthly payment plans',
-          'Customized to your budget',
-          'No bank involvement needed',
-          'Fast approval process',
-          'Ownership transfers after final payment',
-        ],
-      },
-      {
-        title: 'Bank-Financed',
-        description: 'Partnered with reputable banks, structured EMI plans, suitable for medium to large setups.',
-        details: [
-          'Partnerships with leading banks',
-          'Structured EMI plans',
-          'Competitive interest rates',
-          'Suitable for medium to large installations',
-          'Flexible repayment terms',
-          'Professional financial guidance',
-        ],
-      },
-      {
-        title: 'Power Purchase Agreement (PPA)',
-        description: 'No initial investment required. Pay only for electricity consumed. System owned/operated by provider. Immediate cost savings.',
-        details: [
-          'Zero upfront investment',
-          'Pay only for electricity you use',
-          'System owned and maintained by provider',
-          'Immediate cost savings',
-          'No maintenance responsibilities',
-          'Flexible contract terms',
-        ],
-      },
-    ],
-  });
+export default function AdminStore() {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
+    
+    // Form State
+    const initialForm = {
+        id: null,
+        title: '',
+        type: '',
+        voltage: '',
+        annual_output: '', 
+        warranty: '',
+        description: '',
+        original_price: '',
+        discount_price: '',
+        image: ''
+    };
+    const [formData, setFormData] = useState(initialForm);
+    const [isEditing, setIsEditing] = useState(false);
 
-  const handleChange = (e, section, index = null) => {
-    const { name, value } = e.target;
-    if (section === 'hero') {
-      setFormData({ ...formData, [name]: value });
-    } else if (section === 'financing' && index !== null) {
-      const updatedOptions = [...formData.financingOptions];
-      updatedOptions[index] = { ...updatedOptions[index], [name]: value };
-      setFormData({ ...formData, financingOptions: updatedOptions });
-    }
-  };
+    useEffect(() => {
+        fetchProducts();
+    }, []);
 
-  const handleDetailChange = (optionIndex, detailIndex, value) => {
-    const updatedOptions = [...formData.financingOptions];
-    updatedOptions[optionIndex].details[detailIndex] = value;
-    setFormData({ ...formData, financingOptions: updatedOptions });
-  };
+    const fetchProducts = async () => {
+        try {
+            const res = await axios.get('/admin/products-data');
+            setProducts(res.data);
+        } catch (err) { console.error(err); } 
+        finally { setLoading(false); }
+    };
 
-  const handleAddDetail = (optionIndex) => {
-    const updatedOptions = [...formData.financingOptions];
-    updatedOptions[optionIndex].details.push('');
-    setFormData({ ...formData, financingOptions: updatedOptions });
-  };
+    const handleEdit = (product) => {
+        setFormData(product);
+        setIsEditing(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
-  const handleRemoveDetail = (optionIndex, detailIndex) => {
-    const updatedOptions = [...formData.financingOptions];
-    updatedOptions[optionIndex].details.splice(detailIndex, 1);
-    setFormData({ ...formData, financingOptions: updatedOptions });
-  };
+    const handleDelete = async (id) => {
+        if (!confirm('Are you sure you want to delete this product?')) return;
+        try {
+            await axios.delete(`/admin/products/${id}`);
+            setProducts(prev => prev.filter(p => p.id !== id));
+        } catch (err) { alert('Failed to delete'); }
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Financing data:', formData);
-    alert('Financing content saved successfully!');
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSaving(true);
+        try {
+            await axios.post('/admin/products', formData);
+            await fetchProducts(); // Refresh list
+            setFormData(initialForm);
+            setIsEditing(false);
+            alert('Product Saved!');
+        } catch (err) {
+            alert('Error saving product');
+            console.error(err);
+        } finally {
+            setSaving(false);
+        }
+    };
 
-  return (
-    <div className="container-fluid px-2 px-sm-3 px-md-4 px-lg-5 py-3 py-sm-4 py-md-5" style={{ background: '#f8faf9', minHeight: '100vh' }}>
-      <div className="mb-4 mb-sm-5 fade-up">
-        <div style={{ 
-          background: 'linear-gradient(135deg, rgba(45, 80, 22, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%)',
-          padding: '2rem 2.5rem',
-          borderRadius: '20px',
-          border: '1px solid rgba(45, 80, 22, 0.1)',
-          marginBottom: '2rem',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.05)'
-        }}>
-          <h2 className="fw-bold mb-2 mb-sm-3 dashboard-title" style={{ 
-            background: 'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            fontSize: '2.25rem',
-            fontWeight: 800,
-            letterSpacing: '-0.02em'
-          }}>
-            Financing Page Content
-          </h2>
-          <p className="mb-0 small small-md-normal" style={{ color: '#64748b', fontSize: '1.05rem', fontWeight: 500 }}>Manage content for the Financing page</p>
-        </div>
-      </div>
+    const handleImageSelect = (url) => {
+        setFormData(prev => ({ ...prev, image: url }));
+        setShowMediaPicker(false);
+    };
 
-      <form onSubmit={handleSubmit}>
-        {/* Hero Section */}
-        <div className="rounded-4 p-4 p-md-5 surface-card admin-form-card fade-up fade-delay-1 mb-4" style={{
-          background: 'linear-gradient(135deg, #ffffff 0%, #f8faf9 100%)',
-          border: '1px solid rgba(45, 80, 22, 0.1)',
-          boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '4px',
-            background: 'linear-gradient(90deg, #2D5016 0%, #22C55E 100%)'
-          }}></div>
-          <h3 className="fw-bold mb-4 chart-title position-relative" style={{ 
-            fontSize: '1.75rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem'
-          }}>
-            <span style={{
-              width: '5px',
-              height: '28px',
-              background: 'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
-              borderRadius: '3px'
-            }}></span>
-            Hero Section
-          </h3>
-          <div className="row g-4">
-            <div className="col-12">
-              <label className="form-label fw-semibold mb-3 admin-form-label">
-                <FontAwesomeIcon icon={faLightbulb} style={{ color: '#22C55E', marginRight: '0.5rem' }} />
-                Hero Title
-              </label>
-              <input
-                type="text"
-                name="heroTitle"
-                className="form-control rounded-3 admin-form-input"
-                value={formData.heroTitle}
-                onChange={(e) => handleChange(e, 'hero')}
-                style={{ padding: '14px 16px', fontSize: '0.95rem' }}
-              />
+    // --- HELPER TO HANDLE CAPACITY INPUT ---
+    // User types "5", we save "5kW". 
+    // If DB has "5kW", we show "5".
+    const handleVoltageChange = (e) => {
+        const val = e.target.value;
+        // Append 'kW' immediately to state if value exists
+        setFormData({ ...formData, voltage: val ? `${val}kW` : '' });
+    };
+
+    const getVoltageNumber = () => {
+        if (!formData.voltage) return '';
+        // Remove 'kW' (case insensitive) to show just the number
+        return formData.voltage.replace(/kW/gi, '');
+    };
+
+    return (
+        <div className="container-fluid p-4 bg-light min-vh-100">
+            <h3 className="fw-bold text-success mb-4">Manage Store Products</h3>
+
+            {/* --- PRODUCT FORM --- */}
+            <div className="card border-0 shadow-sm mb-5">
+                <div className="card-header bg-white py-3">
+                    <h5 className="mb-0 fw-bold">{isEditing ? 'Edit Product' : 'Add New Product'}</h5>
+                </div>
+                <div className="card-body">
+                    <form onSubmit={handleSubmit}>
+                        <div className="row g-3">
+                            {/* Image Upload */}
+                            <div className="col-md-4">
+                                <div 
+                                    className="border rounded d-flex align-items-center justify-content-center bg-light position-relative" 
+                                    style={{ height: '300px', cursor: 'pointer', overflow: 'hidden' }}
+                                    onClick={() => setShowMediaPicker(true)}
+                                >
+                                    {formData.image ? (
+                                        <img src={formData.image} alt="Preview" style={{width:'100%', height:'100%', objectFit:'cover'}} />
+                                    ) : (
+                                        <div className="text-center text-muted">
+                                            <FaImage size={40} className="mb-2" />
+                                            <p className="small mb-0">Select Product Image</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Inputs */}
+                            <div className="col-md-8">
+                                <div className="row g-3">
+                                    <div className="col-12">
+                                        <label className="form-label small fw-bold">Product Title</label>
+                                        <input type="text" className="form-control" required 
+                                            value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} 
+                                            placeholder="e.g. Solar Hybrid Package 5kW" />
+                                    </div>
+
+                                    {/* --- TECHNICAL SPECS ROW --- */}
+                                    
+                                    {/* 1. Type */}
+                                    <div className="col-md-3">
+                                        <label className="form-label small fw-bold">Type</label>
+                                        <select 
+                                            className="form-select" 
+                                            required
+                                            value={formData.type} 
+                                            onChange={e => setFormData({...formData, type: e.target.value})}
+                                        >
+                                            <option value="">Select Type</option>
+                                            <option value="On-Grid">On-Grid</option>
+                                            <option value="Hybrid">Hybrid</option>
+                                            <option value="Off-Grid">Off-Grid</option>
+                                        </select>
+                                    </div>
+
+                                    {/* 2. Capacity (Fixed kW) */}
+                                    <div className="col-md-3">
+                                        <label className="form-label small fw-bold">Capacity</label>
+                                        <div className="input-group">
+                                            <input 
+                                                type="number" 
+                                                className="form-control" 
+                                                required 
+                                                value={getVoltageNumber()} 
+                                                onChange={handleVoltageChange} 
+                                                placeholder="5" 
+                                            />
+                                            <span className="input-group-text bg-light text-muted fw-bold">kW</span>
+                                        </div>
+                                    </div>
+
+                                    {/* 3. Annual Output (New) */}
+                                    <div className="col-md-3">
+                                        <label className="form-label small fw-bold">Est. Output</label>
+                                        <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            value={formData.annual_output} 
+                                            onChange={e => setFormData({...formData, annual_output: e.target.value})} 
+                                            placeholder="e.g. 7200 kWh" 
+                                        />
+                                    </div>
+
+                                    {/* 4. Warranty (New) */}
+                                    <div className="col-md-3">
+                                        <label className="form-label small fw-bold">Warranty</label>
+                                        <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            value={formData.warranty} 
+                                            onChange={e => setFormData({...formData, warranty: e.target.value})} 
+                                            placeholder="e.g. 25 Years" 
+                                        />
+                                    </div>
+
+                                    {/* --- END TECH SPECS --- */}
+
+                                    <div className="col-12">
+                                        <label className="form-label small fw-bold">Description</label>
+                                        <textarea className="form-control" rows="3" required 
+                                            value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} 
+                                            placeholder="Short product description..." />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label className="form-label small fw-bold">Original Price (PKR)</label>
+                                        <input type="text" className="form-control" 
+                                            value={formData.original_price} onChange={e => setFormData({...formData, original_price: e.target.value})} 
+                                            placeholder="e.g. 1,200,000" />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label className="form-label small fw-bold text-success">Discount Price (PKR)</label>
+                                        <input type="text" className="form-control border-success" required 
+                                            value={formData.discount_price} onChange={e => setFormData({...formData, discount_price: e.target.value})} 
+                                            placeholder="e.g. 1,000,000" />
+                                    </div>
+                                </div>
+                                <div className="mt-4 text-end">
+                                    {isEditing && (
+                                        <button type="button" className="btn btn-light me-2" onClick={() => { setIsEditing(false); setFormData(initialForm); }}>
+                                            Cancel
+                                        </button>
+                                    )}
+                                    <button type="submit" disabled={saving} className="btn btn-success fw-bold px-4">
+                                        {saving ? <FaSpinner className="spin" /> : <><FaSave className="me-2" /> {isEditing ? 'Update' : 'Save'} Product</>}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div className="col-12">
-              <label className="form-label fw-semibold mb-3 admin-form-label">
-                Hero Subtitle
-              </label>
-              <textarea
-                name="heroSubtitle"
-                className="form-control rounded-3 admin-form-input"
-                rows="3"
-                value={formData.heroSubtitle}
-                onChange={(e) => handleChange(e, 'hero')}
-                style={{ padding: '14px 16px', fontSize: '0.95rem', resize: 'vertical' }}
-              />
-            </div>
-          </div>
-        </div>
 
-        {/* Financing Options */}
-        {formData.financingOptions.map((option, index) => (
-          <div key={index} className="rounded-4 p-4 p-md-5 surface-card admin-form-card fade-up fade-delay-2 mb-4" style={{
-            background: 'linear-gradient(135deg, #ffffff 0%, #f8faf9 100%)',
-            border: '1px solid rgba(45, 80, 22, 0.1)',
-            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: '4px',
-              background: 'linear-gradient(90deg, #2D5016 0%, #22C55E 100%)'
-            }}></div>
-            <h3 className="fw-bold mb-4 chart-title position-relative" style={{ fontSize: '1.5rem' }}>
-              <FontAwesomeIcon icon={faDollarSign} style={{ color: '#22C55E', marginRight: '0.5rem' }} />
-              Option {index + 1}: {option.title}
-            </h3>
-            <div className="row g-4">
-              <div className="col-12">
-                <label className="form-label fw-semibold mb-3 admin-form-label">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  className="form-control rounded-3 admin-form-input"
-                  value={option.title}
-                  onChange={(e) => handleChange(e, 'financing', index)}
-                  style={{ padding: '14px 16px', fontSize: '0.95rem' }}
-                />
-              </div>
-              <div className="col-12">
-                <label className="form-label fw-semibold mb-3 admin-form-label">
-                  Description
-                </label>
-                <textarea
-                  name="description"
-                  className="form-control rounded-3 admin-form-input"
-                  rows="3"
-                  value={option.description}
-                  onChange={(e) => handleChange(e, 'financing', index)}
-                  style={{ padding: '14px 16px', fontSize: '0.95rem', resize: 'vertical' }}
-                />
-              </div>
-              <div className="col-12">
-                <label className="form-label fw-semibold mb-3 admin-form-label">
-                  <FontAwesomeIcon icon={faList} style={{ color: '#22C55E', marginRight: '0.5rem' }} />
-                  Key Features / Details
-                </label>
-                {option.details.map((detail, detailIndex) => (
-                  <div key={detailIndex} className="d-flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      className="form-control rounded-3 admin-form-input"
-                      value={detail}
-                      onChange={(e) => handleDetailChange(index, detailIndex, e.target.value)}
-                      style={{ padding: '14px 16px', fontSize: '0.95rem' }}
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-danger rounded-3"
-                      onClick={() => handleRemoveDetail(index, detailIndex)}
-                      style={{ minWidth: '50px' }}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  className="btn btn-outline-success rounded-3 mt-2"
-                  onClick={() => handleAddDetail(index)}
-                >
-                  + Add Detail
-                </button>
-              </div>
+            {/* --- PRODUCTS LIST TABLE --- */}
+            <div className="card border-0 shadow-sm">
+                <div className="card-header bg-white py-3">
+                    <h5 className="mb-0 fw-bold">Product List</h5>
+                </div>
+                <div className="table-responsive">
+                    <table className="table table-hover align-middle mb-0">
+                        <thead className="table-light">
+                            <tr>
+                                <th style={{width: '80px'}}>Image</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Voltage</th>
+                                <th className="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading ? <tr><td colSpan="6" className="text-center p-4">Loading...</td></tr> : 
+                             products.length === 0 ? <tr><td colSpan="6" className="text-center p-4">No products found.</td></tr> :
+                             products.map(product => (
+                                <tr key={product.id}>
+                                    <td>
+                                        <img src={product.image} className="rounded" style={{width: '50px', height: '50px', objectFit: 'cover'}} alt="" />
+                                    </td>
+                                    <td className="fw-bold">{product.title}</td>
+                                    <td><span className="badge bg-light text-dark border">{product.type}</span></td>
+                                    <td className="fw-bold text-success">PKR {product.discount_price}</td>
+                                    <td><span className="badge bg-warning text-dark">{product.voltage}</span></td>
+                                    <td className="text-end">
+                                        <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleEdit(product)}>
+                                            <FaEdit />
+                                        </button>
+                                        <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(product.id)}>
+                                            <FaTrash />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-          </div>
-        ))}
 
-        <div className="d-flex justify-content-end gap-3 mt-4">
-          <button type="button" className="btn rounded-pill px-4 px-md-5 admin-btn-cancel">
-            Cancel
-          </button>
-          <button type="submit" className="btn rounded-pill px-4 px-md-5 admin-btn-primary" style={{ 
-            background: 'linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%)',
-            color: '#ffffff',
-            border: 'none',
-            fontWeight: 600
-          }}>
-            Save Changes
-          </button>
+            <MediaPickerModal 
+                isOpen={showMediaPicker} 
+                onClose={() => setShowMediaPicker(false)} 
+                onSelectImage={handleImageSelect}
+                allowedTypes="image"
+            />
         </div>
-      </form>
-    </div>
-  );
+    );
 }
-
-export default AdminStore;
