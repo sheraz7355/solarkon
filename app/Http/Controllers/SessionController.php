@@ -28,4 +28,15 @@ class SessionController extends Controller
         $request->session()->regenerate();
         return redirect()->intended('/admin');
     }
+
+    public function destroy(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
 }

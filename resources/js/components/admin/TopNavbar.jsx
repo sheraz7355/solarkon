@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { NavLink } from 'react-router-dom';
 // 1. Added faHome to imports
-import { faBell, faUserCircle, faCog, faSearch, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faUserCircle, faCog, faSearch, faHome, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 function TopNavbar() {
   return (
@@ -94,38 +95,7 @@ function TopNavbar() {
             </a>
             {/* --- HOME BUTTON END --- */}
 
-            {/* Search Button */}
-            <button
-              className="btn position-relative p-1 p-sm-2 text-decoration-none rounded-3 admin-search-btn"
-              aria-label="Search"
-              style={{ 
-                background: 'linear-gradient(135deg, rgba(45, 80, 22, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%)',
-                border: '1px solid rgba(45, 80, 22, 0.1)',
-                color: '#2D5016',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                width: '34px',
-                height: '34px',
-                minWidth: '34px',
-                maxWidth: '34px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                padding: 0,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(45, 80, 22, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%)';
-                e.currentTarget.style.transform = 'scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(45, 80, 22, 0.2)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(45, 80, 22, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%)';
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <FontAwesomeIcon icon={faSearch} style={{ fontSize: 'clamp(0.8rem, 2vw, 0.95rem)' }} />
-            </button>
+           
 
             {/* Notifications Button */}
             <button
@@ -181,7 +151,8 @@ function TopNavbar() {
             </button>
 
             {/* Settings Button */}
-            <button
+            <NavLink
+              to="/settings"
               className="btn position-relative p-1 p-sm-2 text-decoration-none rounded-3 admin-settings-btn d-none d-md-flex"
               aria-label="Settings"
               style={{ 
@@ -211,7 +182,7 @@ function TopNavbar() {
               }}
             >
               <FontAwesomeIcon icon={faCog} style={{ fontSize: 'clamp(0.8rem, 2vw, 0.95rem)' }} />
-            </button>
+            </NavLink>
 
             {/* User Profile */}
             <div 
@@ -257,7 +228,7 @@ function TopNavbar() {
                   }} 
                 />
               </div>
-              <div className="d-none d-xl-block fade-up fade-delay-1" style={{ minWidth: 0, overflow: 'hidden', maxWidth: '150px' }}>
+              <div className="d-none d-lg-block fade-up fade-delay-1" style={{ minWidth: 0, overflow: 'hidden', maxWidth: '150px' }}>
                 <div 
                   className="fw-semibold small admin-user-name" 
                   style={{ 
@@ -284,10 +255,44 @@ function TopNavbar() {
                     textOverflow: 'ellipsis',
                   }}
                 >
-                  admin@solarkon.com
+                  info@solarkon.com
                 </div>
               </div>
             </div>
+
+            {/* Logout Button */}
+            <a
+              href="/logout"
+              className="btn position-relative p-1 p-sm-2 text-decoration-none rounded-3 admin-logout-btn d-flex"
+              aria-label="Logout"
+              style={{ 
+                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(220, 38, 38, 0.05) 100%)',
+                border: '1px solid rgba(239, 68, 68, 0.1)',
+                color: '#dc2626',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                width: '34px',
+                height: '34px',
+                minWidth: '34px',
+                maxWidth: '34px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                padding: 0,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(220, 38, 38, 0.05) 100%)';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} style={{ fontSize: 'clamp(0.8rem, 2vw, 0.95rem)' }} />
+            </a>
           </div>
         </div>
       </div>
