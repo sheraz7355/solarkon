@@ -15,37 +15,35 @@ class MediaController extends Controller
         return response()->json(Media::latest()->get());
     }
 
-    // 2. POST: Upload new media
     public function store(Request $request)
-    {
-        // Validate: Allow Images & Video, Max 50MB
-        $request->validate([
-            'file' => 'required|file|mimes:jpeg,png,webp,jpg,mp4,mov,avi,wmv|max:51200',
+{
+    // Validate: 20MB = 20480KB
+    $request->validate([
+        'file' => 'required|file|mimes:jpeg,png,webp,jpg,mp4,mov,avi,wmv,pdf|max:20480',
+    ]);
+
+    if ($request->hasFile('file')) {
+        $file = $request->file('file');
+        
+        // Clean filename
+        $filename = time() . '_' . preg_replace('/[^A-Za-z0-9\-\.]/', '', $file->getClientOriginalName());
+        
+        // Save to public storage
+        $path = $file->storeAs('media', $filename, 'public');
+
+        $media = Media::create([
+            'name' => $file->getClientOriginalName(),
+            'file_path' => $path,
+            'url' => asset('storage/' . $path),
+            'mime_type' => $file->getMimeType(),
+            'size' => $file->getSize(),
         ]);
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-
-            // Sanitize filename
-            $filename = time() . '_' . preg_replace('/[^A-Za-z0-9\-\.]/', '', $file->getClientOriginalName());
-
-            // Save to 'public/media' folder
-            $path = $file->storeAs('media', $filename, 'public');
-
-            // Create Database Record
-            $media = Media::create([
-                'name' => $file->getClientOriginalName(),
-                'file_path' => $path,
-                'url' => asset('storage/' . $path),
-                'mime_type' => $file->getMimeType(),
-                'size' => $file->getSize(),
-            ]);
-
-            return response()->json($media, 201);
-        }
-
-        return response()->json(['error' => 'File upload failed'], 400);
+        return response()->json($media, 201);
     }
+
+    return response()->json(['error' => 'File upload failed'], 400);
+}
 
     // 3. DELETE: Remove media
     public function destroy($id)
