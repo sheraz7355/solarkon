@@ -1,156 +1,242 @@
-import { useState } from 'react';
-import Navbar from '../components/client/Navbar';
 import Footer from '../components/client/Footer';
-import { motion } from 'framer-motion';
-import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
+import Navbar from '../components/client/Navbar';
 import WhatsAppFloat from '../components/client/WhatsAppFloat';
+import solarImg from '../assets/images/solarimg.webp';
+
 
 function Financing() {
-  const [openAccordion, setOpenAccordion] = useState(0);
- <WhatsAppFloat/>
-  const financingOptions = [
-    {
-      title: 'Client Self Finance',
-      description: 'Complete ownership, no interest, max long-term return, full government incentives.',
-      details: [
-        'Full system ownership from day one',
-        'No interest payments',
-        'Maximum long-term return on investment',
-        'Eligible for all government incentives and tax benefits',
-        'Complete control over your solar system',
-      ],
-    },
-    {
-      title: 'Solar on Installment',
-      description: 'Low upfront cost, monthly payments customized to budget, no bank involvement, faster approval.',
-      details: [
-        'Minimal upfront investment required',
-        'Flexible monthly payment plans',
-        'Customized to your budget',
-        'No bank involvement needed',
-        'Fast approval process',
-        'Ownership transfers after final payment',
-      ],
-    },
-    {
-      title: 'Bank-Financed',
-      description: 'Partnered with reputable banks, structured EMI plans, suitable for medium to large setups.',
-      details: [
-        'Partnerships with leading banks',
-        'Structured EMI plans',
-        'Competitive interest rates',
-        'Suitable for medium to large installations',
-        'Flexible repayment terms',
-        'Professional financial guidance',
-      ],
-    },
-    {
-      title: 'Power Purchase Agreement (PPA)',
-      description: 'No initial investment required. Pay only for electricity consumed. System owned/operated by provider. Immediate cost savings.',
-      details: [
-        'Zero upfront investment',
-        'Pay only for electricity you use',
-        'System owned and maintained by provider',
-        'Immediate cost savings',
-        'No maintenance responsibilities',
-        'Flexible contract terms',
-      ],
-    },
-  ];
+    return (
+        <div className="bg-white min-vh-100 overflow-hidden">
+            <Navbar />
+            <WhatsAppFloat />
 
-  const toggleAccordion = (index) => {
-    setOpenAccordion(openAccordion === index ? null : index);
-  };
+            {/* ================= HERO SECTION ================= */}
+            <section className="hero-modern py-5 position-relative">
+                <div className="py-5 position-relative container text-center" style={{ zIndex: 2 }}>
+                    <div className="badge-pill mb-3">Financing Made Simple</div>
 
-  return (
-    <div className="d-flex flex-column min-vh-100">
-      <Navbar />
-      <main className="flex-grow-1">
-        {/* Hero Section */}
-        <section className="section-shell bg-white" data-aos="fade-up">
-          <div className="container">
-            <div className="text-center mb-5">
-              <span className="eyebrow">Financing Options</span>
-              <h1 className="fw-bold section-title mt-3" style={{ fontSize: '2.5rem' }}>
-                Flexible Financing Solutions
-              </h1>
-              <p className="text-muted mt-3 mx-auto" style={{ maxWidth: '700px' }}>
-                Choose the financing option that best fits your needs and budget. We offer multiple ways to make solar energy accessible.
-              </p>
-            </div>
-          </div>
-        </section>
+                    <h1 className="display-3 fw-bold mb-3 text-dark">
+                        Empower Your Future with <br />
+                        <span className="text-success-gradient">Smart Solar Financing</span>
+                    </h1>
 
-        {/* Accordion Section */}
-        <section className="section-shell pt-0" data-aos="fade-up">
-          <div className="container">
-            <div className="row justify-content-center">
-              <div className="col-lg-10">
-                {financingOptions.map((option, index) => (
-                  <motion.div
-                    key={index}
-                    className="mb-3"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <div className="surface-card rounded-4 overflow-hidden">
-                      <button
-                        className="w-100 p-4 d-flex align-items-center justify-content-between text-start border-0 bg-transparent"
-                        onClick={() => toggleAccordion(index)}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <div>
-                          <h3 className="fw-bold mb-2" style={{ color: '#2D5016', fontSize: '1.3rem' }}>
-                            {option.title}
-                          </h3>
-                          <p className="text-muted mb-0">{option.description}</p>
-                        </div>
-                        <div className="flex-shrink-0 ms-3">
-                          {openAccordion === index ? (
-                            <HiChevronUp size={24} color="#22C55E" />
-                          ) : (
-                            <HiChevronDown size={24} color="#64748b" />
-                          )}
-                        </div>
-                      </button>
-                      {openAccordion === index && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="px-4 pb-4"
-                        >
-                          <div className="border-top pt-4">
-                            <h4 className="fw-semibold mb-3" style={{ color: '#1e293b' }}>
-                              Key Features:
-                            </h4>
-                            <ul className="list-unstyled mb-0">
-                              {option.details.map((detail, idx) => (
-                                <li key={idx} className="mb-2 d-flex align-items-start gap-2">
-                                  <svg width="20" height="20" fill="#22C55E" viewBox="0 0 20 20" className="mt-1 flex-shrink-0">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                  </svg>
-                                  <span className="text-muted">{detail}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </motion.div>
-                      )}
+                    <p className="lead text-muted mb-5 mx-auto" style={{ maxWidth: 750 }}>
+                        Don't let the cost stop you. Choose from our flexible payment plans designed to make solar energy accessible for every home
+                        and business.
+                    </p>
+
+                    {/* SINGLE CTA BUTTON */}
+                    <div className="d-flex justify-content-center">
+                        <a href="/contact" className="btn-consultation">
+                            Get Free Consultation
+                        </a>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
-  );
+                </div>
+
+                <div className="blob-1"></div>
+                <div className="blob-2"></div>
+            </section>
+
+            {/* ================= OPTION 1 ================= */}
+            <section className="py-5">
+                <div className="py-4 container">
+                    <div className="row align-items-center g-5">
+                        <div className="col-lg-6">
+                            <a href="/contact" className="active-image-link">
+                                <div className="image-container">
+                                    <img
+                                        src={solarImg}
+                                        alt="Self Finance"
+                                        className="img-fluid rounded-5 shadow-2xl active-image-premium"
+                                    />
+                                    <div className="floating-card">
+                                        <span className="fs-4 fw-bold text-success">100%</span>
+                                        <p className="small mb-0 text-muted">Ownership</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div className="col-lg-6 ps-lg-4">
+                            <h6 className="text-success fw-bold text-uppercase mb-2">Plan Alpha</h6>
+                            <h2 className="display-5 fw-bold mb-4">Client Self Finance</h2>
+                            <p className="text-muted fs-5 mb-4">
+                                The fastest way to energy independence. Pay upfront, eliminate your bills immediately, and enjoy the highest lifetime
+                                ROI.
+                            </p>
+
+                            <div className="row g-4">
+                                {[
+                                    { title: 'Zero Debt', desc: 'No monthly liabilities.' },
+                                    { title: 'Full Control', desc: '100% system ownership.' },
+                                    { title: 'Max Savings', desc: 'No interest or hidden fees.' },
+                                    { title: 'Priority', desc: 'Fast-track installation.' },
+                                ].map((item, i) => (
+                                    <div key={i} className="col-sm-6">
+                                        <div className="premium-feature-card h-100">
+                                            <div className="dot-icon"></div>
+                                            <h6 className="fw-bold mb-1">{item.title}</h6>
+                                            <p className="small text-muted mb-0">{item.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ================= OPTION 2 ================= */}
+            <section className="py-5 bg-soft-green">
+                <div className="py-4 container">
+                    <div className="row align-items-center g-5 flex-lg-row-reverse">
+                        <div className="col-lg-6">
+                            <a href="/contact" className="active-image-link">
+                                <img
+                                    src={solarImg}
+                                    alt="Installment"
+                                    className="img-fluid rounded-5 shadow-2xl active-image-premium"
+                                />
+                            </a>
+                        </div>
+
+                        <div className="col-lg-6 pe-lg-4">
+                            <h6 className="text-success fw-bold text-uppercase mb-2">Plan Beta</h6>
+                            <h2 className="display-5 fw-bold mb-4">Solar on Installment</h2>
+                            <p className="text-muted fs-5 mb-4">
+                                Start saving from day one. Pay a small down payment and let your monthly savings cover the installments.
+                            </p>
+
+                            {[
+                                'Low 20% upfront payment',
+                                'Flexible 12-24 month plans',
+                                'Direct in-house financing',
+                                'Ownership transfer on completion',
+                            ].map((item, i) => (
+                                <div key={i} className="d-flex align-items-center gap-3 mb-3">
+                                    <div className="check-circle">✓</div>
+                                    <span className="fw-semibold">{item}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ================= OPTION 3 ================= */}
+            <section className="py-5">
+                <div className="py-4 container">
+                    <div className="row align-items-center g-5">
+                        <div className="col-lg-6">
+                            <a href="/contact" className="active-image-link">
+                                <img
+                                    src={solarImg}
+                                    alt="Bank Finance"
+                                    className="img-fluid rounded-5 shadow-2xl active-image-premium"
+                                />
+                            </a>
+                        </div>
+
+                        <div className="col-lg-6 ps-lg-4">
+                            <h6 className="text-success fw-bold text-uppercase mb-2">Plan Gamma</h6>
+                            <h2 className="display-5 fw-bold mb-4">Bank Financing</h2>
+                            <p className="text-muted fs-5 mb-4">Partnered with leading banks to offer SBP subsidized solar schemes.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ================= OPTION 4 ================= */}
+            <section className="py-5 mb-5">
+                <div className="container">
+                    <div className="ppa-premium-box p-5 text-white position-relative">
+                        <div className="row align-items-center g-5 position-relative" style={{ zIndex: 2 }}>
+                            <div className="col-lg-7">
+                                <h2 className="display-4 fw-bold mb-3">
+                                    PPA Model <span className="text-success-light">(Zero Investment)</span>
+                                </h2>
+                                <p className="lead opacity-75">We install, maintain, and operate. You only pay for energy used.</p>
+                            </div>
+
+                            <div className="col-lg-5">
+                                <a href="/contact" className="active-image-link">
+                                    <img src={solarImg} alt="PPA" className="img-fluid rounded-4 shadow-lg active-image-premium" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <Footer />
+
+            {/* ================= STYLES ================= */}
+            <style jsx>{`
+                :root {
+                    --brand-green: #022c22;
+                }
+
+                .text-success-gradient {
+                    background: linear-gradient(90deg, #022c22, #16a34a);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                .btn-consultation {
+                    background: var(--brand-green);
+                    color: #fff;
+                    padding: 16px 44px;
+                    border-radius: 14px;
+                    font-weight: 600;
+                    text-decoration: none;
+                    transition: all 0.35s ease;
+                    box-shadow: 0 15px 35px rgba(2, 44, 34, 0.4);
+                }
+
+                .btn-consultation:hover {
+                    transform: translateY(-3px);
+                    background: #034b3a;
+                }
+
+                .active-image-link {
+                    display: block;
+                    border-radius: 30px;
+                }
+
+                .active-image-premium {
+                    transition: all 0.4s ease;
+                    border: 2px solid transparent;
+                }
+
+                .active-image-link:hover .active-image-premium {
+                    transform: scale(1.04);
+                    border-color: var(--brand-green);
+                    box-shadow: 0 30px 70px rgba(2, 44, 34, 0.35);
+                }
+
+                .bg-soft-green {
+                    background: #f7fdf9;
+                }
+
+                .check-circle {
+                    width: 28px;
+                    height: 28px;
+                    background: #dcfce7;
+                    color: var(--brand-green);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                }
+
+                .ppa-premium-box {
+                    background: linear-gradient(135deg, #022c22, #064e3b);
+                    border-radius: 40px;
+                }
+            `}</style>
+        </div>
+    );
 }
 
 export default Financing;

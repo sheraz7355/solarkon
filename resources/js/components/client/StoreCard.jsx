@@ -75,7 +75,7 @@ const StoreCard = ({ product }) => {
                     </button>
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 };
 
