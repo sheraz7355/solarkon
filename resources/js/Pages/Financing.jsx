@@ -3,236 +3,237 @@ import Navbar from '../components/client/Navbar';
 import WhatsAppFloat from '../components/client/WhatsAppFloat';
 import solarImg from '../assets/images/solarimg.webp';
 
-
 function Financing() {
     return (
-        <div className="bg-white min-vh-100 overflow-hidden">
+        <div className="finance-master-wrapper">
             <Navbar />
             <WhatsAppFloat />
 
-            {/* ================= HERO SECTION ================= */}
-            <section className="hero-modern py-5 position-relative">
-                <div className="py-5 position-relative container text-center" style={{ zIndex: 2 }}>
-                    <div className="badge-pill mb-3">Financing Made Simple</div>
-
-                    <h1 className="display-3 fw-bold mb-3 text-dark">
-                        Empower Your Future with <br />
-                        <span className="text-success-gradient">Smart Solar Financing</span>
-                    </h1>
-
-                    <p className="lead text-muted mb-5 mx-auto" style={{ maxWidth: 750 }}>
-                        Don't let the cost stop you. Choose from our flexible payment plans designed to make solar energy accessible for every home
-                        and business.
-                    </p>
-
-                    {/* SINGLE CTA BUTTON */}
-                    <div className="d-flex justify-content-center">
-                        <a href="/contact" className="btn-consultation">
-                            Get Free Consultation
-                        </a>
-                    </div>
-                </div>
-
-                <div className="blob-1"></div>
-                <div className="blob-2"></div>
-            </section>
-
-            {/* ================= OPTION 1 ================= */}
-            <section className="py-5">
-                <div className="py-4 container">
-                    <div className="row align-items-center g-5">
-                        <div className="col-lg-6">
-                            <a href="/contact" className="active-image-link">
-                                <div className="image-container">
-                                    <img
-                                        src={solarImg}
-                                        alt="Self Finance"
-                                        className="img-fluid rounded-5 shadow-2xl active-image-premium"
-                                    />
-                                    <div className="floating-card">
-                                        <span className="fs-4 fw-bold text-success">100%</span>
-                                        <p className="small mb-0 text-muted">Ownership</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div className="col-lg-6 ps-lg-4">
-                            <h6 className="text-success fw-bold text-uppercase mb-2">Plan Alpha</h6>
-                            <h2 className="display-5 fw-bold mb-4">Client Self Finance</h2>
-                            <p className="text-muted fs-5 mb-4">
-                                The fastest way to energy independence. Pay upfront, eliminate your bills immediately, and enjoy the highest lifetime
-                                ROI.
+            {/* --- IMMERSIVE HERO --- */}
+            <section className="immersive-hero">
+                <div className="container">
+                    <div className="row align-items-center min-vh-75">
+                        <div className="col-lg-7 py-5">
+                            <span className="info-tag pulse">Best Rates Guaranteed</span>
+                            <h1 className="main-title">
+                                Smart Money for <br /> 
+                                <span className="highlight">Green Energy</span>
+                            </h1>
+                            <p className="description">
+                                Breaking the cost barrier. Explore our 4 unique financing pathways 
+                                designed to put solar panels on your roof without breaking the bank.
                             </p>
-
-                            <div className="row g-4">
-                                {[
-                                    { title: 'Zero Debt', desc: 'No monthly liabilities.' },
-                                    { title: 'Full Control', desc: '100% system ownership.' },
-                                    { title: 'Max Savings', desc: 'No interest or hidden fees.' },
-                                    { title: 'Priority', desc: 'Fast-track installation.' },
-                                ].map((item, i) => (
-                                    <div key={i} className="col-sm-6">
-                                        <div className="premium-feature-card h-100">
-                                            <div className="dot-icon"></div>
-                                            <h6 className="fw-bold mb-1">{item.title}</h6>
-                                            <p className="small text-muted mb-0">{item.desc}</p>
-                                        </div>
-                                    </div>
-                                ))}
+                            <div className="hero-stats d-flex gap-4 mt-4">
+                                <div className="stat-item">
+                                    <h4 className="fw-bold mb-0">0%</h4>
+                                    <small>Markup Options</small>
+                                </div>
+                                <div className="stat-item border-start ps-4">
+                                    <h4 className="fw-bold mb-0">5 Yrs</h4>
+                                    <small>Flexible Tenure</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-5 d-none d-lg-block">
+                            <div className="hero-visual-card">
+                                <img src={solarImg} alt="Solar" className="img-fluid rounded-5 shadow-2xl" />
+                                <div className="floating-info-card">
+                                    <span>⚡ Save up to 90% on Bills</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div className="hero-wave"></div>
             </section>
 
-            {/* ================= OPTION 2 ================= */}
-            <section className="py-5 bg-soft-green">
-                <div className="py-4 container">
-                    <div className="row align-items-center g-5 flex-lg-row-reverse">
-                        <div className="col-lg-6">
-                            <a href="/contact" className="active-image-link">
-                                <img
-                                    src={solarImg}
-                                    alt="Installment"
-                                    className="img-fluid rounded-5 shadow-2xl active-image-premium"
-                                />
-                            </a>
+            {/* --- THE INFORMATION JOURNEY --- */}
+            <main className="container py-5">
+                
+                {/* 1. SELF FINANCE - THE INDEPENDENCE CARD */}
+                <div className="journey-card self-finance shadow-hover">
+                    <div className="row g-0">
+                        <div className="col-lg-5">
+                            <div className="card-image-wrapper">
+                                <img src={solarImg} alt="Self" />
+                                <div className="price-badge">Best ROI</div>
+                            </div>
                         </div>
-
-                        <div className="col-lg-6 pe-lg-4">
-                            <h6 className="text-success fw-bold text-uppercase mb-2">Plan Beta</h6>
-                            <h2 className="display-5 fw-bold mb-4">Solar on Installment</h2>
-                            <p className="text-muted fs-5 mb-4">
-                                Start saving from day one. Pay a small down payment and let your monthly savings cover the installments.
+                        <div className="col-lg-7 p-4 p-md-5">
+                            <div className="card-header-icon">💰</div>
+                            <h2 className="fw-bold">Client Self Finance</h2>
+                            <p className="info-text">
+                                The most powerful way to own your energy. You pay 100% upfront, 
+                                and every single unit produced is pure profit from day one.
                             </p>
+                            <div className="benefit-grid">
+                                <div className="benefit-box">
+                                    <strong>No Interest</strong>
+                                    <span>Save on markup costs</span>
+                                </div>
+                                <div className="benefit-box">
+                                    <strong>Asset Equity</strong>
+                                    <span>Immediate ownership</span>
+                                </div>
+                            </div>
+                            <button className="btn-modern mt-4">Calculate Payback Period</button>
+                        </div>
+                    </div>
+                </div>
 
+                {/* 2 & 3. DUAL GRID (INSTALLMENT & BANK) */}
+                <div className="row g-4 mb-5">
+                    {/* INSTALLMENT */}
+                    <div className="col-lg-6">
+                        <div className="info-box glass-effect h-100">
+                            <div className="box-icon">🗓️</div>
+                            <h3>Solar on Installment</h3>
+                            <p className="text-muted">No Bank? No Problem. Pay directly to Solakon in easy monthly bits.</p>
+                            <ul className="custom-list mt-3">
+                                <li>25% Downpayment only</li>
+                                <li>12 - 18 Months Tenure</li>
+                                <li>Hassle-free Documentation</li>
+                            </ul>
+                            <div className="mt-auto pt-4">
+                                <a href="/contact" className="link-arrow">Check Eligibility →</a>
+                            </div>
+                        </div>
+                    </div>
+                    {/* BANK FINANCE */}
+                    <div className="col-lg-6">
+                        <div className="info-box bank-theme h-100">
+                            <div className="box-icon">🏦</div>
+                            <h3>Structured Bank Finance</h3>
+                            <p className="text-muted">Leverage the power of Islamic & Conventional banking under SBP schemes.</p>
+                            <div className="bank-meta mt-3">
+                                <div className="d-flex justify-content-between mb-2 border-bottom pb-1">
+                                    <span>Markup Rate</span>
+                                    <span className="fw-bold text-success">Starting 6%</span>
+                                </div>
+                                <div className="d-flex justify-content-between mb-2 border-bottom pb-1">
+                                    <span>Maximum Tenure</span>
+                                    <span className="fw-bold text-success">Up to 5 Years</span>
+                                </div>
+                            </div>
+                            <div className="mt-auto pt-4">
+                                <button className="btn btn-outline-success w-100 rounded-pill">View Partner Banks</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 4. PPA - INDUSTRIAL MASTERCLASS */}
+                <div className="ppa-industrial-card">
+                    <div className="ppa-content text-center">
+                        <div className="badge bg-success mb-3">Enterprise Exclusive</div>
+                        <h2 className="display-4 fw-bold">Power Purchase Agreement (PPA)</h2>
+                        <h4 className="text-success-light mb-4">Zero Capex. Zero Risk. Pure Savings.</h4>
+                        <div className="row justify-content-center g-4 mt-2">
                             {[
-                                'Low 20% upfront payment',
-                                'Flexible 12-24 month plans',
-                                'Direct in-house financing',
-                                'Ownership transfer on completion',
+                                {icon: '🛠️', t: 'Free Maintenance', d: 'We own & maintain the plant'},
+                                {icon: '📉', t: 'Reduced Tariff', d: 'Pay less than grid price'},
+                                {icon: '🔋', t: 'Unlimited Energy', d: 'Scale as your industry grows'}
                             ].map((item, i) => (
-                                <div key={i} className="d-flex align-items-center gap-3 mb-3">
-                                    <div className="check-circle">✓</div>
-                                    <span className="fw-semibold">{item}</span>
+                                <div key={i} className="col-md-4">
+                                    <div className="ppa-feature-item">
+                                        <div className="fs-1 mb-2">{item.icon}</div>
+                                        <h6>{item.t}</h6>
+                                        <p className="small opacity-75">{item.d}</p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
+                        <button className="btn-ppa-cta mt-5">Request Industrial Survey</button>
                     </div>
+                    <div className="ppa-bg-pattern"></div>
                 </div>
-            </section>
 
-            {/* ================= OPTION 3 ================= */}
-            <section className="py-5">
-                <div className="py-4 container">
-                    <div className="row align-items-center g-5">
-                        <div className="col-lg-6">
-                            <a href="/contact" className="active-image-link">
-                                <img
-                                    src={solarImg}
-                                    alt="Bank Finance"
-                                    className="img-fluid rounded-5 shadow-2xl active-image-premium"
-                                />
-                            </a>
-                        </div>
-
-                        <div className="col-lg-6 ps-lg-4">
-                            <h6 className="text-success fw-bold text-uppercase mb-2">Plan Gamma</h6>
-                            <h2 className="display-5 fw-bold mb-4">Bank Financing</h2>
-                            <p className="text-muted fs-5 mb-4">Partnered with leading banks to offer SBP subsidized solar schemes.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* ================= OPTION 4 ================= */}
-            <section className="py-5 mb-5">
-                <div className="container">
-                    <div className="ppa-premium-box p-5 text-white position-relative">
-                        <div className="row align-items-center g-5 position-relative" style={{ zIndex: 2 }}>
-                            <div className="col-lg-7">
-                                <h2 className="display-4 fw-bold mb-3">
-                                    PPA Model <span className="text-success-light">(Zero Investment)</span>
-                                </h2>
-                                <p className="lead opacity-75">We install, maintain, and operate. You only pay for energy used.</p>
-                            </div>
-
-                            <div className="col-lg-5">
-                                <a href="/contact" className="active-image-link">
-                                    <img src={solarImg} alt="PPA" className="img-fluid rounded-4 shadow-lg active-image-premium" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            </main>
 
             <Footer />
 
-            {/* ================= STYLES ================= */}
             <style jsx>{`
-                :root {
-                    --brand-green: #022c22;
+                @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+                .finance-master-wrapper {
+                    background: #fdfdfd;
+                    font-family: 'Plus Jakarta Sans', sans-serif;
+                    color: #1a2e2a;
                 }
 
-                .text-success-gradient {
-                    background: linear-gradient(90deg, #022c22, #16a34a);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
+                /* HERO */
+                .immersive-hero {
+                    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+                    position: relative;
+                    overflow: hidden;
+                }
+                .main-title { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1.1; margin-top: 15px; }
+                .highlight { color: #16a34a; }
+                .info-tag { background: #dcfce7; color: #166534; padding: 6px 18px; border-radius: 100px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
+                .description { font-size: 1.15rem; color: #4b5563; max-width: 600px; margin-top: 20px; }
+                
+                .hero-visual-card { position: relative; padding: 20px; }
+                .floating-info-card {
+                    position: absolute;
+                    bottom: 40px; left: -20px;
+                    background: white; padding: 15px 25px;
+                    border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                    font-weight: 700; animation: float 3s infinite ease-in-out;
                 }
 
-                .btn-consultation {
-                    background: var(--brand-green);
-                    color: #fff;
-                    padding: 16px 44px;
-                    border-radius: 14px;
-                    font-weight: 600;
-                    text-decoration: none;
-                    transition: all 0.35s ease;
-                    box-shadow: 0 15px 35px rgba(2, 44, 34, 0.4);
+                /* JOURNEY CARDS */
+                .journey-card {
+                    background: white; border-radius: 35px; overflow: hidden;
+                    border: 1px solid #f1f5f9; margin-bottom: 50px;
+                }
+                .card-image-wrapper { position: relative; height: 100%; overflow: hidden; }
+                .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+                .journey-card:hover .card-image-wrapper img { transform: scale(1.1); }
+                .price-badge { position: absolute; top: 20px; right: 20px; background: #16a34a; color: white; padding: 5px 15px; border-radius: 10px; font-weight: 700; }
+                
+                .card-header-icon { font-size: 2.5rem; margin-bottom: 10px; }
+                .benefit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+                .benefit-box { background: #f8fafc; padding: 15px; border-radius: 15px; border-left: 4px solid #16a34a; }
+                .benefit-box strong { display: block; color: #1e293b; }
+
+                /* BENTO STYLE BOXES */
+                .info-box { padding: 40px; border-radius: 35px; transition: 0.4s; border: 1px solid #f1f5f9; display: flex; flex-direction: column; }
+                .glass-effect { background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+                .info-box:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(0,0,0,0.08); }
+                .bank-theme { background: #f0fdf4; border-color: #dcfce7; }
+                .box-icon { font-size: 2.5rem; margin-bottom: 15px; }
+                .custom-list { list-style: none; padding: 0; }
+                .custom-list li::before { content: "✓"; color: #16a34a; font-weight: 800; margin-right: 10px; }
+                .link-arrow { color: #16a34a; text-decoration: none; font-weight: 700; }
+
+                /* PPA CARD */
+                .ppa-industrial-card {
+                    background: #022c22; color: white; border-radius: 40px;
+                    padding: 80px 40px; position: relative; overflow: hidden;
+                }
+                .text-success-light { color: #4ade80; }
+                .ppa-feature-item { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); height: 100%; }
+                .btn-ppa-cta {
+                    background: #16a34a; color: white; border: none; padding: 18px 50px;
+                    border-radius: 100px; font-weight: 700; font-size: 1.1rem;
+                    box-shadow: 0 15px 30px rgba(22, 163, 74, 0.4);
                 }
 
-                .btn-consultation:hover {
-                    transform: translateY(-3px);
-                    background: #034b3a;
+                .btn-modern {
+                    background: #1e293b; color: white; border: none; padding: 12px 30px;
+                    border-radius: 12px; font-weight: 600; transition: 0.3s;
+                }
+                .btn-modern:hover { background: #16a34a; transform: translateY(-2px); }
+
+                @keyframes float {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-15px); }
                 }
 
-                .active-image-link {
-                    display: block;
-                    border-radius: 30px;
-                }
-
-                .active-image-premium {
-                    transition: all 0.4s ease;
-                    border: 2px solid transparent;
-                }
-
-                .active-image-link:hover .active-image-premium {
-                    transform: scale(1.04);
-                    border-color: var(--brand-green);
-                    box-shadow: 0 30px 70px rgba(2, 44, 34, 0.35);
-                }
-
-                .bg-soft-green {
-                    background: #f7fdf9;
-                }
-
-                .check-circle {
-                    width: 28px;
-                    height: 28px;
-                    background: #dcfce7;
-                    color: var(--brand-green);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: bold;
-                }
-
-                .ppa-premium-box {
-                    background: linear-gradient(135deg, #022c22, #064e3b);
-                    border-radius: 40px;
+                @media (max-width: 991px) {
+                    .benefit-grid { grid-template-columns: 1fr; }
+                    .ppa-industrial-card { padding: 50px 20px; }
+                    .main-title { font-size: 2.5rem; }
                 }
             `}</style>
         </div>
