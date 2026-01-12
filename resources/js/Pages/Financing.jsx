@@ -1,239 +1,306 @@
+import { useState } from 'react';
 import Footer from '../components/client/Footer';
 import Navbar from '../components/client/Navbar';
 import WhatsAppFloat from '../components/client/WhatsAppFloat';
 import solarImg from '../assets/images/solarimg.webp';
 
 function Financing() {
+    // 1. Functional State: Toggle between Individual and Business
+    const [view, setView] = useState('individual');
+
+    // 2. Functional Scroll Logic
+    const scrollToSection = (id) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
-        <div className="finance-master-wrapper">
+        <div className="finance-premium-page">
             <Navbar />
             <WhatsAppFloat />
 
-            {/* --- IMMERSIVE HERO --- */}
-            <section className="immersive-hero">
+            {/* --- HERO SECTION: ADMIRABLE & CLEAN --- */}
+            <section className="hero-v3">
                 <div className="container">
-                    <div className="row align-items-center min-vh-75">
-                        <div className="col-lg-7 py-5">
-                            <span className="info-tag pulse">Best Rates Guaranteed</span>
-                            <h1 className="main-title">
-                                Smart Money for <br /> 
-                                <span className="highlight">Green Energy</span>
-                            </h1>
-                            <p className="description">
-                                Breaking the cost barrier. Explore our 4 unique financing pathways 
-                                designed to put solar panels on your roof without breaking the bank.
-                            </p>
-                            <div className="hero-stats d-flex gap-4 mt-4">
-                                <div className="stat-item">
-                                    <h4 className="fw-bold mb-0">0%</h4>
-                                    <small>Markup Options</small>
-                                </div>
-                                <div className="stat-item border-start ps-4">
-                                    <h4 className="fw-bold mb-0">5 Yrs</h4>
-                                    <small>Flexible Tenure</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-5 d-none d-lg-block">
-                            <div className="hero-visual-card">
-                                <img src={solarImg} alt="Solar" className="img-fluid rounded-5 shadow-2xl" />
-                                <div className="floating-info-card">
-                                    <span>⚡ Save up to 90% on Bills</span>
+                    <div className="row align-items-center min-vh-100">
+                        <div className="col-lg-6 py-5">
+                            <div className="reveal-text">
+                                <span className="category-pill">Smart Energy Solutions</span>
+                                <h1 className="main-heading mt-3">
+                                    Financing the <br />
+                                    <span className="text-lime">Next Generation</span>
+                                </h1>
+                                <p className="hero-para mt-4">
+                                    Why wait for tomorrow's energy? Choose a plan that fits your budget today. 
+                                    We provide the capital, you enjoy the sunlight.
+                                </p>
+                                <div className="d-flex gap-3 mt-5">
+                                    <button onClick={() => scrollToSection('plans')} className="btn-primary-custom">
+                                        View All Plans
+                                    </button>
+                                    <button onClick={() => window.location.href='/contact'} className="btn-outline-custom">
+                                        Free Consultation
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div className="hero-wave"></div>
-            </section>
-
-            {/* --- THE INFORMATION JOURNEY --- */}
-            <main className="container py-5">
-                
-                {/* 1. SELF FINANCE - THE INDEPENDENCE CARD */}
-                <div className="journey-card self-finance shadow-hover">
-                    <div className="row g-0">
-                        <div className="col-lg-5">
-                            <div className="card-image-wrapper">
-                                <img src={solarImg} alt="Self" />
-                                <div className="price-badge">Best ROI</div>
-                            </div>
-                        </div>
-                        <div className="col-lg-7 p-4 p-md-5">
-                            <div className="card-header-icon">💰</div>
-                            <h2 className="fw-bold">Client Self Finance</h2>
-                            <p className="info-text">
-                                The most powerful way to own your energy. You pay 100% upfront, 
-                                and every single unit produced is pure profit from day one.
-                            </p>
-                            <div className="benefit-grid">
-                                <div className="benefit-box">
-                                    <strong>No Interest</strong>
-                                    <span>Save on markup costs</span>
-                                </div>
-                                <div className="benefit-box">
-                                    <strong>Asset Equity</strong>
-                                    <span>Immediate ownership</span>
-                                </div>
-                            </div>
-                            <button className="btn-modern mt-4">Calculate Payback Period</button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* 2 & 3. DUAL GRID (INSTALLMENT & BANK) */}
-                <div className="row g-4 mb-5">
-                    {/* INSTALLMENT */}
-                    <div className="col-lg-6">
-                        <div className="info-box glass-effect h-100">
-                            <div className="box-icon">🗓️</div>
-                            <h3>Solar on Installment</h3>
-                            <p className="text-muted">No Bank? No Problem. Pay directly to Solakon in easy monthly bits.</p>
-                            <ul className="custom-list mt-3">
-                                <li>25% Downpayment only</li>
-                                <li>12 - 18 Months Tenure</li>
-                                <li>Hassle-free Documentation</li>
-                            </ul>
-                            <div className="mt-auto pt-4">
-                                <a href="/contact" className="link-arrow">Check Eligibility →</a>
-                            </div>
-                        </div>
-                    </div>
-                    {/* BANK FINANCE */}
-                    <div className="col-lg-6">
-                        <div className="info-box bank-theme h-100">
-                            <div className="box-icon">🏦</div>
-                            <h3>Structured Bank Finance</h3>
-                            <p className="text-muted">Leverage the power of Islamic & Conventional banking under SBP schemes.</p>
-                            <div className="bank-meta mt-3">
-                                <div className="d-flex justify-content-between mb-2 border-bottom pb-1">
-                                    <span>Markup Rate</span>
-                                    <span className="fw-bold text-success">Starting 6%</span>
-                                </div>
-                                <div className="d-flex justify-content-between mb-2 border-bottom pb-1">
-                                    <span>Maximum Tenure</span>
-                                    <span className="fw-bold text-success">Up to 5 Years</span>
-                                </div>
-                            </div>
-                            <div className="mt-auto pt-4">
-                                <button className="btn btn-outline-success w-100 rounded-pill">View Partner Banks</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* 4. PPA - INDUSTRIAL MASTERCLASS */}
-                <div className="ppa-industrial-card">
-                    <div className="ppa-content text-center">
-                        <div className="badge bg-success mb-3">Enterprise Exclusive</div>
-                        <h2 className="display-4 fw-bold">Power Purchase Agreement (PPA)</h2>
-                        <h4 className="text-success-light mb-4">Zero Capex. Zero Risk. Pure Savings.</h4>
-                        <div className="row justify-content-center g-4 mt-2">
-                            {[
-                                {icon: '🛠️', t: 'Free Maintenance', d: 'We own & maintain the plant'},
-                                {icon: '📉', t: 'Reduced Tariff', d: 'Pay less than grid price'},
-                                {icon: '🔋', t: 'Unlimited Energy', d: 'Scale as your industry grows'}
-                            ].map((item, i) => (
-                                <div key={i} className="col-md-4">
-                                    <div className="ppa-feature-item">
-                                        <div className="fs-1 mb-2">{item.icon}</div>
-                                        <h6>{item.t}</h6>
-                                        <p className="small opacity-75">{item.d}</p>
+                        <div className="col-lg-6 position-relative d-none d-lg-block">
+                            <div className="hero-img-stack">
+                                <img src={solarImg} alt="Solar" className="img-main shadow-2xl" />
+                                <div className="floating-card-ui">
+                                    <div className="icon-pulse">⚡</div>
+                                    <div>
+                                        <h5 className="mb-0 fw-bold">90%</h5>
+                                        <small>Bill Reduction</small>
                                     </div>
                                 </div>
-                            ))}
+                            </div>
                         </div>
-                        <button className="btn-ppa-cta mt-5">Request Industrial Survey</button>
                     </div>
-                    <div className="ppa-bg-pattern"></div>
                 </div>
+            </section>
 
-            </main>
+            {/* --- FUNCTIONAL SELECTOR --- */}
+            <section id="plans" className="py-5 bg-faded text-center">
+                <div className="container">
+                    <h2 className="fw-bold mb-4">Choose Your Path</h2>
+                    <div className="toggle-container mx-auto mb-5">
+                        <button 
+                            className={`toggle-btn ${view === 'individual' ? 'active' : ''}`}
+                            onClick={() => setView('individual')}
+                        >
+                            Residential
+                        </button>
+                        <button 
+                            className={`toggle-btn ${view === 'business' ? 'active' : ''}`}
+                            onClick={() => setView('business')}
+                        >
+                            Corporate
+                        </button>
+                    </div>
+
+                    <div className="row g-4 justify-content-center">
+                        {view === 'individual' ? (
+                            <>
+                                {/* OPTION 1: SELF FINANCE */}
+                                <div className="col-lg-5">
+                                    <div className="finance-card shadow-lg">
+                                        <div className="card-badge">Most Popular</div>
+                                        <div className="card-icon-wrap">💰</div>
+                                        <h3 className="fw-bold mt-3">Self Finance</h3>
+                                        <p className="text-muted">Direct ownership with zero debt. Pay once, enjoy forever.</p>
+                                        <div className="card-stats">
+                                            <div className="stat"><span>Markup</span><strong>0%</strong></div>
+                                            <div className="stat"><span>Ownership</span><strong>100%</strong></div>
+                                        </div>
+                                        <button onClick={() => window.location.href='/contact'} className="btn-card-action mt-4">Get Started</button>
+                                    </div>
+                                </div>
+                                {/* OPTION 2: INSTALLMENT */}
+                                <div className="col-lg-5">
+                                    <div className="finance-card shadow-lg">
+                                        <div className="card-icon-wrap">🗓️</div>
+                                        <h3 className="fw-bold mt-3">Monthly Installments</h3>
+                                        <p className="text-muted">Easy 12-24 month plans directly from Solakon.</p>
+                                        <div className="card-stats">
+                                            <div className="stat"><span>Downpayment</span><strong>20%</strong></div>
+                                            <div className="stat"><span>Tenure</span><strong>2 Years</strong></div>
+                                        </div>
+                                        <button onClick={() => window.location.href='/contact'} className="btn-card-action mt-4">Apply Now</button>
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {/* OPTION 3: BANK FINANCE */}
+                                <div className="col-lg-5">
+                                    <div className="finance-card shadow-lg bank-card">
+                                        <div className="card-icon-wrap">🏦</div>
+                                        <h3 className="fw-bold mt-3">Bank Financing</h3>
+                                        <p className="text-muted">SBP subsidized schemes for industries and large sectors.</p>
+                                        <div className="card-stats">
+                                            <div className="stat"><span>Interest Rate</span><strong>From 6%</strong></div>
+                                            <div className="stat"><span>Max Tenure</span><strong>5 Years</strong></div>
+                                        </div>
+                                        <button onClick={() => window.location.href='/contact'} className="btn-card-action mt-4">Check Eligibility</button>
+                                    </div>
+                                </div>
+                                {/* OPTION 4: PPA */}
+                                <div className="col-lg-5">
+                                    <div className="finance-card shadow-lg ppa-card">
+                                        <div className="card-icon-wrap">⚡</div>
+                                        <h3 className="fw-bold mt-3 text-white">PPA Model</h3>
+                                        <p className="text-white opacity-75">Zero Investment. Just pay for the units you use.</p>
+                                        <div className="card-stats text-white">
+                                            <div className="stat"><span>Capex</span><strong>None</strong></div>
+                                            <div className="stat"><span>Maintenance</span><strong>Free</strong></div>
+                                        </div>
+                                        <button onClick={() => window.location.href='/contact'} className="btn-card-action light mt-4">Request Survey</button>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </section>
 
             <Footer />
 
             <style jsx>{`
                 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
 
-                .finance-master-wrapper {
-                    background: #fdfdfd;
+                .finance-premium-page {
                     font-family: 'Plus Jakarta Sans', sans-serif;
-                    color: #1a2e2a;
+                    background: #ffffff;
+                    color: #022c22;
                 }
 
                 /* HERO */
-                .immersive-hero {
-                    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
-                    position: relative;
+                .hero-v3 {
+                    background: radial-gradient(circle at top right, #f7fee7, #ffffff);
                     overflow: hidden;
                 }
-                .main-title { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1.1; margin-top: 15px; }
-                .highlight { color: #16a34a; }
-                .info-tag { background: #dcfce7; color: #166534; padding: 6px 18px; border-radius: 100px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
-                .description { font-size: 1.15rem; color: #4b5563; max-width: 600px; margin-top: 20px; }
-                
-                .hero-visual-card { position: relative; padding: 20px; }
-                .floating-info-card {
+                .category-pill {
+                    background: #dcfce7;
+                    color: #166534;
+                    padding: 8px 20px;
+                    border-radius: 50px;
+                    font-weight: 800;
+                    font-size: 0.75rem;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+                .main-heading {
+                    font-size: clamp(2.8rem, 6vw, 4.5rem);
+                    font-weight: 800;
+                    line-height: 1.1;
+                    color: #022c22;
+                }
+                .text-lime { color: #84cc16; }
+                .hero-para { font-size: 1.2rem; color: #4b5563; max-width: 550px; }
+
+                /* BUTTONS */
+                .btn-primary-custom {
+                    background: #022c22;
+                    color: white;
+                    border: none;
+                    padding: 16px 40px;
+                    border-radius: 14px;
+                    font-weight: 700;
+                    transition: 0.3s;
+                }
+                .btn-primary-custom:hover { transform: translateY(-5px); background: #16a34a; }
+
+                .btn-outline-custom {
+                    background: transparent;
+                    color: #022c22;
+                    border: 2px solid #022c22;
+                    padding: 16px 40px;
+                    border-radius: 14px;
+                    font-weight: 700;
+                    transition: 0.3s;
+                }
+
+                /* TOGGLE */
+                .toggle-container {
+                    background: #f1f5f9;
+                    padding: 6px;
+                    border-radius: 20px;
+                    display: flex;
+                    width: fit-content;
+                }
+                .toggle-btn {
+                    padding: 12px 30px;
+                    border: none;
+                    border-radius: 16px;
+                    font-weight: 700;
+                    background: transparent;
+                    transition: 0.3s;
+                }
+                .toggle-btn.active {
+                    background: white;
+                    color: #16a34a;
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+                }
+
+                /* FINANCE CARDS */
+                .finance-card {
+                    background: white;
+                    padding: 50px 40px;
+                    border-radius: 40px;
+                    border: 1px solid #f1f5f9;
+                    transition: 0.4s;
+                    position: relative;
+                }
+                .finance-card:hover { transform: translateY(-15px); }
+                .card-icon-wrap {
+                    font-size: 3rem;
+                    background: #f8fafc;
+                    width: 80px;
+                    height: 80px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 24px;
+                    margin: 0 auto 20px;
+                }
+                .card-badge {
                     position: absolute;
-                    bottom: 40px; left: -20px;
-                    background: white; padding: 15px 25px;
-                    border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-                    font-weight: 700; animation: float 3s infinite ease-in-out;
+                    top: 25px; right: 25px;
+                    background: #ffedd5; color: #9a3412;
+                    padding: 5px 15px; border-radius: 10px; font-weight: 800; font-size: 0.7rem;
                 }
+                .card-stats {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 30px;
+                    padding-top: 20px;
+                    border-top: 1px dashed #e2e8f0;
+                }
+                .stat span { display: block; font-size: 0.8rem; color: #64748b; }
+                .stat strong { font-size: 1.2rem; color: #022c22; }
 
-                /* JOURNEY CARDS */
-                .journey-card {
-                    background: white; border-radius: 35px; overflow: hidden;
-                    border: 1px solid #f1f5f9; margin-bottom: 50px;
+                .btn-card-action {
+                    width: 100%;
+                    padding: 15px;
+                    border: none;
+                    border-radius: 15px;
+                    background: #f1f5f9;
+                    font-weight: 800;
+                    color: #022c22;
+                    transition: 0.3s;
                 }
-                .card-image-wrapper { position: relative; height: 100%; overflow: hidden; }
-                .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-                .journey-card:hover .card-image-wrapper img { transform: scale(1.1); }
-                .price-badge { position: absolute; top: 20px; right: 20px; background: #16a34a; color: white; padding: 5px 15px; border-radius: 10px; font-weight: 700; }
-                
-                .card-header-icon { font-size: 2.5rem; margin-bottom: 10px; }
-                .benefit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
-                .benefit-box { background: #f8fafc; padding: 15px; border-radius: 15px; border-left: 4px solid #16a34a; }
-                .benefit-box strong { display: block; color: #1e293b; }
+                .btn-card-action:hover { background: #16a34a; color: white; }
+                .ppa-card { background: #022c22; }
+                .btn-card-action.light { background: #ffffff; color: #022c22; }
 
-                /* BENTO STYLE BOXES */
-                .info-box { padding: 40px; border-radius: 35px; transition: 0.4s; border: 1px solid #f1f5f9; display: flex; flex-direction: column; }
-                .glass-effect { background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
-                .info-box:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(0,0,0,0.08); }
-                .bank-theme { background: #f0fdf4; border-color: #dcfce7; }
-                .box-icon { font-size: 2.5rem; margin-bottom: 15px; }
-                .custom-list { list-style: none; padding: 0; }
-                .custom-list li::before { content: "✓"; color: #16a34a; font-weight: 800; margin-right: 10px; }
-                .link-arrow { color: #16a34a; text-decoration: none; font-weight: 700; }
-
-                /* PPA CARD */
-                .ppa-industrial-card {
-                    background: #022c22; color: white; border-radius: 40px;
-                    padding: 80px 40px; position: relative; overflow: hidden;
+                /* HERO IMAGE */
+                .hero-img-stack { position: relative; padding: 40px; }
+                .img-main { border-radius: 50px; width: 100%; height: 500px; object-fit: cover; }
+                .floating-card-ui {
+                    position: absolute;
+                    bottom: 0; left: 0;
+                    background: white; padding: 20px 30px;
+                    border-radius: 25px; display: flex; align-items: center; gap: 15px;
+                    box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+                    animation: float 4s ease-in-out infinite;
                 }
-                .text-success-light { color: #4ade80; }
-                .ppa-feature-item { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); height: 100%; }
-                .btn-ppa-cta {
-                    background: #16a34a; color: white; border: none; padding: 18px 50px;
-                    border-radius: 100px; font-weight: 700; font-size: 1.1rem;
-                    box-shadow: 0 15px 30px rgba(22, 163, 74, 0.4);
+                .icon-pulse {
+                    width: 50px; height: 50px; background: #dcfce7;
+                    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                    font-size: 1.5rem;
                 }
-
-                .btn-modern {
-                    background: #1e293b; color: white; border: none; padding: 12px 30px;
-                    border-radius: 12px; font-weight: 600; transition: 0.3s;
-                }
-                .btn-modern:hover { background: #16a34a; transform: translateY(-2px); }
 
                 @keyframes float {
                     0%, 100% { transform: translateY(0); }
-                    50% { transform: translateY(-15px); }
+                    50% { transform: translateY(-20px); }
                 }
 
                 @media (max-width: 991px) {
-                    .benefit-grid { grid-template-columns: 1fr; }
-                    .ppa-industrial-card { padding: 50px 20px; }
-                    .main-title { font-size: 2.5rem; }
+                    .main-heading { font-size: 2.5rem; }
+                    .finance-card { padding: 30px 20px; }
                 }
             `}</style>
         </div>
