@@ -2,7 +2,7 @@
 function ContactHero() {
   return (
     <section className="section-shell bg-white" data-aos="fade-up">
-      <div className="container text-center text-md-start section-heading">
+      <div className="container  text-md-start section-heading">
         <p
           className="text-uppercase small fw-semibold mb-2"
           style={{ color: '#22C55E', letterSpacing: '0.16em' }}

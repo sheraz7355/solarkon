@@ -3,7 +3,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 const StoreCard = ({ product }) => {
     return (
         <div className="card h-100 border-0 shadow-sm overflow-hidden store-card">
-            
+
             {/* Image Wrapper */}
             <div className="position-relative bg-light">
                 <img
