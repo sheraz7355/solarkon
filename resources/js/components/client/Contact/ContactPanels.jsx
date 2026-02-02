@@ -1,14 +1,42 @@
 import { useForm } from '@inertiajs/react';
 import { HiOutlinePhone, HiOutlineEnvelope, HiOutlineMapPin } from 'react-icons/hi2';
+import { FaFacebookF, FaTwitter ,FaInstagram, FaLinkedin } from 'react-icons/fa';
 
-function ContactPanels() {
+function ContactPanels({contact}) {
   // 1. Setup Inertia Form
+   
   const { data, setData, post, processing, reset } = useForm({
     name: '',
     phone: '',
     email: '',
   });
 
+  const phone = [
+    {name: 'MobileNumber',number:contact?.data?.phones?.MobileNumber || '+92 306 2935768'},
+    {name:'LandLine',number:contact?.data?.phones?.LandLine || '042-36449602'}
+  ];
+
+  const address = contact?.address || '94-C J1 Johar Town, Phase 2 Lahore';
+  const email = contact?.email || 'info@solarkon.com';
+  const website = contact?.website || 'www.solarkon.org';
+  const heading = contact?.heading || 'Get in Touch'; // Fixed typo 'Broken' to standard text based on context
+  const description = contact?.description || "We're here to help! Whether you're curious about our services, need support on an existing project, or want to request a quote, our team is ready to assist."; 
+  const businessHours = [
+    { 
+      hours: contact?.data?.BusinessHours?.['MF'] || '9:00 AM - 6:00 PM' 
+    },
+    { 
+      hours: contact?.data?.BusinessHours?.['SAT'] || '10:00 AM - 4:00 PM' 
+    },
+    { 
+      hours: contact?.data?.BusinessHours?.['SUN'] || 'Closed' 
+    },
+  ];
+  const socialIcons = [
+    { name: 'Facebook', icon: <FaFacebookF />, href: contact?.data?.SocialLinks?.Facebook || 'https://facebook.com' },
+    { name: 'Twitter', icon: <FaTwitter />, href: contact?.data?.SocialLinks?.Twitter || 'https://twitter.com' },
+    { name: 'LinkedIn', icon: <FaLinkedin />, href: contact?.data?.SocialLinks?.LinkedIn || 'https://Link.com'},
+  ]
   const handleSubmit = (e) => {
     e.preventDefault();
     // 2. Post to your existing route
@@ -22,28 +50,108 @@ function ContactPanels() {
 
   return (
     <section className="section-shell pt-0" data-aos="fade-up">
+      {/* Embedded Styles from app.css */}
+      <style>{`
+        :root {
+          --brand-primary: #022c22;
+          --brand-accent: #22c55e;
+          --brand-cream: #f6f8f3;
+          --brand-dark: #0f172a;
+          --brand-muted: #6b7280;
+        }
+
+        .section-shell {
+          padding-block: clamp(3rem, 6vw, 5rem);
+        }
+
+        /* Left Panel Style */
+        .section-dark {
+          background: #022c22;
+          color: #ffffff;
+        }
+
+        /* Right Panel Card Style */
+        .surface-card {
+          border-radius: 28px;
+          background: #ffffff;
+          box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+          transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .surface-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 30px 70px rgba(15, 23, 42, 0.12);
+        }
+
+        /* Typography */
+        .section-title {
+          color: var(--brand-primary);
+          font-weight: 700;
+          letter-spacing: -0.02em;
+        }
+
+        /* Button Styles */
+        .btn-pill {
+          border-radius: 999px;
+          padding-inline: 1.75rem;
+          padding-block: 0.85rem;
+          font-weight: 600;
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+          border: none;
+        }
+        .btn-pill.btn-primary {
+          background: var(--brand-primary);
+          color: #ffffff;
+          box-shadow: 0 18px 30px rgba(45, 80, 22, 0.35);
+        }
+        .btn-pill.btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 20px 36px rgba(45, 80, 22, 0.45);
+          background-color: var(--brand-primary);
+          color: #ffffff;
+        }
+        .btn-soft-hover {
+          transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease,
+            color 0.25s ease;
+        }
+
+        /* Social Icons */
+        .social-pill {
+          width: 40px;
+          height: 40px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.2s ease, background 0.2s ease;
+          text-decoration: none;
+        }
+        .social-pill:hover {
+          transform: translateY(-3px);
+          background: rgba(255, 255, 255, 0.25);
+          color: #ffffff;
+        }
+      `}</style>
+
       <div className="container">
         <div className="row g-4 align-items-stretch">
           
-          {/* LEFT PANEL (Static Info) */}
+          {/* LEFT PANEL (Static Info) - Using section-dark class */}
           <div className="col-lg-6">
-            <div
-              className="h-100 rounded-4 p-4 p-md-5 text-white d-flex flex-column justify-content-between surface-card"
-              style={{ backgroundColor: '#163023' }}
-            >
+            <div className="h-100 rounded-4 p-4 p-md-5 d-flex flex-column justify-content-between section-dark">
               <div>
-                <h2 className="h4 fw-bold mb-3">Have Questions Or Need Assistance?</h2>
-                <p className="mb-4" style={{ fontSize: 14, color: '#E5F2E0', lineHeight: 1.7 }}>
-                  We&apos;re here to help! Whether you&apos;re curious about our services, need support on an
-                  existing project, or want to request a quote, our team is ready to assist.
+                <h2 className="h4 fw-bold mb-3 text-white">{heading}</h2>
+                <p className="mb-4" style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.7 }}>
+                  {description}
                 </p>
 
                 <div className="mb-4">
                   <p className="text-uppercase small fw-semibold mb-1" style={{ color: '#BBF7D0' }}>
                     Email
                   </p>
-                  <p className="mb-0" style={{ fontSize: 14 }}>
-                    info@solarkon.org
+                  <p className="mb-0 text-white" style={{ fontSize: 14 }}>
+                    {email}
                   </p>
                 </div>
 
@@ -51,20 +159,21 @@ function ContactPanels() {
                   <p className="text-uppercase small fw-semibold mb-1" style={{ color: '#BBF7D0' }}>
                     Phone
                   </p>
-                  <p className="mb-0" style={{ fontSize: 14 }}>
-                    +92 306 2935768
-                  </p>
-                  <p className="mb-0" style={{ fontSize: 14 }}>
-                    Landline: 042-36449602
-                  </p>
+                  {phone.map((numbers,index) => 
+                    numbers.number ? (
+                       <p key={index} className="mb-0 text-white" style={{ fontSize: 14 }}>
+                          {numbers.name} : {numbers.number}
+                     </p>
+                    ) : null
+                  )}
                 </div>
 
                 <div className="mb-4">
                   <p className="text-uppercase small fw-semibold mb-1" style={{ color: '#BBF7D0' }}>
                     Address
                   </p>
-                  <p className="mb-0" style={{ fontSize: 14 }}>
-                    94-C J1 Johar Town, Phase 2 Lahore
+                  <p className="mb-0 text-white" style={{ fontSize: 14 }}>
+                    {address}
                   </p>
                 </div>
 
@@ -72,8 +181,8 @@ function ContactPanels() {
                   <p className="text-uppercase small fw-semibold mb-1" style={{ color: '#BBF7D0' }}>
                     Website
                   </p>
-                  <p className="mb-0" style={{ fontSize: 14 }}>
-                    www.solarkon.org
+                  <p className="mb-0 text-white" style={{ fontSize: 14 }}>
+                    {website}
                   </p>
                 </div>
 
@@ -81,15 +190,11 @@ function ContactPanels() {
                   <p className="text-uppercase small fw-semibold mb-1" style={{ color: '#BBF7D0' }}>
                     Business Hours
                   </p>
-                  <p className="mb-0" style={{ fontSize: 14 }}>
-                    Monday - Friday: 9:00 AM - 6:00 PM
+                  {businessHours.map((bh,index) => (
+                  <p key = {index} className="mb-0 text-white" style={{ fontSize: 14 }}>
+                    {bh.hours}
                   </p>
-                  <p className="mb-0" style={{ fontSize: 14 }}>
-                    Saturday: 10:00 AM - 4:00 PM
-                  </p>
-                  <p className="mb-0" style={{ fontSize: 14 }}>
-                    Sunday: Closed
-                  </p>
+                  ))}
                 </div>
               </div>
 
@@ -98,24 +203,31 @@ function ContactPanels() {
                   Social Media
                 </p>
                 <div className="d-flex gap-2">
-                  {[HiOutlinePhone, HiOutlineEnvelope, HiOutlineMapPin].map((Icon, idx) => (
-                    <span
-                      key={idx}
-                      className="d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10"
-                      style={{ width: 36, height: 36 }}
+                  {socialIcons.map((social) => (
+                    social.href ? (
+                      <a
+                      key={social.name}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener norefferer"
+                      className='social-pill'
                     >
-                      <Icon size={18} />
+                    <span style={{ fontSize: '0.9rem' }}>
+                      {social.icon}
                     </span>
-                  ))}
+                    </a>
+                    ) : null 
+                  )
+                  )}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* RIGHT PANEL (Form) */}
+          {/* RIGHT PANEL (Form) - Using surface-card class */}
           <div className="col-lg-6">
             <div className="h-100 rounded-4 p-4 p-md-5 surface-card">
-              <h2 className="h5 fw-bold mb-3" style={{ color: '#111827' }}>
+              <h2 className="h5 section-title mb-3">
                 Fill out the form below, and our team will get back to you within 24 hours.
               </h2>
 
@@ -144,7 +256,6 @@ function ContactPanels() {
                   />
                 </div>
 
-                {/* Added Email, Removed City/Bill */}
                 <div className="col-12">
                   <label className="form-label small fw-semibold text-muted">Email *</label>
                   <input 
@@ -157,12 +268,12 @@ function ContactPanels() {
                   />
                 </div>
 
-                <div className="col-12 d-flex justify-content-end mt-2">
+                <div className="col-12 d-flex justify-content-end mt-4">
+                  {/* Using btn-pill and btn-primary classes */}
                   <button
                     type="submit"
                     disabled={processing}
-                    className="btn btn-pill px-4 btn-soft-hover d-inline-flex align-items-center gap-2"
-                    style={{ backgroundColor: '#22C55E', color: '#111827' }}
+                    className="btn btn-pill btn-primary btn-soft-hover d-inline-flex align-items-center gap-2"
                   >
                     <span>{processing ? 'Sending...' : 'Submit Request'}</span>
                   </button>

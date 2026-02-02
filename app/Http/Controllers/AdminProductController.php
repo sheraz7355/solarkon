@@ -25,7 +25,12 @@ class AdminProductController extends Controller
             'description' => 'The perfect starter kit for small households. Includes Tier-1 panels and a high-efficiency inverter.',
             'original_price' => '480,000',
             'discount_price' => '410,000',
-            'image' => 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1000&auto=format&fit=crop'
+            'image' => 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1000&auto=format&fit=crop',
+             'gallery_images' => [
+            'https://images.unsplash.com/photo-1548611716-3650d7e4125b?q=80&w=1000',
+            'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?q=80&w=1000',
+            'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000',
+        ],
         ];
     } 
     // 2. Handle Database Products
@@ -46,28 +51,28 @@ class AdminProductController extends Controller
 
     // POST: Create or Update Product
     public function store(Request $request) {
-        $data = $request->validate([
-            'id' => 'nullable|integer',
-            'title' => 'required|string',
-            'type' => 'required|string',
-            'voltage' => 'required|string',
-            'annual_output' => 'nullable|string', 
-            'warranty' => 'nullable|string',
-            'description' => 'required|string',
-            'original_price' => 'nullable|string',
-            'discount_price' => 'required|string',
-            'image' => 'required|string',
-        ]);
+    $data = $request->validate([
+        'id' => 'nullable|integer',
+        'title' => 'required|string',
+        'brand' => 'required|string',
+        'type' => 'required|string',
+        'voltage' => 'nullable|string',
+        'unit' => 'nullable|string',
+        'warranty' => 'nullable|string',
+        'description' => 'required|string',
+        'original_price' => 'nullable|string',
+        'discount_price' => 'nullable|string', // Now nullable
+        'image' => 'required|string',
+        'gallery_images' => 'nullable|array',
+    ]);
 
-        if (isset($data['id'])) {
-            $product = Product::find($data['id']);
-            $product->update($data);
-        } else {
-            Product::create($data);
-        }
-
-        return response()->json(['message' => 'Product saved successfully!']);
+    if (isset($data['id'])) {
+        Product::find($data['id'])->update($data);
+    } else {
+        Product::create($data);
     }
+    return response()->json(['message' => 'Saved!']);
+}
 
     // DELETE: Remove Product
     public function destroy($id) {

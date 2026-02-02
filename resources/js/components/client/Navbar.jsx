@@ -38,12 +38,15 @@ function Navbar() {
             <nav className="container" style={{ pointerEvents: 'auto' }}>
                 <div className="glass-nav d-flex align-items-center justify-content-between gap-3">
                     {/* LOGO */}
+                    <Link href="/" className="text-decoration-none">
                     <div className="d-flex align-items-center gap-2">
                         <img src={webLogo} alt="SOLARKON logo" style={{ height: 50 }} />
                         <span className="fw-bold fs-4" style={{ color: '#2D5016' }}>
                             SOLARKON
                         </span>
+                        
                     </div>
+                    </Link>
 
                     {/* DESKTOP LINKS (ONLY LARGE SCREENS) */}
                     <div className="d-none d-lg-flex align-items-center gap-4">
