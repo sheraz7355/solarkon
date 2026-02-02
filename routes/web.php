@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminSolutionController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContactPanelController;
 use App\Http\Controllers\HeroSectionsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
@@ -15,7 +16,7 @@ use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', function () { return Inertia::render('About'); })->name('about');
-Route::get('/contact', function () {return Inertia::render('Contact');})->name('contact');
+Route::get('/contact', [ContactController::class,'get'])->name('contact');
 Route::get('/solutions',[AdminSolutionController::class,'get'])->name('solutions');
 Route::get('/projects', [ProjectController::class,'index'])->name('projects'); 
 Route::get('/financing', function () { return Inertia::render('Financing'); });
@@ -26,6 +27,7 @@ Route::get('/product-details', [AdminProductController::class,'product_details']
      return Inertia::render('Profile');
  })->name('profile');
 
+ Route::post('/userDetails',[ContactController::class,'store'])->name('admin.updateUserDetails');
 
 
 
@@ -51,7 +53,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/work-data',[HomeController::class,'updateData'])->name('admin.work-data.update');
     Route::post('/logos',[HomeController::class,'updateLogos'])->name('admin.updateLogos');
     Route::post('/settings', [SettingsController::class,'updateSettings'])->name('admin.updateSettings');
-    Route::post('/userDetails',[ContactController::class,'store'])->name('admin.updateUserDetails');
     Route::post('/homeServices',[HomeController::class,'storeServices'])->name('admin.storeServices');
     Route::delete('/userDetails/{id}',[ContactController::class,'destroy'])->name('admin.deleteUserDetails');
 
@@ -71,10 +72,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/products', [AdminProductController::class, 'store']);
     Route::delete('/admin/products/{id}', [AdminProductController::class, 'destroy']);
 
+    //Contact data
+    Route::get('/admin/contact-data',[ContactPanelController::class,'index'])->name('admin.contact.index');
+    Route::post('/admin/contact-data',[ContactPanelController::class,'update'])->name('admin.contact.update');
+
     // Media Routes
     Route::get('/media', [MediaController::class, 'index'])->name('media.index');
     Route::post('/media/upload', [MediaController::class, 'store'])->name('media.store');
     Route::delete('/media/{id}', [MediaController::class, 'destroy'])->name('media.destroy');
+
 
     // --- MAIN ADMIN ENTRY POINT ---
     // This loads the AdminApp.jsx, which then uses React Router.

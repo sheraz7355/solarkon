@@ -3,7 +3,6 @@ import { Head, Link } from '@inertiajs/react';
 import Navbar from '../components/client/Navbar';
 import Footer from '../components/client/Footer';
 import WhatsAppFloat from '../components/client/WhatsAppFloat';
-import ProfileSettings from '../components/client/Profile/ProfileSettings';
 import { 
     FaMapMarkerAlt, FaCalendarAlt, FaTag, FaSolarPanel, 
     FaArrowLeft, FaSpinner, FaTimes, FaExpand 
@@ -210,7 +209,6 @@ export default function ProjectDetails({ project }) {
             </section>
         )}
 
-        <ProfileSettings />
 
       </main>
 

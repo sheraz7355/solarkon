@@ -1,12 +1,10 @@
-// resources/js/components/client/Footer.jsx
-import { Link, usePage } from '@inertiajs/react'; // ✅ Import usePage
+import { Link, usePage } from '@inertiajs/react'; 
 import { 
   FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, 
   FaMapMarkerAlt, FaPhoneAlt, FaEnvelope 
 } from 'react-icons/fa';
 
 function Footer() {
-  // 1. ✅ Grab the data from the "Global Backpack" (Middleware)
   const { site_settings } = usePage().props;
 
   // 2. Use the data (with fallback text if DB is empty)
@@ -18,10 +16,10 @@ function Footer() {
 
   // Social Links
   const socialIcons = [
-    { name: 'Facebook', icon: <FaFacebookF />, href: site_settings?.facebook_url },
-    { name: 'Twitter', icon: <FaTwitter />, href: site_settings?.twitter_url },
-    { name: 'Instagram', icon: <FaInstagram />, href: site_settings?.instagram_url },
-    { name: 'LinkedIn', icon: <FaLinkedinIn />, href: site_settings?.linkedin_url },
+    { name: 'Facebook', icon: <FaFacebookF />, href: site_settings?.facebook_url || 'https://facebook.com' },
+    { name: 'Twitter', icon: <FaTwitter />, href: site_settings?.twitter_url || 'https://twitter.com' },
+    { name: 'Instagram', icon: <FaInstagram />, href: site_settings?.instagram_url || 'https://instagram.com'},
+    { name: 'LinkedIn', icon: <FaLinkedinIn />, href: site_settings?.linkedin_url || 'https://linkedin.com'},
   ];
 
   return (

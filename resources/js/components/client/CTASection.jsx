@@ -12,7 +12,7 @@ function CTASection() {
     e.preventDefault();
     
     post('/userDetails', {
-      onSuccess: () => alert('Request sent! We will contact you shortly.'),
+      onSuccess: () => alert('Request Sent Successfully! We will contact you shortly.'),
     });
   };
 

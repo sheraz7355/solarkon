@@ -108,7 +108,10 @@ export default function AdminSolutions() {
         }
     };
 
-    if (loading) return <div className="p-5 text-center">Loading Data...</div>;
+    if (loading) return <div className="vh-100 align-items-center justify-content-center d-flex">
+              <FontAwesomeIcon icon={faSpinner} spin size="3x" className="text-warning" />
+
+    </div>;
 
     const systemLabels = {
         'off-grid': 'Off-Grid Systems',

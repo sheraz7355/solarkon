@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
 use App\Models\ContactRequest;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ContactController extends Controller
 {
@@ -34,5 +36,13 @@ class ContactController extends Controller
     {
         ContactRequest::findOrFail($id)->delete();
         return response()->json(['message' => 'Deleted successfully']);
+    }
+
+    public function get()
+    {
+        $contact = Contact::first();
+        return Inertia::render('Contact', [
+            'contact' => $contact
+        ]);
     }
 }
