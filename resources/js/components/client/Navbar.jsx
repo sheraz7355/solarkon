@@ -31,7 +31,10 @@ function Navbar() {
     };
 
     return (
-        <header className="py-3 position-sticky top-0 w-100" style={{ zIndex: 1050, pointerEvents: 'none' }}>
+        <header
+            className="py-3 position-sticky top-0 w-100"
+            style={{ zIndex: 1050, pointerEvents: 'none' }}
+        >
             <nav className="container" style={{ pointerEvents: 'auto' }}>
                 <div className="glass-nav d-flex align-items-center justify-content-between gap-3">
                     {/* LOGO */}
@@ -45,22 +48,24 @@ function Navbar() {
                     </div>
                     </Link>
 
-                    {/* DESKTOP LINKS */}
-                    <div className="d-none d-md-flex align-items-center gap-4">
+                    {/* DESKTOP LINKS (ONLY LARGE SCREENS) */}
+                    <div className="d-none d-lg-flex align-items-center gap-4">
                         {navLinks.map((item) => (
                             <Link
                                 key={item.to}
                                 href={item.to}
-                                className={`fw-semibold text-decoration-none nav-link-main ${isLinkActive(item.to) ? 'text-success' : 'text-dark'}`}
+                                className={`fw-semibold text-decoration-none nav-link-main ${
+                                    isLinkActive(item.to) ? 'text-success' : 'text-dark'
+                                }`}
                             >
                                 {item.label}
                             </Link>
                         ))}
                     </div>
 
-                    {/* DESKTOP RIGHT SIDE: ADMIN + CONTACT */}
-                    <div 
-                        className="d-none d-md-inline-flex align-items-center"
+                    {/* DESKTOP RIGHT SIDE */}
+                    <div
+                        className="d-none d-lg-inline-flex align-items-center"
                         onMouseEnter={() => setHoverAdmin(true)}
                         onMouseLeave={() => setHoverAdmin(false)}
                     >
@@ -76,43 +81,66 @@ function Navbar() {
                                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center'
+                                justifyContent: 'center',
                             }}
                             title="Admin Login"
                         >
-                            <div 
+                            <div
                                 className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
                                 style={{
                                     width: '32px',
                                     height: '32px',
-                                    background: 'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
+                                    background:
+                                        'linear-gradient(135deg, #2D5016 0%, #22C55E 100%)',
                                     boxShadow: '0 4px 12px rgba(45, 80, 22, 0.25)',
-                                    cursor: 'pointer'
                                 }}
                             >
-                                <FontAwesomeIcon 
-                                    icon={faUserCircle} 
-                                    style={{ color: '#ffffff', fontSize: '1.2rem' }} 
+                                <FontAwesomeIcon
+                                    icon={faUserCircle}
+                                    style={{ color: '#fff', fontSize: '1.2rem' }}
                                 />
                             </div>
                         </Link>
 
                         {/* CONTACT BUTTON */}
-                        <button className="btn btn-outline-success rounded-pill d-flex align-items-center" onClick={() => router.visit('/contact')}>
+                        <button
+                            className="btn btn-outline-success rounded-pill d-flex align-items-center"
+                            onClick={() => router.visit('/contact')}
+                        >
                             <HiPhone className="me-2" size={18} />
                             Contact Us
                         </button>
                     </div>
 
-                    {/* MOBILE TOGGLE */}
-                    <button className="btn btn-outline-success d-md-none" onClick={handleToggle}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            {isOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></>}
+                    {/* MOBILE / TABLET TOGGLE */}
+                    <button
+                        className="btn btn-outline-success d-lg-none"
+                        onClick={handleToggle}
+                    >
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            {isOpen ? (
+                                <path d="M18 6L6 18M6 6l12 12" />
+                            ) : (
+                                <>
+                                    <line x1="3" y1="6" x2="21" y2="6" />
+                                    <line x1="3" y1="12" x2="21" y2="12" />
+                                    <line x1="3" y1="18" x2="21" y2="18" />
+                                </>
+                            )}
                         </svg>
                     </button>
                 </div>
 
-                {/* MOBILE MENU */}
+                {/* MOBILE / TABLET MENU */}
                 <AnimatePresence>
                     {isOpen && (
                         <motion.div
@@ -120,22 +148,28 @@ function Navbar() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -15 }}
                             transition={{ duration: 0.25 }}
-                            className="mt-2 d-md-none rounded-4 p-3 bg-white shadow-lg border"
+                            className="mt-2 d-lg-none rounded-4 p-3 bg-white shadow-lg border"
                         >
                             <div className="d-flex flex-column gap-3">
-                                {/* Standard Links */}
                                 {navLinks.map((item) => (
-                                    <Link key={item.to} href={item.to} className={`fw-semibold text-decoration-none ${isLinkActive(item.to) ? 'text-success' : 'text-dark'}`} onClick={closeMenu}>
+                                    <Link
+                                        key={item.to}
+                                        href={item.to}
+                                        className={`fw-semibold text-decoration-none ${
+                                            isLinkActive(item.to)
+                                                ? 'text-success'
+                                                : 'text-dark'
+                                        }`}
+                                        onClick={closeMenu}
+                                    >
                                         {item.label}
                                     </Link>
                                 ))}
 
-                                {/* Divider */}
                                 <hr className="my-1 border-secondary opacity-25" />
 
-                                {/* --- ADDED ADMIN LINK HERE --- */}
-                                <Link 
-                                    href="/admin" 
+                                <Link
+                                    href="/admin"
                                     className="fw-semibold text-decoration-none text-warning d-flex align-items-center gap-2"
                                     onClick={closeMenu}
                                 >
@@ -143,9 +177,15 @@ function Navbar() {
                                     Admin Login
                                 </Link>
 
-                                {/* Contact Button */}
-                                <button className="btn btn-success rounded-pill mt-2" onClick={() => { closeMenu(); router.visit('/contact'); }}>
-                                    <HiPhone className="me-2" size={18} /> Contact Us
+                                <button
+                                    className="btn btn-success rounded-pill mt-2"
+                                    onClick={() => {
+                                        closeMenu();
+                                        router.visit('/contact');
+                                    }}
+                                >
+                                    <HiPhone className="me-2" size={18} />
+                                    Contact Us
                                 </button>
                             </div>
                         </motion.div>

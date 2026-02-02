@@ -25,8 +25,8 @@ export default function ProjectsHeroSlider({ featuredProjects }) {
   const [index, setIndex] = useState(0);
 
   // If we have dynamic featured projects, use them. Otherwise, use fallback.
-  const slides = (featuredProjects && featuredProjects.length > 0) 
-    ? featuredProjects 
+  const slides = (featuredProjects && featuredProjects.length > 0)
+    ? featuredProjects
     : defaultSlides;
 
   const slide = slides[index];
@@ -45,9 +45,9 @@ export default function ProjectsHeroSlider({ featuredProjects }) {
   return (
     <section style={styles.wrapper}>
       <div className="d-flex flex-column flex-lg-row" style={{ minHeight: '620px' }}>
-        
+
         {/* CONTENT */}
-        <div 
+        <div
           className="col-lg-5 p-5 d-flex flex-column justify-content-between"
           style={{ backgroundColor: '#022c22', color: '#ffffff' }}
         >
@@ -57,9 +57,9 @@ export default function ProjectsHeroSlider({ featuredProjects }) {
                 {/* Truncate description for slider aesthetics */}
                 {slide.description.length > 180 ? slide.description.substring(0, 180) + '...' : slide.description}
             </p>
-            
+
             <div style={styles.divider} />
-            
+
             <span style={{ color: '#bef264', fontWeight: 600, fontSize: '15px' }}>
                 {slide.tag}
             </span>
@@ -75,10 +75,10 @@ export default function ProjectsHeroSlider({ featuredProjects }) {
                 <button style={styles.arrowBtn} onClick={next}><FiArrowRight /></button>
             </div>
           </div>
-          
+
           {/* View Details Button (Optional, but good UX) */}
           {slide.id && typeof slide.id === 'number' && (
-              <button 
+              <button
                 onClick={handleViewDetails}
                 className="btn btn-outline-light rounded-pill mt-4 align-self-start"
               >
@@ -89,10 +89,10 @@ export default function ProjectsHeroSlider({ featuredProjects }) {
 
         {/* IMAGE */}
         <div className="col-lg-7 p-0 overflow-hidden" style={{ minHeight: '320px' }}>
-          <img 
-            src={slide.image} 
-            alt={slide.title} 
-            className="w-100 h-100 object-fit-cover" 
+          <img
+            src={slide.image}
+            alt={slide.title}
+            className="w-100 h-100 object-fit-cover"
           />
         </div>
       </div>

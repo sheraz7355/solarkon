@@ -1,5 +1,4 @@
-import { router } from '@inertiajs/react';
-import { motion } from 'framer-motion';
+import { Link, router, usePage } from '@inertiajs/react';
 
 const StoreCard = ({ product }) => {
     return (
@@ -12,7 +11,7 @@ const StoreCard = ({ product }) => {
             {/* FULL WIDTH/HEIGHT IMAGE CONTAINER */}
             <div className="position-relative w-100" style={{ height: '280px' }}>
                 <img
-                    src={product.image || 'https://placehold.co/600x400?text=No+Image'}
+                    src={product.image}
                     alt={product.title}
                     className="w-100 h-100 object-fit-cover"
                 />
