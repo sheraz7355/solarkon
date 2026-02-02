@@ -56,7 +56,7 @@ const StoreCard = ({ product }) => {
                     View Details
                 </button>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
