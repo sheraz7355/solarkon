@@ -385,16 +385,7 @@ export default function Solutions({ solutionData }) { // Accept Prop from Larave
             </div>
         </section>
 
-        {/* ================= FINAL CTA ================= */}
-        <section className="py-5 bg-white">
-            <div className="container text-center py-5">
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                    <h2 className="display-5 fw-bold mb-4" style={{color: '#14532d'}}>Power Your Future Today</h2>
-                    <p className="lead text-muted mb-5 mx-auto" style={{maxWidth: '600px'}}>Join thousands of satisfied customers across Pakistan</p>
-                    <Link href="/contact" className="btn px-5 py-3 fw-bold rounded-pill shadow-lg" style={{ background: 'linear-gradient(135deg, #14532d 0%, #15803d 100%)', color: 'white', border: 'none' }}>Get a Free Quote</Link>
-                </motion.div>
-            </div>
-        </section>
+        
 
       </main>
       <Footer />

@@ -1,4 +1,4 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'); 
 
 .text-brand-primary {
     color: var(--brand-primary) !important;
@@ -34,7 +34,6 @@ section {
     overflow: hidden;
 }
 
-/* Responsive glass-nav for tablets */
 @media (max-width: 1199.98px) {
     .glass-nav {
         padding: 0.75rem 1.25rem;
@@ -127,9 +126,7 @@ section {
     outline: none;
 }
 
-/* resources/css/app.css */
 
-/* Force the Inertia Loading Bar to be on top of the Navbar */
 #nprogress .bar {
     z-index: 99999 !important;
     height: 4px !important;
@@ -199,7 +196,6 @@ section {
     color: #ffffff;
 }
 
-/* Responsive glass-nav for tablets and mobile */
 @media (max-width: 1199.98px) {
     .glass-nav {
         padding: 0.75rem 1.25rem;
@@ -229,7 +225,6 @@ section {
     }
 }
 
-/* Admin Dashboard Styles */
 
 .stats-card-hover {
     transition: all 0.3s ease;
@@ -240,7 +235,6 @@ section {
     box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12) !important;
 }
 
-/* Dashboard Responsive Typography */
 .dashboard-title {
     font-size: 1.25rem;
 }
@@ -1250,4 +1244,11 @@ section {
     .admin-footer-enhanced {
         display: none !important;
     }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    100% { transform: rotate(360deg); }
 }

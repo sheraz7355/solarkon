@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+// Removed trailing comma in import
 import { FaPlus, FaTrash, FaSave, FaFilePdf, FaSpinner, FaExclamationTriangle } from 'react-icons/fa';
 import MediaPickerModal from '../../components/admin/MediaPickerModal';
 
@@ -27,7 +28,7 @@ export default function AdminSolutions() {
     };
 
     const [systems, setSystems] = useState(defaultData);
-    const [initialState, setInitialState] = useState(null); // Snapshot for dirty check
+    const [initialState, setInitialState] = useState(null);
 
     const [showPicker, setShowPicker] = useState(false);
     const [pickerTarget, setPickerTarget] = useState({ system: '', index: 0 });
@@ -37,20 +38,19 @@ export default function AdminSolutions() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    },[]);
 
     const fetchData = async () => {
         try {
             const res = await axios.get('/admin/solutions-data');
             let loadedData = defaultData;
 
-            // Merge DB data if exists
             if (res.data && Object.keys(res.data).length > 0) {
                  loadedData = { ...defaultData, ...res.data };
             }
             
             setSystems(loadedData);
-            setInitialState(JSON.parse(JSON.stringify(loadedData))); // Create deep copy snapshot
+            setInitialState(JSON.parse(JSON.stringify(loadedData))); 
         } catch (err) {
             console.error("Error fetching solutions, using defaults", err);
             setInitialState(defaultData);
@@ -68,7 +68,7 @@ export default function AdminSolutions() {
     };
 
     const handleRemoveCapacity = (key, index) => {
-        if(!confirm('Remove this capacity option?')) return;
+        if(!window.confirm('Remove this capacity option?')) return; // Added window. to confirm to ensure no strict-mode reference errors
         const updatedList = [...systems[key]];
         updatedList.splice(index, 1);
         setSystems(prev => ({ ...prev, [key]: updatedList }));
@@ -98,7 +98,7 @@ export default function AdminSolutions() {
         setSaving(true);
         try {
             await axios.post('/admin/solutions', systems);
-            setInitialState(JSON.parse(JSON.stringify(systems))); // Update snapshot after save
+            setInitialState(JSON.parse(JSON.stringify(systems)));
             alert('Solutions updated successfully!');
         } catch (err) {
             console.error(err);
@@ -108,7 +108,12 @@ export default function AdminSolutions() {
         }
     };
 
-    if (loading) return <div className="p-5 text-center">Loading Data...</div>;
+    // FIXED ICON PROPS HERE
+    if (loading) return (
+        <div className="vh-100 align-items-center justify-content-center d-flex">
+            <FaSpinner className="spin text-warning" size={50} />
+        </div>
+    );
 
     const systemLabels = {
         'off-grid': 'Off-Grid Systems',
@@ -119,7 +124,6 @@ export default function AdminSolutions() {
     return (
         <div className="container-fluid p-4 bg-light min-vh-100">
             
-            {/* Header with Dirty Indicator */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <div className="d-flex align-items-center gap-3">
                     <h3 className="fw-bold text-success m-0">Manage Solution Capacities</h3>
@@ -132,7 +136,7 @@ export default function AdminSolutions() {
                 
                 <button 
                     onClick={handleSave} 
-                    disabled={saving || !isDirty} // Disabled if saving OR not dirty
+                    disabled={saving || !isDirty}
                     className={`btn fw-bold px-4 rounded-pill shadow transition-all ${isDirty ? 'btn-success' : 'btn-secondary opacity-50'}`}
                 >
                     {saving ? <><FaSpinner className="spin me-2" /> Saving...</> : <><FaSave className="me-2"/> Save Changes</>}

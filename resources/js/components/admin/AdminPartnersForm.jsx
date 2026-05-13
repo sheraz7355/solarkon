@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faSave, faImage, faRotateLeft, faExclamationTriangle, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 
 // 1. IMPORT THE MODAL YOU JUST MADE
-import MediaPickerModal from './MediaPickerModal'; // <--- Check this path!
+import MediaPickerModal from './MediaPickerModal'; 
 
 export default function AdminPartnersForm({ initialData, onRefresh }) {
     
@@ -31,6 +31,7 @@ export default function AdminPartnersForm({ initialData, onRefresh }) {
             onSuccess: () => onRefresh(),
         });
     };
+
 
     return (
         <>

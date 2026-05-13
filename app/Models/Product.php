@@ -10,9 +10,14 @@ class Product extends Model
     //
      use HasFactory;
     protected $fillable = [
-        'title', 'type', 'voltage',
-        'annual_output', 'warranty',
-         'description', 
-        'original_price', 'discount_price', 'image', 'is_active'
+        'title', 'brand', 'type', 'voltage', 'unit',
+        'warranty', 'description', 
+        'original_price', 'discount_price', 
+        'image', 'gallery_images', 
+        'is_active'
+    ];
+
+    protected $casts = [
+        'gallery_images' => 'array',
     ];
 }
