@@ -1,4 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 
 const StoreCard = ({ product }) => {
     return (

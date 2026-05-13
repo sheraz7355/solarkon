@@ -38,7 +38,7 @@ export default function Settings() {
         
         // Sanitize data: Ensure nulls become empty strings to prevent React warnings
         const cleanData = {
-            site_name: res.data.site_name || '',
+            site_name: res?.data?.site_name || '',
             footer_description: res.data.footer_description || '',
             address: res.data.address || '',
             phone: res.data.phone || '',
